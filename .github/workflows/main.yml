@@ -18,5 +18,7 @@ jobs:
       - uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - run: dotnet run
+      - name: Run generator
+        run: dotnet run
+        working-directory: ${{env.working-directory}}
 
