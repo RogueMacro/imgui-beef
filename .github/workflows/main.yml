@@ -1,0 +1,24 @@
+name: Generation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  generate:
+    env:
+      working-directory: ./Generator
+
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+      - name: Run generator
+        run: dotnet run
+        working-directory: ${{env.working-directory}}
+
