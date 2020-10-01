@@ -9,7 +9,7 @@ on:
 jobs:
   generate:
     env:
-      working-directory: ./Generator
+      working-directory: D:/a/imgui-beef/imgui-beef/Generator/
 
     runs-on: windows-2019
 
