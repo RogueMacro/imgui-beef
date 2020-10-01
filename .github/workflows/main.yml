@@ -1,10 +1,8 @@
 name: Generation
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  schedule:
+    - cron: '0 6 * * *'
 
 jobs:
   generate:
@@ -23,5 +21,5 @@ jobs:
       - name: Generate
         run: dotnet run
         working-directory: ${{env.working-directory}}
-      - run: git status
+      - run: git commit -a -m "Generation"
 
