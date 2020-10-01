@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - run: dir
-        working-directory: ${{env.working-directory}}
+      - name: Clone submodules
+        run: git submodule update --init
       - uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - name: Run generator
+      - name: Generate
         run: dotnet run
         working-directory: ${{env.working-directory}}
 
