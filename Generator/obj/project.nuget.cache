@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "b4j124aM5IIq7jRYtat3n0vNYS1v8PUY1AWFMBUhFnbkkzcd+/tECdT66GqBF0xRORZv6F/DtCEDOaOAQMEo0g==",
+  "success": true,
+  "projectFilePath": "C:\\dev\\Beef\\imgui-beef\\Generator\\Generator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Willi\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.reflection.emit\\4.3.0\\system.reflection.emit.4.3.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.reflection.emit.ilgeneration\\4.3.0\\system.reflection.emit.ilgeneration.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.reflection.emit.lightweight\\4.3.0\\system.reflection.emit.lightweight.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.reflection.primitives\\4.3.0\\system.reflection.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.threading.tasks.extensions\\4.4.0\\system.threading.tasks.extensions.4.4.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\system.valuetuple\\4.4.0\\system.valuetuple.4.4.0.nupkg.sha512",
+    "C:\\Users\\Willi\\.nuget\\packages\\utf8json\\1.3.7\\utf8json.1.3.7.nupkg.sha512"
+  ],
+  "logs": []
+}
