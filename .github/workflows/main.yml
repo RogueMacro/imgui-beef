@@ -1,26 +1,22 @@
-# This is a basic workflow to help you get started with Actions
+name: Generation
 
-name: CI
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   generate:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
+    env:
+      working-directory: ./Generator
+
+    runs-on: windows-2019
 
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - run: dotnet run Generator
+      - run: dotnet run
 
