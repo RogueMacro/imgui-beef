@@ -14,11 +14,8 @@ namespace ImGuiBeefGenerator
 
             Console.WriteLine("Writing output files");
 
-            if (!Directory.Exists("output"))
-                Directory.CreateDirectory("output");
-
             foreach (var file in outputFiles)
-                File.WriteAllText($"output/{file.Key}", file.Value);
+                File.WriteAllText($"../../../../{file.Key.Replace(".bf", "")}/src/{file.Key}", file.Value);
         }
     }
 }

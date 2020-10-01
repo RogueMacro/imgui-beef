@@ -1,0 +1,10 @@
+FileVersion = 1
+
+[Project]
+Name = "imgui-beef"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/dist/x64/Debug/cimgui.lib"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/dist/x64/Release/cimgui.lib"]

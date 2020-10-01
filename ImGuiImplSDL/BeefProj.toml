@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*"}
+
+[Project]
+Name = "ImGuiImplSDL"
+TargetType = "BeefLib"
+DefaultNamespace = "ImGui"

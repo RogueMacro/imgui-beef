@@ -1,4 +1,0 @@
-C:\dev\Beef\imgui-beef\Generator\bin\Debug\netcoreapp3.1\Generator.exe
-C:\dev\Beef\imgui-beef\Generator\obj\Debug\netcoreapp3.1\Generator.csprojAssemblyReference.cache
-C:\dev\Beef\imgui-beef\Generator\obj\Debug\netcoreapp3.1\Generator.AssemblyInfoInputs.cache
-C:\dev\Beef\imgui-beef\Generator\obj\Debug\netcoreapp3.1\Generator.AssemblyInfo.cs

@@ -1,0 +1,38 @@
+using System;
+
+namespace ImGui
+{
+    public static class ImGuiImplSDL2
+    {
+        private typealias SDL_Window = SDL2.SDL.Window;
+        private typealias SDL_Event = SDL2.SDL.Window;
+    
+        [LinkName("ImGui_ImplSDL2_InitForD3D")]
+        private static extern bool InitForD3DImpl(SDL_Window* window);
+        public static bool InitForD3D(SDL_Window* window) => InitForD3DImpl(window);
+        
+        [LinkName("ImGui_ImplSDL2_InitForMetal")]
+        private static extern bool InitForMetalImpl(SDL_Window* window);
+        public static bool InitForMetal(SDL_Window* window) => InitForMetalImpl(window);
+        
+        [LinkName("ImGui_ImplSDL2_InitForOpenGL")]
+        private static extern bool InitForOpenGLImpl(SDL_Window* window, void* sdl_gl_context);
+        public static bool InitForOpenGL(SDL_Window* window, void* sdl_gl_context) => InitForOpenGLImpl(window, sdl_gl_context);
+        
+        [LinkName("ImGui_ImplSDL2_InitForVulkan")]
+        private static extern bool InitForVulkanImpl(SDL_Window* window);
+        public static bool InitForVulkan(SDL_Window* window) => InitForVulkanImpl(window);
+        
+        [LinkName("ImGui_ImplSDL2_NewFrame")]
+        private static extern void NewFrameImpl(SDL_Window* window);
+        public static void NewFrame(SDL_Window* window) => NewFrameImpl(window);
+        
+        [LinkName("ImGui_ImplSDL2_ProcessEvent")]
+        private static extern bool ProcessEventImpl(SDL_Event* event);
+        public static bool ProcessEvent(SDL_Event* event) => ProcessEventImpl(event);
+        
+        [LinkName("ImGui_ImplSDL2_Shutdown")]
+        private static extern void ShutdownImpl();
+        public static void Shutdown() => ShutdownImpl();
+    }
+}

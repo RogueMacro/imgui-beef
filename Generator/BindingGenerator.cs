@@ -23,9 +23,7 @@ namespace ImGuiBeefGenerator
             Bindings.AddRange(enums);
 
             List<ImGuiMethodDefinition> methods = ImGuiMethodDefinition.From(ReadBindingData("definitions.json"));
-		
 			Bindings.AddRange(ImGuiStruct.From(structs_and_enums["structs"], ref methods, false));
-			Bindings.AddRange(ImGuiStruct.From(ReadBindingData("extra_definitions.json"), ref methods));
 			Bindings.AddRange(methods);
             Bindings.AddRange(ImGuiImplStruct.From(ReadBindingData("impl_definitions.json")));
         }
@@ -156,14 +154,14 @@ namespace ImGui
 			files["ImGuiImplGlfw.bf"] = GenerateImplFile("ImGuiImplGlfw", Bindings);
 			files["ImGuiImplOpenGL2.bf"] = GenerateImplFile("ImGuiImplOpenGL2", Bindings);
 			files["ImGuiImplOpenGL3.bf"] = GenerateImplFile("ImGuiImplOpenGL3", Bindings);
-			files["ImGuiImplSDL2.bf"] = GenerateImplFile("ImGuiImplSDL2", Bindings);
+			files["ImGuiImplSDL.bf"] = GenerateImplFile("ImGuiImplSDL2", Bindings);
 
 			return files;
         }
 
         private dynamic ReadBindingData(string file)
         {
-            var stream = new FileStream($"BindingData/{file}", FileMode.Open);
+            var stream = new FileStream($"../../../../cimgui/generator/output/{file}", FileMode.Open);
             return JsonSerializer.Deserialize<dynamic>(stream);
         }
 

@@ -1,0 +1,9 @@
+FileVersion = 1
+Dependencies = {corlib = "*"}
+
+[Project]
+Name = "ImGuiImplOpenGL2"
+DefaultNamespace = "ImGui"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../ImGuiBeef/dist/x64/Debug/cimgui.lib"]

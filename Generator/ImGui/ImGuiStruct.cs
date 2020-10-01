@@ -28,6 +28,25 @@ namespace ImGuiBeefGenerator.ImGui
             var destructors = methods.Where(m => m is ImGuiDestructorDefinition).ToList().ConvertAll(m => m as ImGuiDestructorDefinition);
             var instanceMethods = methods.Where(m => m is ImGuiInstanceMethodDefinition).ToList().ConvertAll(m => m as ImGuiInstanceMethodDefinition);
 
+            var vectorProps = new List<dynamic>();
+
+            var prop1 = new Dictionary<string, object>();
+            prop1["name"] = "Size";
+            prop1["type"] = "int";
+            vectorProps.Add(prop1);
+
+            var prop2 = new Dictionary<string, object>();
+            prop2["name"] = "Capacity";
+            prop2["type"] = "int";
+            vectorProps.Add(prop2);
+
+            var prop3 = new Dictionary<string, object>();
+            prop3["name"] = "Data";
+            prop3["type"] = "T*";
+            vectorProps.Add(prop3);
+
+            structs["ImVector"] = vectorProps;
+
             foreach (var name in structs.Keys)
             {
                 var fixedName = ImGui.RemovePrefix(name);

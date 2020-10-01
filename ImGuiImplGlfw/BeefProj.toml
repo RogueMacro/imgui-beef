@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*", glfw-beef = "*"}
+
+[Project]
+Name = "ImGuiImplGlfw"
+TargetType = "BeefLib"
+DefaultNamespace = "ImGui"
