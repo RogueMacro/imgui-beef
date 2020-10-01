@@ -161,7 +161,7 @@ namespace ImGui
 
         private dynamic ReadBindingData(string file)
         {
-            var stream = new FileStream($"../../../../cimgui/generator/output/{file}", FileMode.Open);
+            var stream = new FileStream($"../cimgui/generator/output/{file}", FileMode.Open);
             return JsonSerializer.Deserialize<dynamic>(stream);
         }
 
