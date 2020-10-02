@@ -28,4 +28,6 @@ jobs:
           git config user.email github-actions@github.com
           git commit -a -m "Generation"
           git push
+      - name: Prepare cimgui
+        run: ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content -Path .\cimgui\CMakeLists.txt
         
