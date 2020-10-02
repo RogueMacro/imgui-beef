@@ -23,8 +23,8 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Commit
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
           git commit -a -m "Generation"
       - name: Push
         uses: ad-m/github-push-action@master
