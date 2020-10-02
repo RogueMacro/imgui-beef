@@ -11,7 +11,7 @@ jobs:
   generate:
     env:
       working-directory: D:/a/imgui-beef/imgui-beef/Generator/
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: true
 
     runs-on: windows-2019
 
