@@ -20,7 +20,7 @@ jobs:
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Generate
-        run: dotnet run
+        run: dotnet run --nologo
         working-directory: ${{env.working-directory}}
       - name: Commit and push
         run: |
