@@ -11,6 +11,7 @@ jobs:
   generate:
     env:
       working-directory: D:/a/imgui-beef/imgui-beef/Generator/
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
     runs-on: windows-2019
 
