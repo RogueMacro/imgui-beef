@@ -11,7 +11,7 @@ jobs:
   generate:
     env:
       working-directory: D:/a/imgui-beef/imgui-beef/Generator/
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
     runs-on: windows-2019
 
@@ -19,10 +19,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Clone submodules
         run: git submodule update --init --recursive
-      - name: Setup environment
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: '3.1.x'
       - name: Generate
         run: dotnet run
         working-directory: ${{env.working-directory}}
