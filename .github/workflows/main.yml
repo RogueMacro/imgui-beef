@@ -17,16 +17,14 @@ jobs:
         run: git submodule update --init
       - uses: actions/setup-dotnet@v1.7.2
         with:
-          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+          dotnet-version: '3.1.x'
       - name: Generate
         run: dotnet run
         working-directory: ${{env.working-directory}}
-      - name: Login
+      - name: Commit and push generation
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-      - name: Commit and push generation
-        run: |
           git commit -a -m "Generation"
           git push
         
