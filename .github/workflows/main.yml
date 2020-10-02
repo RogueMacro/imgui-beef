@@ -3,6 +3,9 @@ name: Generation
 on:
   schedule:
     - cron: '0 6 * * *'
+  push:
+    branches: 
+      - main
 
 jobs:
   generate:
