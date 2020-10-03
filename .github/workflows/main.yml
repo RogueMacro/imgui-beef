@@ -33,14 +33,17 @@ jobs:
       - name: Get cimgui dependencies
         run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
       - name: Prepare cimgui
-        run: | # cimgui SHARED
+        run: |
           ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "cimgui SHARED","cimgui STATIC") | Set-Content .\cimgui\CMakeLists.txt
           ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content -Path .\cimgui\CMakeLists.txt
           ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#include `"cimgui.h`"`n#include <imgui/examples/imgui_impl_opengl3.h>`n#include <imgui/examples/imgui_impl_opengl2.h>`n#include <imgui/examples/imgui_impl_glfw.h>") | Set-Content .\cimgui\cimgui.cpp
       - name: Show CMakeLists.txt
         run: Get-Content -path .\cimgui\CMakeLists.txt -Raw
       - name: Build cimgui
-        run: cmake --build .\cimgui\ --target ALL_BUILD --config Release -- /nologo /maxcpucount
+        run: |
+          cd .\cimgui\
+          cmake .
+          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
         run: Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\x64\"
       - name: Commit and push
