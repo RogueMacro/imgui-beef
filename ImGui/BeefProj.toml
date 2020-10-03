@@ -1,7 +1,7 @@
 FileVersion = 1
 
 [Project]
-Name = "imgui-beef"
+Name = "ImGui"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/dist/x64/Debug/cimgui.lib"]
