@@ -32,7 +32,7 @@ jobs:
           ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content -Path .\cimgui\CMakeLists.txt
           ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#include `"cimgui.h`"`n#include <imgui/examples/imgui_impl_opengl3.h>`n#include <imgui/examples/imgui_impl_opengl2.h>`n#include <imgui/examples/imgui_impl_glfw.h>") | Set-Content .\cimgui\cimgui.cpp
       - name: Build cimgui
-        run: cmake --build -S .\cimgui\ -B .\cimgui\ --target ALL_BUILD --config Release -- /nologo /maxcpucount
+        run: cmake --build .\cimgui\ --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
         run: Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\x64\"
       - name: Commit and push
