@@ -18,13 +18,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Clone submodules
-        run: git submodule update --init --recursive
-      - name: Generate
-        run: dotnet run
-        working-directory: ${{env.working-directory}}
-      - name: Add generated files
-        run: git add .
+      #- name: Clone submodules
+      #  run: git submodule update --init --recursive
+      #- name: Generate
+      #  run: dotnet run
+      # working-directory: ${{env.working-directory}}
+      #- name: Add generated files
+      #  run: git add .
       - name: Get cimgui dependencies
         run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
       - name: Prepare cimgui
