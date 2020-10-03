@@ -1,10 +1,10 @@
 // -- GENERATION INFORMATION --
-// Constructors: 1
-// Destructors: 1
+// Constructors: 0
+// Destructors: 0
 // Enums: 61
 // Global methods: 659
-// Instance methods: 21
-// Structs: 68
+// Instance methods: 0
+// Structs: 70
 // Typedefs: 19
 
 using System;
@@ -4128,96 +4128,101 @@ namespace ImGui
             
         }
         
-        [LinkName("ImChunkStream_alloc_chunk")]
-        private extern T* AllocChunkImpl(ChunkStream<T>* self, size sz);
-        public T* AllocChunk(size sz) mut=> AllocChunkImpl(&this, sz);
-        
-        [LinkName("ImChunkStream_begin")]
-        private extern T* BeginImpl(ChunkStream<T>* self);
-        public T* Begin() mut=> BeginImpl(&this);
-        
-        [LinkName("ImChunkStream_chunk_size")]
-        private extern int32 ChunkSizeImpl(ChunkStream<T>* self, T* p);
-        public int32 ChunkSize(T* p) mut=> ChunkSizeImpl(&this, p);
-        
-        [LinkName("ImChunkStream_clear")]
-        private extern void ClearImpl(ChunkStream<T>* self);
-        public void Clear() mut=> ClearImpl(&this);
-        
-        [LinkName("ImChunkStream_empty")]
-        private extern bool EmptyImpl(ChunkStream<T>* self);
-        public bool Empty() mut=> EmptyImpl(&this);
-        
-        [LinkName("ImChunkStream_end")]
-        private extern T* EndImpl(ChunkStream<T>* self);
-        public T* End() mut=> EndImpl(&this);
-        
-        [LinkName("ImChunkStream_next_chunk")]
-        private extern T* NextChunkImpl(ChunkStream<T>* self, T* p);
-        public T* NextChunk(T* p) mut=> NextChunkImpl(&this, p);
-        
-        [LinkName("ImChunkStream_offset_from_ptr")]
-        private extern int32 OffsetFromPtrImpl(ChunkStream<T>* self, T* p);
-        public int32 OffsetFromPtr(T* p) mut=> OffsetFromPtrImpl(&this, p);
-        
-        [LinkName("ImChunkStream_ptr_from_offset")]
-        private extern T* PtrFromOffsetImpl(ChunkStream<T>* self, int32 off);
-        public T* PtrFromOffset(int32 off) mut=> PtrFromOffsetImpl(&this, off);
-        
-        [LinkName("ImChunkStream_size")]
-        private extern int32 SizeImpl(ChunkStream<T>* self);
-        public int32 Size() mut=> SizeImpl(&this);
-        
-        [LinkName("ImPool_Add")]
-        private extern T* AddImpl(Pool<T>* self);
-        public T* Add() mut=> AddImpl(&this);
-        
-        [LinkName("ImPool_Clear")]
-        private extern void ClearImpl(Pool<T>* self);
-        public void Clear() mut=> ClearImpl(&this);
-        
-        [LinkName("ImPool_Contains")]
-        private extern bool ContainsImpl(Pool<T>* self, T* p);
-        public bool Contains(T* p) mut=> ContainsImpl(&this, p);
-        
-        [LinkName("ImPool_GetByIndex")]
-        private extern T* GetByIndexImpl(Pool<T>* self, PoolIdx n);
-        public T* GetByIndex(PoolIdx n) mut=> GetByIndexImpl(&this, n);
-        
-        [LinkName("ImPool_GetByKey")]
-        private extern T* GetByKeyImpl(Pool<T>* self, ID key);
-        public T* GetByKey(ID key) mut=> GetByKeyImpl(&this, key);
-        
-        [LinkName("ImPool_GetIndex")]
-        private extern PoolIdx GetIndexImpl(Pool<T>* self, T* p);
-        public PoolIdx GetIndex(T* p) mut=> GetIndexImpl(&this, p);
-        
-        [LinkName("ImPool_GetOrAddByKey")]
-        private extern T* GetOrAddByKeyImpl(Pool<T>* self, ID key);
-        public T* GetOrAddByKey(ID key) mut=> GetOrAddByKeyImpl(&this, key);
-        
-        [LinkName("ImPool_GetSize")]
-        private extern int32 GetSizeImpl(Pool<T>* self);
-        public int32 GetSize() mut=> GetSizeImpl(&this);
-        
-        [LinkName("ImPool_ImPool")]
-        private static extern Pool<T>* CtorImpl();
-        public this()
+        [CRepr]
+        public struct ChunkStream<T>
         {
-            this = *CtorImpl();
+        
+            [LinkName("ImChunkStream_alloc_chunk")]
+            private extern T* AllocChunkImpl(ChunkStream<T>* self, size sz);
+            public T* AllocChunk(size sz) mut=> AllocChunkImpl(&this, sz);
+            
+            [LinkName("ImChunkStream_begin")]
+            private extern T* BeginImpl(ChunkStream<T>* self);
+            public T* Begin() mut=> BeginImpl(&this);
+            
+            [LinkName("ImChunkStream_chunk_size")]
+            private extern int32 ChunkSizeImpl(ChunkStream<T>* self, T* p);
+            public int32 ChunkSize(T* p) mut=> ChunkSizeImpl(&this, p);
+            
+            [LinkName("ImChunkStream_clear")]
+            private extern void ClearImpl(ChunkStream<T>* self);
+            public void Clear() mut=> ClearImpl(&this);
+            
+            [LinkName("ImChunkStream_empty")]
+            private extern bool EmptyImpl(ChunkStream<T>* self);
+            public bool Empty() mut=> EmptyImpl(&this);
+            
+            [LinkName("ImChunkStream_end")]
+            private extern T* EndImpl(ChunkStream<T>* self);
+            public T* End() mut=> EndImpl(&this);
+            
+            [LinkName("ImChunkStream_next_chunk")]
+            private extern T* NextChunkImpl(ChunkStream<T>* self, T* p);
+            public T* NextChunk(T* p) mut=> NextChunkImpl(&this, p);
+            
+            [LinkName("ImChunkStream_offset_from_ptr")]
+            private extern int32 OffsetFromPtrImpl(ChunkStream<T>* self, T* p);
+            public int32 OffsetFromPtr(T* p) mut=> OffsetFromPtrImpl(&this, p);
+            
+            [LinkName("ImChunkStream_ptr_from_offset")]
+            private extern T* PtrFromOffsetImpl(ChunkStream<T>* self, int32 off);
+            public T* PtrFromOffset(int32 off) mut=> PtrFromOffsetImpl(&this, off);
+            
+            [LinkName("ImChunkStream_size")]
+            private extern int32 SizeImpl(ChunkStream<T>* self);
+            public int32 Size() mut=> SizeImpl(&this);
+            
         }
         
-        [LinkName("ImPool_RemoveTPtr")]
-        private extern void RemoveImpl(Pool<T>* self, ID key, T* p);
-        public void Remove(ID key, T* p) mut=> RemoveImpl(&this, key, p);
+        [CRepr]
+        public struct Pool<T>
+        {
         
-        [LinkName("ImPool_RemovePoolIdx")]
-        private extern void RemoveImpl(Pool<T>* self, ID key, PoolIdx idx);
-        public void Remove(ID key, PoolIdx idx) mut=> RemoveImpl(&this, key, idx);
-        
-        [LinkName("ImPool_Reserve")]
-        private extern void ReserveImpl(Pool<T>* self, int32 capacity);
-        public void Reserve(int32 capacity) mut=> ReserveImpl(&this, capacity);
+            [LinkName("ImPool_Add")]
+            private extern T* AddImpl(Pool<T>* self);
+            public T* Add() mut=> AddImpl(&this);
+            
+            [LinkName("ImPool_Clear")]
+            private extern void ClearImpl(Pool<T>* self);
+            public void Clear() mut=> ClearImpl(&this);
+            
+            [LinkName("ImPool_Contains")]
+            private extern bool ContainsImpl(Pool<T>* self, T* p);
+            public bool Contains(T* p) mut=> ContainsImpl(&this, p);
+            
+            [LinkName("ImPool_GetByIndex")]
+            private extern T* GetByIndexImpl(Pool<T>* self, PoolIdx n);
+            public T* GetByIndex(PoolIdx n) mut=> GetByIndexImpl(&this, n);
+            
+            [LinkName("ImPool_GetByKey")]
+            private extern T* GetByKeyImpl(Pool<T>* self, ID key);
+            public T* GetByKey(ID key) mut=> GetByKeyImpl(&this, key);
+            
+            [LinkName("ImPool_GetIndex")]
+            private extern PoolIdx GetIndexImpl(Pool<T>* self, T* p);
+            public PoolIdx GetIndex(T* p) mut=> GetIndexImpl(&this, p);
+            
+            [LinkName("ImPool_GetOrAddByKey")]
+            private extern T* GetOrAddByKeyImpl(Pool<T>* self, ID key);
+            public T* GetOrAddByKey(ID key) mut=> GetOrAddByKeyImpl(&this, key);
+            
+            [LinkName("ImPool_GetSize")]
+            private extern int32 GetSizeImpl(Pool<T>* self);
+            public int32 GetSize() mut=> GetSizeImpl(&this);
+            
+            [LinkName("ImPool_RemoveTPtr")]
+            private extern void RemoveImpl(Pool<T>* self, ID key, T* p);
+            public void Remove(ID key, T* p) mut=> RemoveImpl(&this, key, p);
+            
+            [LinkName("ImPool_RemovePoolIdx")]
+            private extern void RemoveImpl(Pool<T>* self, ID key, PoolIdx idx);
+            public void Remove(ID key, PoolIdx idx) mut=> RemoveImpl(&this, key, idx);
+            
+            [LinkName("ImPool_Reserve")]
+            private extern void ReserveImpl(Pool<T>* self, int32 capacity);
+            public void Reserve(int32 capacity) mut=> ReserveImpl(&this, capacity);
+            
+        }
         
         [LinkName("igAcceptDragDropPayload")]
         private static extern Payload* AcceptDragDropPayloadImpl(char* type, DragDropFlags flags);
