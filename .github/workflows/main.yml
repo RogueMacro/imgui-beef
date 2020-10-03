@@ -40,9 +40,12 @@ jobs:
         run: |
           cd .\cimgui\
           cmake .
+          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
-        run: Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\x64\"
+        run: |
+          Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
+          Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
         run: |
           git add ImGui/dist/\*
