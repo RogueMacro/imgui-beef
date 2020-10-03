@@ -20,7 +20,7 @@ namespace ImGuiBeefGenerator.ImGui
             IsGeneric = isGeneric;
         }
 
-        public static List<ImGuiStruct> From(Dictionary<string, object> structs, ref List<ImGuiMethodDefinition> methods, bool autoCreateStructs = true)
+        public static List<ImGuiStruct> From(Dictionary<string, object> structs, ref List<ImGuiMethodDefinition> methods)
         {
             var structList = new List<ImGuiStruct>();
 
@@ -112,46 +112,43 @@ namespace ImGuiBeefGenerator.ImGui
                 structList.Add(new ImGuiStruct(name, properties, structMethods, unions, isGeneric));
             }
 
-            if (autoCreateStructs)
+            // Leftover methods without a valid parent
+            foreach (var method in instanceMethods)
             {
-                // Leftover methods without a valid parent
-                foreach (var method in instanceMethods)
+                ImGuiStruct parent = null;
+                if (!structList.Any(s => s.Name == ImGui.RemovePrefix(method.ParentType)))
                 {
-                    ImGuiStruct parent = null;
-                    if (!structList.Any(s => s.Name == ImGui.RemovePrefix(method.ParentType)))
-                    {
-                        parent = new ImGuiStruct(method.ParentType, new List<ImGuiStructProperty>(), new List<ImGuiStructMethodDefinition>(), new List<ImGuiStructUnion>(), method.IsGeneric);
-                        structList.Add(parent);
-                    }
-                    else
-                    {
-                        parent = structList.Single(s => s.Name == ImGui.RemovePrefix(method.ParentType));
-                    }
-
-                    parent.Methods.Add(method);
-
-                    var originalArgs = method.Args.Where(a => a.Type.Replace("*", "") == parent.Name);
-                    var newArgs = new Dictionary<int, ImGuiMethodParameter>();
-
-                    foreach (var originalArg in originalArgs)
-                    {
-                        var originalArgType = originalArg.Type.Replace("*", "");
-                        var newArg = new ImGuiMethodParameter(originalArg.Name, originalArg.Type.Replace(originalArgType, $"{originalArgType}<T>"));
-                        var index = method.Args.IndexOf(originalArg);
-                        newArgs[index] = newArg;
-                    }
-
-                    foreach (var newArg in newArgs)
-                    {
-                        method.Args.RemoveAt(newArg.Key);
-                        method.Args.Insert(newArg.Key, newArg.Value);
-                    }
+                    parent = new ImGuiStruct(method.ParentType, new List<ImGuiStructProperty>(), new List<ImGuiStructMethodDefinition>(), new List<ImGuiStructUnion>(), method.IsGeneric);
+                    structList.Add(parent);
+                }
+                else
+                {
+                    parent = structList.Single(s => s.Name == ImGui.RemovePrefix(method.ParentType));
                 }
 
-                methods.RemoveAll(m => m is ImGuiConstructorDefinition);
-                methods.RemoveAll(m => m is ImGuiDestructorDefinition);
-                methods.RemoveAll(m => m is ImGuiInstanceMethodDefinition);
+                parent.Methods.Add(method);
+
+                var originalArgs = method.Args.Where(a => a.Type.Replace("*", "") == parent.Name);
+                var newArgs = new Dictionary<int, ImGuiMethodParameter>();
+
+                foreach (var originalArg in originalArgs)
+                {
+                    var originalArgType = originalArg.Type.Replace("*", "");
+                    var newArg = new ImGuiMethodParameter(originalArg.Name, originalArg.Type.Replace(originalArgType, $"{originalArgType}<T>"));
+                    var index = method.Args.IndexOf(originalArg);
+                    newArgs[index] = newArg;
+                }
+
+                foreach (var newArg in newArgs)
+                {
+                    method.Args.RemoveAt(newArg.Key);
+                    method.Args.Insert(newArg.Key, newArg.Value);
+                }
             }
+
+            methods.RemoveAll(m => m is ImGuiConstructorDefinition);
+            methods.RemoveAll(m => m is ImGuiDestructorDefinition);
+            methods.RemoveAll(m => m is ImGuiInstanceMethodDefinition);
 
             return structList;
         }

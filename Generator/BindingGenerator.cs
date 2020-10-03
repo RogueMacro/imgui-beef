@@ -23,7 +23,7 @@ namespace ImGuiBeefGenerator
             Bindings.AddRange(enums);
 
             List<ImGuiMethodDefinition> methods = ImGuiMethodDefinition.From(ReadBindingData("definitions.json"));
-			Bindings.AddRange(ImGuiStruct.From(structs_and_enums["structs"], ref methods, false));
+			Bindings.AddRange(ImGuiStruct.From(structs_and_enums["structs"], ref methods));
 			Bindings.AddRange(methods);
             Bindings.AddRange(ImGuiImplStruct.From(ReadBindingData("impl_definitions.json")));
         }
