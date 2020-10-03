@@ -3,5 +3,28 @@ Dependencies = {corlib = "*", glfw-beef = "*"}
 
 [Project]
 Name = "ImGuiImplGlfw"
-TargetType = "BeefLib"
 DefaultNamespace = "ImGui"
+
+[Configs.Debug.Win32]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Release.Win32]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Paranoid.Win32]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Paranoid.Win64]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Test.Win32]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
+
+[Configs.Test.Win64]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
