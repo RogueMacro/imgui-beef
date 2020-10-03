@@ -12,6 +12,7 @@ jobs:
     env:
       working-directory: D:/a/imgui-beef/imgui-beef/Generator/
       DOTNET_NOLOGO: true
+      VERBOSE: true
 
     runs-on: windows-2019
 
@@ -25,7 +26,7 @@ jobs:
       - name: Add generated files
         run: git add .
       - name: Get cimgui dependencies
-        run: Copy-item -Force -Recurse ".\cimgui-deps\*" -Destination ".\cimgui\"
+        run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
       - name: Prepare cimgui
         run: |
           ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content -Path .\cimgui\CMakeLists.txt
@@ -33,7 +34,7 @@ jobs:
       - name: Build cimgui
         run: |
           cmake --build .\cimgui\ --target ALL_BUILD --config Release -- /nologo /verbosity:minimal /maxcpucount
-          Copy-item -Force ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\x64\"
+          Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\x64\"
       - name: Commit and push
         run: |
           git add ImGui/dist/\*
