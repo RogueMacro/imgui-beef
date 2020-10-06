@@ -33,8 +33,9 @@ jobs:
         run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
       - name: Prepare cimgui
         run: |
-          ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "cimgui SHARED","cimgui STATIC") | Set-Content .\cimgui\CMakeLists.txt
-          ((Get-Content -path .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets.cpp`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content -Path .\cimgui\CMakeLists.txt
+          ((Get-Content .\cimgui\CMakeLists.txt -Raw) -replace "cimgui SHARED","cimgui STATIC") | Set-Content .\cimgui\CMakeLists.txt
+          ((Get-Content .\cimgui\CMakeLists.txt -Raw) -replace "endif \(IMGUI_STATIC\)","endif (IMGUI_STATIC)`n`nif(MSVC)`n    set(CMAKE_EXE_LINKER_FLAGS `"`${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB`")`nendif()") | Set-Content .\cimgui\CMakeLists.txt
+          ((Get-Content .\cimgui\CMakeLists.txt -Raw) -replace "imgui/imgui_widgets.cpp","imgui/imgui_widgets.cpp`n    imgui/examples/imgui_impl_glfw.h`n    imgui/examples/imgui_impl_glfw.cpp`n    imgui/examples/imgui_impl_opengl3.h`n    imgui/examples/imgui_impl_opengl3.cpp`n    glad/glad.h`n    glad/glad.c`n    KHR/khrplatform.h") | Set-Content .\cimgui\CMakeLists.txt
           ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#define CIMGUI_NO_EXPORT`n#include `"cimgui.h`"`n#include <imgui/examples/imgui_impl_opengl3.h>`n#include <imgui/examples/imgui_impl_opengl2.h>`n#include <imgui/examples/imgui_impl_glfw.h>") | Set-Content .\cimgui\cimgui.cpp
       - name: Build cimgui
         run: |
