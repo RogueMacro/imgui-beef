@@ -8,4 +8,10 @@ Note: SDL binaries are not automatically generated yet. Feel free to send me a m
 
 Generation happens at 06:00 UTC every day
 
-The generator uses the docking_inter branch of https://github.com/cimgui/cimgui. I have not made any other branches, so docking and viewports can be enabled on demand. It it however, not by default.
+The generator uses the docking_inter branch of https://github.com/cimgui/cimgui. I have not made any other branches, so docking and viewports can be enabled on demand. It is however, not by default.
+
+## Usage
+
+Add the ImGui project along with the implementation you use, i.e. ImGuiImplGlfw if you're using GLFW.
+
+**Make sure to change the *C Library* property of *your* project to dynamic or else it won't work**
