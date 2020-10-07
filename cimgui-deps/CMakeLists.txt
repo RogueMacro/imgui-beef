@@ -9,9 +9,6 @@ foreach(flag_var
   endif()
 endforeach()
 
-set_property(TARGET cimgui PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
 project(cimgui)
 
 #general settings
@@ -48,9 +45,7 @@ else (IMGUI_STATIC)
     add_library(cimgui STATIC ${IMGUI_SOURCES})
 endif (IMGUI_STATIC)
 
-if(MSVC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB")
-endif()
+set_property(TARGET cimgui PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 target_compile_definitions(cimgui PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
 if (WIN32)
