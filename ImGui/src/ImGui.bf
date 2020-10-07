@@ -94,6 +94,25 @@ namespace ImGui
 		    Rect[(.) Dir.COUNT] DropRectsDraw;
 		}
 
+		public static void FullscreenDockspace()
+		{
+			var viewport = ImGui.GetMainViewport();
+			ImGui.SetNextWindowPos(viewport.Pos);
+			ImGui.SetNextWindowSize(viewport.Size);
+			ImGui.SetNextWindowViewport(viewport.ID);
+
+			ImGui.PushStyleVar(.WindowPadding, .(0, 0));
+			ImGui.PushStyleVar(.WindowRounding, 0.0f);
+			ImGui.PushStyleVar(.WindowBorderSize, 0.0f);
+			ImGui.WindowFlags windowFlags = .MenuBar | .NoDocking | .NoTitleBar | .NoResize | .NoMove | .NoBringToFrontOnFocus | .NoNavFocus;
+			ImGui.Begin("MainDockspaceWindow", null, windowFlags);
+			ImGui.PopStyleVar(3);
+
+			ImGui.ID dockspaceId = ImGui.GetID("MainDockspace");
+			ImGui.DockSpace(dockspaceId);
+			ImGui.End();
+		}
+
         // -- Auto-Generated --
 
         public typealias DrawCallback = function void(DrawList* parent_list, DrawCmd* cmd);
