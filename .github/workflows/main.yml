@@ -13,7 +13,6 @@ jobs:
       generator-project-directory: D:/a/imgui-beef/imgui-beef/Generator/
       DOTNET_NOLOGO: true
       VERBOSE: true
-      CMAKE_MSVC_RUNTIME_LIBRARY: static
 
     runs-on: windows-2019
 
@@ -40,8 +39,8 @@ jobs:
         run: |
           cd .\cimgui\
           cmake .
-          cmake --build . --target ALL_BUILD --config Debug -DMSVC_RUNTIME=static -- /nologo /maxcpucount
-          cmake --build . --target ALL_BUILD --config Release -DMSVC_RUNTIME=static -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
         run: |
           Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
