@@ -9,7 +9,7 @@ foreach(flag_var
   endif()
 endforeach()
 
-set_property(TARGET foo PROPERTY
+set_property(TARGET cimgui PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 project(cimgui)
