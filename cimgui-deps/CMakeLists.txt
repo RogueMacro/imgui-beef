@@ -5,6 +5,7 @@ foreach(flag_var
     CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
   if(${flag_var} MATCHES "/MD")
     string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+    string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
   endif()
 endforeach()
 
