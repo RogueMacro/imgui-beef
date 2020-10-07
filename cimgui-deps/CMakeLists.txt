@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
 
-foreach(flag_var
-    CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-    CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-  if(${flag_var} MATCHES "/MD")
-    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-    string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
-  endif()
-endforeach()
-
 project(cimgui)
 
 #general settings
@@ -44,8 +35,6 @@ if (IMGUI_STATIC)
 else (IMGUI_STATIC)
     add_library(cimgui STATIC ${IMGUI_SOURCES})
 endif (IMGUI_STATIC)
-
-set_property(TARGET cimgui PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 target_compile_definitions(cimgui PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
 if (WIN32)
