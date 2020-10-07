@@ -13,6 +13,7 @@ jobs:
       generator-project-directory: D:/a/imgui-beef/imgui-beef/Generator/
       DOTNET_NOLOGO: true
       VERBOSE: true
+      CMAKE_MSVC_RUNTIME_LIBRARY: static
 
     runs-on: windows-2019
 
