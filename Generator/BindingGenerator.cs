@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using Utf8Json;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ImGuiBeefGenerator
 {
@@ -50,26 +51,29 @@ $@"// -- GENERATION INFORMATION --
 ";
             }
 
-            imguiFile +=
-@"using System;
+			string secondLine = File.ReadLines("../cimgui/cimgui.h").ElementAt(1);
+			Regex pattern = new Regex(@"\d+(\.\d+)+");
+			Match match = pattern.Match(secondLine);
+			string version = match.Value;
+
+			imguiFile +=
+$@"using System;
 
 namespace ImGui
-{
+{{
     public static class ImGui
-    {
-        // Default (hardcoded) typealiases and structs defined in generator
-
-		public static char8* VERSION = ""1.78"";
-		public static int VERSION_NUM = 17800;
+    {{
+		public static char8* VERSION = ""{version}"";
+		public static int VERSION_NUM = {version.Replace(".", "")}00;
 		public static bool CHECKVERSION()
-		{
+		{{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
 			Runtime.Assert(result);
 			return result;
-		}
+		}}
 
-		public static mixin ASSERT(bool condition) { Runtime.Assert(condition); }
-		public static mixin ASSERT(bool condition, String errorMsg) { Runtime.Assert(condition, errorMsg); }
+		public static mixin ASSERT(bool condition) {{ Runtime.Assert(condition); }}
+		public static mixin ASSERT(bool condition, String errorMsg) {{ Runtime.Assert(condition, errorMsg); }}
 
 		public static DrawCallback* DrawCallback_ResetRenderState = (.)(void*)-1;
 
@@ -82,22 +86,22 @@ namespace ImGui
 
         [CRepr]
         public struct FILE
-        {
+        {{
             void* _Placeholder;
-        }
+        }}
 
         [CRepr]
 		public enum DockRequestType
-		{
+		{{
 		    None,
 		    Dock,
 		    Undock,
 		    Split
-		}
+		}}
 
 		[CRepr]
 		public struct DockRequest
-		{
+		{{
 		    DockRequestType Type;
 		    Window* DockTargetWindow;
 		    DockNode* DockTargetNode;
@@ -107,11 +111,11 @@ namespace ImGui
 		    bool DockSplitOuter;
 		    Window* UndockTargetWindow;
 		    DockNode* UndockTargetNode;
-		}
+		}}
 
 		[CRepr]
 		public struct DockNodeSettings
-		{
+		{{
 		    ID             ID;
 		    ID             ParentNodeId;
 		    ID             ParentWindowId;
@@ -122,11 +126,11 @@ namespace ImGui
 		    Vec2ih            Pos;
 		    Vec2ih            Size;
 		    Vec2ih            SizeRef;
-		}
+		}}
 
 		[CRepr]
 		public struct DockPreviewData
-		{
+		{{
 		    DockNode FutureNode;
 		    bool IsDropAllowed;
 		    bool IsCenterAvailable;
@@ -136,10 +140,10 @@ namespace ImGui
 		    Dir SplitDir;
 		    float SplitRatio;
 		    Rect[(.) Dir.COUNT] DropRectsDraw;
-		}
+		}}
 
 		public static void FullscreenDockspace()
-		{
+		{{
 			var viewport = ImGui.GetMainViewport();
 			ImGui.SetNextWindowPos(viewport.Pos);
 			ImGui.SetNextWindowSize(viewport.Size);
@@ -155,7 +159,7 @@ namespace ImGui
 			ImGui.ID dockspaceId = ImGui.GetID(""MainDockspace"");
 			ImGui.DockSpace(dockspaceId);
 			ImGui.End();
-		}
+		}}
 
         // -- Auto-Generated --
 
