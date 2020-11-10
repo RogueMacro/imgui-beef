@@ -13,10 +13,8 @@ namespace ImGui
 {
     public static class ImGui
     {
-        // Default (hardcoded) typealiases and structs defined in generator
-
-		public static char8* VERSION = "1.78";
-		public static int VERSION_NUM = 17800;
+		public static char8* VERSION = "1.79";
+		public static int VERSION_NUM = 17900;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
