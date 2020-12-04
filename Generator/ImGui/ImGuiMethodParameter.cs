@@ -35,7 +35,7 @@ namespace ImGuiBeefGenerator.ImGui
                 else if (defaultValue != "")
                 {
                     if (defaultValue.EndsWith(")"))
-                        DefaultValue = "default";
+                        DefaultValue = $".{defaultValue.Substring(defaultValue.IndexOf("("))}";
                     else
                         DefaultValue = ImGui.RemovePrefix(defaultValue);
 
