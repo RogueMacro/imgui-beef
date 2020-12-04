@@ -2,7 +2,7 @@
 
 ![Generation](https://github.com/RogueMacro/imgui-beef/workflows/Generation/badge.svg)
 
-Note: SDL binaries are not automatically generated yet. Feel free to send me a message on discord (RogueMacro#8595) if you want it to be added soon. It is not my top priority at the moment.
+Note: SDL binaries are not automatically generated yet, but it is coming soon.
 
 ## Generation
 
@@ -14,4 +14,4 @@ The generator uses the docking_inter branch of https://github.com/cimgui/cimgui.
 
 Add the ImGui project along with the implementation you use, i.e. ImGuiImplGlfw if you're using GLFW.
 
-**Make sure to change the *C Library* property of *your* project to dynamic or else it won't work**
+**Make sure to change the *C Library* in your project's properties to dynamic or else it won't work**
