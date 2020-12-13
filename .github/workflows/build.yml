@@ -63,7 +63,7 @@ jobs:
           git submodule update --init --recursive
       - name: Generate
         run: |
-          cd .\Generator\
+          cd ./Generator/
           dotnet run
       - name: Add generated files
         run: git add .
@@ -73,7 +73,7 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
-          cd .\cimgui\
+          cd ./cimgui/
           cmake .
           cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
@@ -100,7 +100,7 @@ jobs:
           git submodule update --init --recursive
       - name: Generate
         run: |
-          cd .\Generator\
+          cd ./Generator/
           dotnet run
       - name: Add generated files
         run: git add .
@@ -110,7 +110,7 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
-          cd .\cimgui\
+          cd ./cimgui/
           cmake .
           cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
