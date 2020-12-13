@@ -92,7 +92,7 @@ jobs:
 
 
   macOS:
-    runs-on: osx-latest
+    runs-on: macOS-latest
     steps:   
       - uses: actions/checkout@v2
       - name: Clone submodules
