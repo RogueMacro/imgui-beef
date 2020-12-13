@@ -116,8 +116,8 @@ jobs:
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
         run: |
-          cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-Linux64/"
-          cp "./cimgui/Release/cimgui.a" "./ImGui/dist/Release-Linux64/"
+          cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-MacOSx64/"
+          cp "./cimgui/Release/cimgui.a" "./ImGui/dist/Release-MacOSx64/"
       - name: Commit and push
         run: |
           git checkout -b build
