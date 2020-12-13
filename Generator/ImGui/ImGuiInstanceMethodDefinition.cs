@@ -88,6 +88,10 @@ public {(isStatic ? "static " : "")}{ReturnType} {Name}({newArgs}) {(isStatic ? 
                     serialized += $"    {Name}Impl({Args.ToCallArgs()});\n    return pOut;\n";
                 else if (ReturnType != "void")
                     serialized += $"    return {Name}Impl({Args.ToCallArgs()});\n";
+                else
+                {
+                    serialized += $"\t{Name}Impl({Args.ToCallArgs()});\n";
+                }
 
                 serialized += "}\n";
             }
