@@ -11,7 +11,25 @@ using System;
 
 namespace ImGui
 {
-    public static class ImGui
+    public extension ImGui
+    {
+        public extension Vec2
+        {
+            public readonly static Vec2 Zero = .(0, 0);
+            public readonly static Vec2 Ones = .(1, 1);
+            public readonly static Vec2 OneZero = .(1, 0);
+            public readonly static Vec2 ZeroOne = .(0, 1);
+            public readonly static Vec2 NOneZero = .(-1, 0);
+        }
+
+        public extension Vec4
+        {
+            public readonly static Vec4 Zero = .(0, 0, 0, 0);
+            public readonly static Vec4 Ones = .(1, 1, 1, 1);
+        }
+    }
+
+	public static class ImGui
     {
 		public static char8* VERSION = "1.79";
 		public static int VERSION_NUM = 17900;
@@ -1269,11 +1287,11 @@ namespace ImGui
             
             [LinkName("ImDrawList_AddImage")]
             private static extern void AddImageImpl(DrawList* self, TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col);
-            public void AddImage(TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min = .(0,0), Vec2 uv_max = .(1,1), U32 col = (U32) 4294967295) mut=> AddImageImpl(&this, user_texture_id, p_min, p_max, uv_min, uv_max, col);
+            public void AddImage(TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min = Vec2.Zero, Vec2 uv_max = Vec2.Ones, U32 col = (U32) 4294967295) mut=> AddImageImpl(&this, user_texture_id, p_min, p_max, uv_min, uv_max, col);
             
             [LinkName("ImDrawList_AddImageQuad")]
             private static extern void AddImageQuadImpl(DrawList* self, TextureID user_texture_id, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 uv1, Vec2 uv2, Vec2 uv3, Vec2 uv4, U32 col);
-            public void AddImageQuad(TextureID user_texture_id, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 uv1 = .(0,0), Vec2 uv2 = .(1,0), Vec2 uv3 = .(1,1), Vec2 uv4 = .(0,1), U32 col = (U32) 4294967295) mut=> AddImageQuadImpl(&this, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col);
+            public void AddImageQuad(TextureID user_texture_id, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 uv1 = Vec2.Zero, Vec2 uv2 = Vec2.OneZero, Vec2 uv3 = Vec2.Ones, Vec2 uv4 = Vec2.ZeroOne, U32 col = (U32) 4294967295) mut=> AddImageQuadImpl(&this, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col);
             
             [LinkName("ImDrawList_AddImageRounded")]
             private static extern void AddImageRoundedImpl(DrawList* self, TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col, float rounding, DrawCornerFlags rounding_corners);
@@ -1684,7 +1702,7 @@ namespace ImGui
             
             [LinkName("ImFontAtlas_AddCustomRectFontGlyph")]
             private static extern int32 AddCustomRectFontGlyphImpl(FontAtlas* self, Font* font, Wchar id, int32 width, int32 height, float advance_x, Vec2 offset);
-            public int32 AddCustomRectFontGlyph(Font* font, Wchar id, int32 width, int32 height, float advance_x, Vec2 offset = .(0,0)) mut=> AddCustomRectFontGlyphImpl(&this, font, id, width, height, advance_x, offset);
+            public int32 AddCustomRectFontGlyph(Font* font, Wchar id, int32 width, int32 height, float advance_x, Vec2 offset = Vec2.Zero) mut=> AddCustomRectFontGlyphImpl(&this, font, id, width, height, advance_x, offset);
             
             [LinkName("ImFontAtlas_AddCustomRectRegular")]
             private static extern int32 AddCustomRectRegularImpl(FontAtlas* self, int32 width, int32 height);
@@ -1724,6 +1742,7 @@ namespace ImGui
             {
                 out_uv_min = ?;
                 out_uv_max = ?;
+            	CalcCustomRectUVImpl(&this, rect, &out_uv_min, &out_uv_max);
             }
             
             [LinkName("ImFontAtlas_Clear")]
@@ -1794,6 +1813,7 @@ namespace ImGui
                 out_pixels = ?;
                 out_width = ?;
                 out_height = ?;
+            	GetTexDataAsAlpha8Impl(&this, &out_pixels, &out_width, &out_height, out_bytes_per_pixel);
             }
             
             [LinkName("ImFontAtlas_GetTexDataAsRGBA32")]
@@ -1803,6 +1823,7 @@ namespace ImGui
                 out_pixels = ?;
                 out_width = ?;
                 out_height = ?;
+            	GetTexDataAsRGBA32Impl(&this, &out_pixels, &out_width, &out_height, out_bytes_per_pixel);
             }
             
             [LinkName("ImFontAtlas_IsBuilt")]
@@ -4292,11 +4313,11 @@ namespace ImGui
         
         [LinkName("igBeginChildStr")]
         private static extern bool BeginChildImpl(char* str_id, Vec2 size, bool border, WindowFlags flags);
-        public static bool BeginChild(char* str_id, Vec2 size = .(0,0), bool border = false, WindowFlags flags = (WindowFlags) 0) => BeginChildImpl(str_id, size, border, flags);
+        public static bool BeginChild(char* str_id, Vec2 size = Vec2.Zero, bool border = false, WindowFlags flags = (WindowFlags) 0) => BeginChildImpl(str_id, size, border, flags);
         
         [LinkName("igBeginChildID")]
         private static extern bool BeginChildImpl(ID id, Vec2 size, bool border, WindowFlags flags);
-        public static bool BeginChild(ID id, Vec2 size = .(0,0), bool border = false, WindowFlags flags = (WindowFlags) 0) => BeginChildImpl(id, size, border, flags);
+        public static bool BeginChild(ID id, Vec2 size = Vec2.Zero, bool border = false, WindowFlags flags = (WindowFlags) 0) => BeginChildImpl(id, size, border, flags);
         
         [LinkName("igBeginChildEx")]
         private static extern bool BeginChildExImpl(char* name, ID id, Vec2 size_arg, bool border, WindowFlags flags);
@@ -4420,7 +4441,7 @@ namespace ImGui
         
         [LinkName("igButton")]
         private static extern bool ButtonImpl(char* label, Vec2 size);
-        public static bool Button(char* label, Vec2 size = .(0,0)) => ButtonImpl(label, size);
+        public static bool Button(char* label, Vec2 size = Vec2.Zero) => ButtonImpl(label, size);
         
         [LinkName("igButtonBehavior")]
         private static extern bool ButtonBehaviorImpl(Rect bb, ID id, bool* out_hovered, bool* out_held, ButtonFlags flags);
@@ -4433,7 +4454,7 @@ namespace ImGui
         
         [LinkName("igButtonEx")]
         private static extern bool ButtonExImpl(char* label, Vec2 size_arg, ButtonFlags flags);
-        public static bool ButtonEx(char* label, Vec2 size_arg = .(0,0), ButtonFlags flags = (ButtonFlags) 0) => ButtonExImpl(label, size_arg, flags);
+        public static bool ButtonEx(char* label, Vec2 size_arg = Vec2.Zero, ButtonFlags flags = (ButtonFlags) 0) => ButtonExImpl(label, size_arg, flags);
         
         [LinkName("igCalcItemSize")]
         private static extern Vec2 CalcItemSizeImpl(Vec2* pOut, Vec2 size, float default_w, float default_h);
@@ -4540,7 +4561,7 @@ namespace ImGui
         
         [LinkName("igColorButton")]
         private static extern bool ColorButtonImpl(char* desc_id, Vec4 col, ColorEditFlags flags, Vec2 size);
-        public static bool ColorButton(char* desc_id, Vec4 col, ColorEditFlags flags = (ColorEditFlags) 0, Vec2 size = .(0,0)) => ColorButtonImpl(desc_id, col, flags, size);
+        public static bool ColorButton(char* desc_id, Vec4 col, ColorEditFlags flags = (ColorEditFlags) 0, Vec2 size = Vec2.Zero) => ColorButtonImpl(desc_id, col, flags, size);
         
         [LinkName("igColorConvertFloat4ToU32")]
         private static extern U32 ColorConvertFloat4ToU32Impl(Vec4 in_);
@@ -4792,7 +4813,7 @@ namespace ImGui
         
         [LinkName("igDockSpace")]
         private static extern void DockSpaceImpl(ID id, Vec2 size, DockNodeFlags flags, WindowClass* window_class);
-        public static void DockSpace(ID id, Vec2 size = .(0,0), DockNodeFlags flags = (DockNodeFlags) 0, WindowClass* window_class = null) => DockSpaceImpl(id, size, flags, window_class);
+        public static void DockSpace(ID id, Vec2 size = Vec2.Zero, DockNodeFlags flags = (DockNodeFlags) 0, WindowClass* window_class = null) => DockSpaceImpl(id, size, flags, window_class);
         
         [LinkName("igDockSpaceOverViewport")]
         private static extern ID DockSpaceOverViewportImpl(Viewport* viewport, DockNodeFlags flags, WindowClass* window_class);
@@ -5881,11 +5902,11 @@ namespace ImGui
         
         [LinkName("igImage")]
         private static extern void ImageImpl(TextureID user_texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec4 tint_col, Vec4 border_col);
-        public static void Image(TextureID user_texture_id, Vec2 size, Vec2 uv0 = .(0,0), Vec2 uv1 = .(1,1), Vec4 tint_col = .(1,1,1,1), Vec4 border_col = .(0,0,0,0)) => ImageImpl(user_texture_id, size, uv0, uv1, tint_col, border_col);
+        public static void Image(TextureID user_texture_id, Vec2 size, Vec2 uv0 = Vec2.Zero, Vec2 uv1 = Vec2.Ones, Vec4 tint_col = Vec4.Ones, Vec4 border_col = Vec4.Zero) => ImageImpl(user_texture_id, size, uv0, uv1, tint_col, border_col);
         
         [LinkName("igImageButton")]
         private static extern bool ImageButtonImpl(TextureID user_texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, int32 frame_padding, Vec4 bg_col, Vec4 tint_col);
-        public static bool ImageButton(TextureID user_texture_id, Vec2 size, Vec2 uv0 = .(0,0), Vec2 uv1 = .(1,1), int32 frame_padding = -1, Vec4 bg_col = .(0,0,0,0), Vec4 tint_col = .(1,1,1,1)) => ImageButtonImpl(user_texture_id, size, uv0, uv1, frame_padding, bg_col, tint_col);
+        public static bool ImageButton(TextureID user_texture_id, Vec2 size, Vec2 uv0 = Vec2.Zero, Vec2 uv1 = Vec2.Ones, int32 frame_padding = -1, Vec4 bg_col = Vec4.Zero, Vec4 tint_col = Vec4.Ones) => ImageButtonImpl(user_texture_id, size, uv0, uv1, frame_padding, bg_col, tint_col);
         
         [LinkName("igImageButtonEx")]
         private static extern bool ImageButtonExImpl(ID id, TextureID texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec2 padding, Vec4 bg_col, Vec4 tint_col);
@@ -5953,7 +5974,7 @@ namespace ImGui
         
         [LinkName("igInputTextMultiline")]
         private static extern bool InputTextMultilineImpl(char* label, char* buf, size buf_size, Vec2 size, InputTextFlags flags, InputTextCallback callback, void* user_data);
-        public static bool InputTextMultiline(char* label, char* buf, size buf_size, Vec2 size = .(0,0), InputTextFlags flags = (InputTextFlags) 0, InputTextCallback callback = null, void* user_data = null) => InputTextMultilineImpl(label, buf, buf_size, size, flags, callback, user_data);
+        public static bool InputTextMultiline(char* label, char* buf, size buf_size, Vec2 size = Vec2.Zero, InputTextFlags flags = (InputTextFlags) 0, InputTextCallback callback = null, void* user_data = null) => InputTextMultilineImpl(label, buf, buf_size, size, flags, callback, user_data);
         
         [LinkName("igInputTextWithHint")]
         private static extern bool InputTextWithHintImpl(char* label, char* hint, char* buf, size buf_size, InputTextFlags flags, InputTextCallback callback, void* user_data);
@@ -6181,7 +6202,7 @@ namespace ImGui
         
         [LinkName("igListBoxHeaderVec2")]
         private static extern bool ListBoxHeaderImpl(char* label, Vec2 size);
-        public static bool ListBoxHeader(char* label, Vec2 size = .(0,0)) => ListBoxHeaderImpl(label, size);
+        public static bool ListBoxHeader(char* label, Vec2 size = Vec2.Zero) => ListBoxHeaderImpl(label, size);
         
         [LinkName("igListBoxHeaderInt")]
         private static extern bool ListBoxHeaderImpl(char* label, int32 items_count, int32 height_in_items);
@@ -6309,19 +6330,19 @@ namespace ImGui
         
         [LinkName("igPlotHistogramFloatPtr")]
         private static extern void PlotHistogramImpl(char* label, float* values, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 graph_size, int32 stride);
-        public static void PlotHistogram(char* label, float* values, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = .(0,0), int32 stride = .(float)) => PlotHistogramImpl(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+        public static void PlotHistogram(char* label, float* values, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = Vec2.Zero, int32 stride = sizeof(float)) => PlotHistogramImpl(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
         
         [LinkName("igPlotHistogramFnFloatPtr")]
         private static extern void PlotHistogramImpl(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 graph_size);
-        public static void PlotHistogram(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = .(0,0)) => PlotHistogramImpl(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+        public static void PlotHistogram(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = Vec2.Zero) => PlotHistogramImpl(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
         
         [LinkName("igPlotLinesFloatPtr")]
         private static extern void PlotLinesImpl(char* label, float* values, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 graph_size, int32 stride);
-        public static void PlotLines(char* label, float* values, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = .(0,0), int32 stride = .(float)) => PlotLinesImpl(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+        public static void PlotLines(char* label, float* values, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = Vec2.Zero, int32 stride = sizeof(float)) => PlotLinesImpl(label, values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
         
         [LinkName("igPlotLinesFnFloatPtr")]
         private static extern void PlotLinesImpl(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 graph_size);
-        public static void PlotLines(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = .(0,0)) => PlotLinesImpl(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+        public static void PlotLines(char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset = (int32) 0, char* overlay_text = null, float scale_min = float.MaxValue, float scale_max = float.MaxValue, Vec2 graph_size = Vec2.Zero) => PlotLinesImpl(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
         
         [LinkName("igPopAllowKeyboardFocus")]
         private static extern void PopAllowKeyboardFocusImpl();
@@ -6373,7 +6394,7 @@ namespace ImGui
         
         [LinkName("igProgressBar")]
         private static extern void ProgressBarImpl(float fraction, Vec2 size_arg, char* overlay);
-        public static void ProgressBar(float fraction, Vec2 size_arg = .(-1,0), char* overlay = null) => ProgressBarImpl(fraction, size_arg, overlay);
+        public static void ProgressBar(float fraction, Vec2 size_arg = Vec2.NOneZero, char* overlay = null) => ProgressBarImpl(fraction, size_arg, overlay);
         
         [LinkName("igPushAllowKeyboardFocus")]
         private static extern void PushAllowKeyboardFocusImpl(bool allow_keyboard_focus);
@@ -6525,11 +6546,11 @@ namespace ImGui
         
         [LinkName("igRenderTextClipped")]
         private static extern void RenderTextClippedImpl(Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align, Rect* clip_rect);
-        public static void RenderTextClipped(Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align = .(0,0), Rect* clip_rect = null) => RenderTextClippedImpl(pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect);
+        public static void RenderTextClipped(Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align = Vec2.Zero, Rect* clip_rect = null) => RenderTextClippedImpl(pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect);
         
         [LinkName("igRenderTextClippedEx")]
         private static extern void RenderTextClippedExImpl(DrawList* draw_list, Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align, Rect* clip_rect);
-        public static void RenderTextClippedEx(DrawList* draw_list, Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align = .(0,0), Rect* clip_rect = null) => RenderTextClippedExImpl(draw_list, pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect);
+        public static void RenderTextClippedEx(DrawList* draw_list, Vec2 pos_min, Vec2 pos_max, char* text, char* text_end, Vec2* text_size_if_known, Vec2 align = Vec2.Zero, Rect* clip_rect = null) => RenderTextClippedExImpl(draw_list, pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect);
         
         [LinkName("igRenderTextEllipsis")]
         private static extern void RenderTextEllipsisImpl(DrawList* draw_list, Vec2 pos_min, Vec2 pos_max, float clip_max_x, float ellipsis_max_x, char* text, char* text_end, Vec2* text_size_if_known);
@@ -6578,11 +6599,11 @@ namespace ImGui
         
         [LinkName("igSelectableBool")]
         private static extern bool SelectableImpl(char* label, bool selected, SelectableFlags flags, Vec2 size);
-        public static bool Selectable(char* label, bool selected = false, SelectableFlags flags = (SelectableFlags) 0, Vec2 size = .(0,0)) => SelectableImpl(label, selected, flags, size);
+        public static bool Selectable(char* label, bool selected = false, SelectableFlags flags = (SelectableFlags) 0, Vec2 size = Vec2.Zero) => SelectableImpl(label, selected, flags, size);
         
         [LinkName("igSelectableBoolPtr")]
         private static extern bool SelectableImpl(char* label, bool* p_selected, SelectableFlags flags, Vec2 size);
-        public static bool Selectable(char* label, bool* p_selected, SelectableFlags flags = (SelectableFlags) 0, Vec2 size = .(0,0)) => SelectableImpl(label, p_selected, flags, size);
+        public static bool Selectable(char* label, bool* p_selected, SelectableFlags flags = (SelectableFlags) 0, Vec2 size = Vec2.Zero) => SelectableImpl(label, p_selected, flags, size);
         
         [LinkName("igSeparator")]
         private static extern void SeparatorImpl();
@@ -6714,7 +6735,7 @@ namespace ImGui
         
         [LinkName("igSetNextWindowPos")]
         private static extern void SetNextWindowPosImpl(Vec2 pos, Cond cond, Vec2 pivot);
-        public static void SetNextWindowPos(Vec2 pos, Cond cond = (Cond) 0, Vec2 pivot = .(0,0)) => SetNextWindowPosImpl(pos, cond, pivot);
+        public static void SetNextWindowPos(Vec2 pos, Cond cond = (Cond) 0, Vec2 pivot = Vec2.Zero) => SetNextWindowPosImpl(pos, cond, pivot);
         
         [LinkName("igSetNextWindowScroll")]
         private static extern void SetNextWindowScrollImpl(Vec2 scroll);
