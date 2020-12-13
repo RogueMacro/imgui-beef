@@ -74,19 +74,12 @@ jobs:
       - name: Build cimgui
         run: |
           cd ./cimgui/
-          cmake -B Debug -S .
+          cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          cmake -B Debug -S .
+          cp "./cimgui.a" "./ImGui/dist/Debug-Linux64/"
           cmake --build . --config Release
-      - name: Copy binaries to dist
-        run: |
-          echo "-> cimgui/"
-          ls ./cimgui/
-          echo "-> cimgui/debug/"
-          ls ./cimgui/Debug/
-          cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-Linux64/"
-          cp "./cimgui/Release/cimgui.a" "./ImGui/dist/Release-Linux64/"
+          cp "./cimgui.a" "./ImGui/dist/Release-Linux64/"
       - name: Commit and push
         run: |
           git checkout -b build
