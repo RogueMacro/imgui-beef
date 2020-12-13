@@ -76,7 +76,9 @@ jobs:
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
+          cmake -LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Debug"
           cmake --build . --config Debug
+          cmake -LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Release"
           cmake --build . --config Release
       - name: Copy binaries to dist
         run: |
