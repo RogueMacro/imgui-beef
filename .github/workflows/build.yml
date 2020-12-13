@@ -52,7 +52,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Generation"
-          git push
+          git push origin build
           
   Linux-x64:
     runs-on: ubuntu-latest
@@ -75,8 +75,8 @@ jobs:
         run: |
           cd ./cimgui/
           cmake .
-          cmake --build . --target ALL_BUILD --config Debug
-          cmake --build . --target ALL_BUILD --config Release
+          cmake --build . --config Debug
+          cmake --build . --config Release
       - name: Copy binaries to dist
         run: |
           cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-Linux64/"
@@ -88,7 +88,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Generation"
-          git push
+          git push origin build
 
 
   macOS:
@@ -125,5 +125,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Generation"
-          git push
+          git push origin build
     
