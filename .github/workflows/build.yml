@@ -75,6 +75,7 @@ jobs:
         run: |
           cd ./cimgui/
           cmake .
+          cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
           cmake --build . --config Release
       - name: Copy binaries to dist
