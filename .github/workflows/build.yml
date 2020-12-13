@@ -75,8 +75,8 @@ jobs:
         run: |
           cd ./cimgui/
           cmake .
-          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
-          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Debug
+          cmake --build . --target ALL_BUILD --config Release
       - name: Copy binaries to dist
         run: |
           cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-Linux64/"
@@ -112,8 +112,8 @@ jobs:
         run: |
           cd ./cimgui/
           cmake .
-          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
-          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Debug
+          cmake --build . --target ALL_BUILD --config Release
       - name: Copy binaries to dist
         run: |
           cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-MacOSx64/"
