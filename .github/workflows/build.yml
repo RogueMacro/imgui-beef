@@ -74,8 +74,8 @@ jobs:
       - name: Build cimgui
         run: |
           cd ./cimgui/
-          cmake --build . --config Debug -DIMGUI_STATIC=yes
-          cmake --build . --config Release -DIMGUI_STATIC=yes
+          cmake --build . --config Debug
+          cmake --build . --config Release
       - name: Copy binaries to dist
         run: |
           cp "./cimgui/Debug/libcimgui.a" "./ImGui/dist/Debug-Linux64/"
