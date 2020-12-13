@@ -6,6 +6,27 @@ namespace ImGuiBeefGenerator.ImGui
     {
         public static readonly string[] ReservedKeywords = { "in", "repeat", "ref", "out", "where" };
 
+        public static readonly Dictionary<string, string> WellKnownDefaultValues = new Dictionary<string, string>()
+        {
+            { "ImVec2(0,0)", "Vec2.Zero" },
+            { "ImVec2(1,1)", "Vec2.Ones" },
+            { "ImVec2(1,0)", "Vec2.OneZero" },
+            { "ImVec2(0,1)", "Vec2.ZeroOne" },
+            { "ImVec2(-1,0)", "Vec2.NOneZero" },
+            { "ImVec4(0,0,0,0)", "Vec4.Zero" },
+            { "ImVec4(1,1,1,1)", "Vec4.Ones" },
+        };
+
+        public static string FixDefaultValue(string value)
+        {
+            if (WellKnownDefaultValues.TryGetValue(value, out string beefValue))
+            {
+                return beefValue;
+            }
+
+            return $".{value.Substring(value.IndexOf("("))}";
+        }
+
         public static string FixType(string type)
         {
             if (type.Contains("_") && !IsFunctionPointer(type) && !type.EndsWith("_t") && !type.EndsWith("_t*"))
