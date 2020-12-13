@@ -74,6 +74,7 @@ jobs:
       - name: Build cimgui
         run: |
           cd ./cimgui/
+          cmake .
           cmake --build . --config Debug
           cmake --build . --config Release
       - name: Copy binaries to dist
