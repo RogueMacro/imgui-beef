@@ -7,16 +7,18 @@ on:
     branches:
       - master
   workflow_dispatch:
+  
+  
+env:
+    DOTNET_NOLOGO: true
+    VERBOSE: true
+    
+    
+jobs: 
 
-jobs:
-  Generate:
-    env:
-      DOTNET_NOLOGO: true
-      VERBOSE: true
-
-    runs-on: windows-2019
-
-    steps:
+  Windows-x64:
+    runs-on: windows-latest
+    steps:   
       - uses: actions/checkout@v2
       - name: Clone submodules
         run: |
@@ -45,8 +47,83 @@ jobs:
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
         run: |
+          git checkout -b build
           git add ImGui/dist/\*
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Generation"
           git push
+          
+  Linux-x64:
+    runs-on: ubuntu-latest
+    steps:   
+      - uses: actions/checkout@v2
+      - name: Clone submodules
+        run: |
+          git submodule update --init --recursive
+      - name: Generate
+        run: |
+          cd .\Generator\
+          dotnet run
+      - name: Add generated files
+        run: git add .
+      - name: Get cimgui dependencies
+        run: echo "TODO"
+      - name: Prepare cimgui
+        run: echo "TODO"
+      - name: Build cimgui
+        run: |
+          cd .\cimgui\
+          cmake .
+          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
+      - name: Copy binaries to dist
+        run: |
+          cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-Linux64/"
+          cp "./cimgui/Release/cimgui.a" "./ImGui/dist/Release-Linux64/"
+      - name: Commit and push
+        run: |
+          git checkout -b build
+          git add ImGui/dist/\*
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m "Generation"
+          git push
+
+
+  macOS:
+    runs-on: macOS-latest
+    steps:   
+      - uses: actions/checkout@v2
+      - name: Clone submodules
+        run: |
+          git submodule update --init --recursive
+      - name: Generate
+        run: |
+          cd .\Generator\
+          dotnet run
+      - name: Add generated files
+        run: git add .
+      - name: Get cimgui dependencies
+        run: echo "TODO"
+      - name: Prepare cimgui
+        run: echo "TODO"
+      - name: Build cimgui
+        run: |
+          cd .\cimgui\
+          cmake .
+          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
+          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
+      - name: Copy binaries to dist
+        run: |
+          cp "./cimgui/Debug/cimgui.a" "./ImGui/dist/Debug-MacOSx64/"
+          cp "./cimgui/Release/cimgui.a" "./ImGui/dist/Release-MacOSx64/"
+      - name: Commit and push
+        run: |
+          git checkout -b build
+          git add ImGui/dist/\*
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m "Generation"
+          git push
+    
