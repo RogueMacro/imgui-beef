@@ -74,7 +74,7 @@ jobs:
       - name: Build cimgui
         run: |
           cd ./cimgui/
-          cmake -B/Debug -S/.
+          cmake -B Debug -S .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
           cmake --build . --config Release
