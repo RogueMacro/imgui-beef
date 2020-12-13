@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ImGuiBeefGenerator.ImGui
@@ -34,8 +35,15 @@ namespace ImGuiBeefGenerator.ImGui
                 }
                 else if (defaultValue != "")
                 {
-                    if (defaultValue.EndsWith(")"))
-                        DefaultValue = $".{defaultValue.Substring(defaultValue.IndexOf("("))}";
+                    if (defaultValue.StartsWith("sizeof("))
+                    {
+                        int start = defaultValue.IndexOf("(", StringComparison.Ordinal) + 1;
+                        int end = defaultValue.IndexOf(")", start, StringComparison.Ordinal);
+
+                        DefaultValue = $"sizeof({ImGui.FixType(defaultValue[start .. end])})";
+                    }
+                    else if (defaultValue.EndsWith(")"))
+                        DefaultValue = ImGui.FixDefaultValue(defaultValue);
                     else
                         DefaultValue = ImGui.RemovePrefix(defaultValue);
 

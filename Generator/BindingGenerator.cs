@@ -61,7 +61,25 @@ $@"using System;
 
 namespace ImGui
 {{
-    public static class ImGui
+    public extension ImGui
+    {{
+        public extension Vec2
+        {{
+            public readonly static Vec2 Zero = .(0, 0);
+            public readonly static Vec2 Ones = .(1, 1);
+            public readonly static Vec2 OneZero = .(1, 0);
+            public readonly static Vec2 ZeroOne = .(0, 1);
+            public readonly static Vec2 NOneZero = .(-1, 0);
+        }}
+
+        public extension Vec4
+        {{
+            public readonly static Vec4 Zero = .(0, 0, 0, 0);
+            public readonly static Vec4 Ones = .(1, 1, 1, 1);
+        }}
+    }}
+
+	public static class ImGui
     {{
 		public static char8* VERSION = ""{version}"";
 		public static int VERSION_NUM = {version.Replace(".", "")}00;
@@ -165,7 +183,7 @@ namespace ImGui
 
         ";
 
-            foreach (var binding in Bindings.Where(b => !(b is ImGuiImplStruct)))
+			foreach (var binding in Bindings.Where(b => !(b is ImGuiImplStruct)))
 				imguiFile += binding.Serialize().Replace("\n", "\n        ");
 
 			imguiFile = imguiFile.Remove(imguiFile.Length - 4);
@@ -195,8 +213,7 @@ $@"using System;
 
 namespace ImGui
 {{";
-
-			implFile += bindings.Single(b => b is ImGuiImplStruct s && s.Name == implName).Serialize().Replace("\n", "\n    ");
+            implFile += bindings.Single(b => b is ImGuiImplStruct s && s.Name == implName).Serialize().Replace("\n", "\n    ");
 			implFile = implFile.Remove(implFile.Length - 4);
 			implFile += "}";
 			return implFile;
