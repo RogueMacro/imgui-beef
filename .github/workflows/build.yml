@@ -144,5 +144,5 @@ jobs:
           git config user.email github-actions@github.com
           git push origin -d Windows-Build
           git push origin -d Linux-Build
-          git push origin -d macOS
+          git push origin -d macOS-Build
           git push origin -d Build
