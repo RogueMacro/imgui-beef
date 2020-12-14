@@ -133,4 +133,19 @@ jobs:
           git push origin -d Windows-Build
           git push origin -d Linux-Build
           git push origin -d macOS-Build
-          git push origin -d Build    
+          git push origin -d Build   
+          
+  Cleanup:
+    runs-on: ubuntu-latest
+    needs: [Merge]
+    if: always()
+    steps:
+      - uses: actions/checkout@v2
+      - name: cleanup branches
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git push origin -d Windows-Build
+          git push origin -d Linux-Build
+          git push origin -d macOS-Build
+          git push origin -d Build 
