@@ -83,7 +83,7 @@ jobs:
           git commit -m "Generation"
           git push origin Linux-Build
 
-  MacOS:
+  macOS:
     runs-on: macOS-latest
     steps:   
       - uses: actions/checkout@v2
@@ -99,22 +99,23 @@ jobs:
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          mkdir ../ImGui/dist/Debug-Linux64
-          \cp "./cimgui.a" "../ImGui/dist/Debug-MacOS64/cimgui.a"
+          mkdir ../ImGui/dist/Debug-macOS
+          \cp "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
-          mkdir ../ImGui/dist/Release-Linux64
-          \cp "./cimgui.a" "../ImGui/dist/Release-MacOS64/cimgui.a"
+          mkdir ../ImGui/dist/Release-macOS
+          \cp "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
       - name: Commit and push
         run: |
-          git checkout -b MacOS-Build
+          git checkout -b macOS-Build
           git add ImGui/dist/\*
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Generation"
-          git push origin MacOS-Build
+          git push origin macOS-Build
       
   Merge:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    needs: [Windows, Linux, macOS]
     steps:
       - uses: actions/checkout@v2
       - name: Merge builds
@@ -122,13 +123,12 @@ jobs:
           git checkout -b Build
           git merge Windows-Build
           git merge Linux-Build
-          git merge MacOS-Build
+          git merge macOS-Build
           git checkout master
           git merge --squash Build
           git commit -m "Generation"
           git push origin master
           git push origin -d Windows-Build
           git push origin -d Linux-Build
-          git push origin -d MacOS-Build
-          git push origin -d Build
-    
+          git push origin -d macOS-Build
+          git push origin -d Build    
