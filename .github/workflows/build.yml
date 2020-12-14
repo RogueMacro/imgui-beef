@@ -100,10 +100,10 @@ jobs:
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
           mkdir ../ImGui/dist/Debug-macOS
-          \cp "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
+          \cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
           mkdir ../ImGui/dist/Release-macOS
-          \cp "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
+          \cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
       - name: Commit and push
         run: |
           git checkout -b macOS-Build
