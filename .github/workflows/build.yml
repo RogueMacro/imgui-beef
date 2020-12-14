@@ -124,9 +124,9 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Build
-          git merge Windows-Build
-          git merge Linux-Build
-          git merge macOS-Build
+          git merge origin/Windows-Build
+          git merge origin/Linux-Build
+          git merge origin/macOS-Build
           git checkout master
           git merge --squash Build
           git commit -m "Generation"
