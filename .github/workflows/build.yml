@@ -148,4 +148,5 @@ jobs:
           git push origin -d Windows-Build
           git push origin -d Linux-Build
           git push origin -d macOS-Build
-          git push origin -d Build 
+          git push origin -d build
+          git push origin -d Build
