@@ -128,7 +128,7 @@ jobs:
           git merge origin/macOS-Build
           git commit -m "Merged builds"
           git checkout master
-          git merge --squash origin/Build
+          git merge --squash Build
           git commit -m "Generation"
           git push origin master 
           
