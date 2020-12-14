@@ -126,14 +126,11 @@ jobs:
           git merge Windows-Build
           git merge Linux-Build
           git merge macOS-Build
+          git commit -m "Merged builds"
           git checkout master
           git merge --squash Build
           git commit -m "Generation"
-          git push origin master
-          git push origin -d Windows-Build
-          git push origin -d Linux-Build
-          git push origin -d macOS-Build
-          git push origin -d Build   
+          git push origin master 
           
   Cleanup:
     runs-on: ubuntu-latest
