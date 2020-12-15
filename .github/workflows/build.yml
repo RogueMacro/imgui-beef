@@ -36,6 +36,8 @@ jobs:
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
       - name: Copy binaries to dist
         run: |
+          New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Debug-Win64\"
+          New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Release-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
@@ -58,6 +60,7 @@ jobs:
       - name: Prepare cimgui
         run: echo "TODO"
       - name: Prepare branch
+        continue-on-error: true
         run: |
            git config user.name github-actions
            git config user.email github-actions@github.com
