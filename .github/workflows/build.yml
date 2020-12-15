@@ -20,6 +20,8 @@ jobs:
     runs-on: windows-latest
     steps:   
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Clone submodules
         run: git submodule update --init --recursive      
       - name: Get cimgui dependencies
@@ -53,6 +55,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:   
       - uses: actions/checkout@v2
+        with:
+         fetch-depth: 0
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Get cimgui dependencies
@@ -94,6 +98,8 @@ jobs:
     runs-on: macOS-latest
     steps:   
       - uses: actions/checkout@v2
+        with:
+          fetch_depth: 0  
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Get cimgui dependencies
@@ -127,6 +133,8 @@ jobs:
     needs: [Windows, Linux, macOS]
     steps:
       - uses: actions/checkout@v2
+        with:
+         fetch-depth: 0
       - name: Merge builds
         run: |
           git config user.name github-actions
@@ -159,6 +167,8 @@ jobs:
     if: always()
     steps:
       - uses: actions/checkout@v2
+        with:
+         fetch-depth: 0
       - name: cleanup branches
         run: |
           git config user.name github-actions
