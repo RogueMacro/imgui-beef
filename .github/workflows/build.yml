@@ -60,6 +60,8 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
+          rm "../ImGui/dist/Debug-Linux64/*"
+          rm "../ImGui/dist/Release-Linux64/*"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
@@ -89,6 +91,8 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
+          rm "../ImGui/dist/Debug-macOS/*"
+          rm "../ImGui/dist/Release-macOS/*"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
