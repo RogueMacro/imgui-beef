@@ -21,13 +21,7 @@ jobs:
     steps:   
       - uses: actions/checkout@v2
       - name: Clone submodules
-        run: git submodule update --init --recursive
-      - name: Generate
-        run: |
-          cd .\Generator\
-          dotnet run
-      - name: Add generated files
-        run: git add .
+        run: git submodule update --init --recursive      
       - name: Get cimgui dependencies
         run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
       - name: Prepare cimgui
@@ -46,10 +40,14 @@ jobs:
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
         run: |
-          git checkout -b Windows-Build
-          git add ImGui/dist/\*
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git checkout -b Windows-Build          
+          del /S "ImGui/dist/\*"
+          git add .
+          git commit -m 'cleanup dist'
+          git push origin Windows-Build
+          git add ImGui/dist/\*          
           git commit -m "Generation"
           git push origin Windows-Build
           
@@ -74,10 +72,14 @@ jobs:
           \cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
         run: |
-          git checkout -b Linux-Build
-          git add ImGui/dist/\*
           git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.email github-actions@github.com       
+          git checkout -b Linux-Build
+          rm -rf ImGui/dist/*
+          git add .
+          git commit -m 'cleanup dist'
+          git push origin Linux-Build
+          git add ImGui/dist/\*        
           git commit -m "Generation"
           git push origin Linux-Build
 
@@ -99,13 +101,17 @@ jobs:
           cmake --build . --config Debug
           \cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
-          \cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
+          \cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
       - name: Commit and push
         run: |
-          git checkout -b macOS-Build
-          git add ImGui/dist/\*
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git checkout -b macOS-Build
+          rm -rf ImGui/dist/*
+          git add .
+          git commit -m 'cleanup dist'
+          git push origin macOS-Build
+          git add ImGui/dist/\*       
           git commit -m "Generation"
           git push origin macOS-Build
       
@@ -116,9 +122,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Merge builds
         run: |
-          git fetch
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git fetch
           git checkout -b Build
           git merge origin/Windows-Build
           git merge origin/Linux-Build
@@ -126,7 +132,19 @@ jobs:
           git checkout master
           git merge --squash Build
           git commit -m "Generation"
-          git push origin master 
+          git push origin master          
+      - name: Generate ImGui bindings
+        run: |
+          cd ./Generator/
+          dotnet run
+      - name: Push generated files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout master
+          git add .
+          git commit -m 'imgui bindings'
+          git push origin master
           
   Cleanup:
     runs-on: ubuntu-latest
@@ -136,9 +154,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: cleanup branches
         run: |
-          git fetch
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git fetch
           git push origin -d Windows-Build
           git push origin -d Linux-Build
           git push origin -d macOS-Build
