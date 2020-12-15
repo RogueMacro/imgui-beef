@@ -60,15 +60,17 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
+          mkdir -p "./ImGui/dist/Debug-Linux64/"
+          mkdir -p "./ImGui/dist/Release-Linux64/"
           rm "../ImGui/dist/Debug-Linux64/*"
           rm "../ImGui/dist/Release-Linux64/*"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          mkdir -p "../ImGui/dist/Debug-Linux64/" && cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
-          mkdir -p "../ImGui/dist/Release-Linux64/" && cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
         continue-on-error: true
         run: |
@@ -91,15 +93,17 @@ jobs:
         run: echo "TODO"
       - name: Build cimgui
         run: |
+          mkdir -p "./ImGui/dist/Debug-macOS/"
+          mkdir -p "./ImGui/dist/Release-macOS/"
           rm "../ImGui/dist/Debug-macOS/*"
           rm "../ImGui/dist/Release-macOS/*"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          mkdir -p "../ImGui/dist/Debug-macOS/" && cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
+          cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
-          mkdir -p "../ImGui/dist/Release-macOS/" && cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
+          cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
       - name: Commit and push
         continue-on-error: true
         run: |
