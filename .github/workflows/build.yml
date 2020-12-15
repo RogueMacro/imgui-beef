@@ -16,37 +16,6 @@ env:
     
 jobs: 
 
-  Windows:
-    runs-on: windows-latest
-    steps:   
-      - uses: actions/checkout@v2
-      - name: Clone submodules
-        run: git submodule update --init --recursive      
-      - name: Get cimgui dependencies
-        run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
-      - name: Prepare cimgui
-        run: |
-          Copy-item -Force -Verbose .\cimgui-deps\CMakeLists.txt -Destination .\cimgui\
-          ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#define CIMGUI_NO_EXPORT`n#include `"cimgui.h`"`n#include <imgui/examples/imgui_impl_opengl3.h>`n#include <imgui/examples/imgui_impl_opengl2.h>`n#include <imgui/examples/imgui_impl_glfw.h>") | Set-Content .\cimgui\cimgui.cpp
-      - name: Build cimgui
-        run: |
-          cd .\cimgui\
-          cmake .
-          cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
-          cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
-      - name: Copy binaries to dist
-        run: |
-          Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
-          Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
-      - name: Commit and push
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git checkout -b Windows-Build    
-          git add ImGui/dist/*              
-          git commit -m "Generation"
-          git push origin Windows-Build
-          
   Linux:
     runs-on: ubuntu-latest
     steps:   
@@ -78,42 +47,10 @@ jobs:
           git add ./ImGui/dist/Debug-Linux64/cimgui.a ./ImGui/dist/Release-Linux64/cimgui.a
           git commit -m "Generation"        
           git push origin Linux-Build
-
-  macOS:
-    runs-on: macOS-latest
-    steps:   
-      - uses: actions/checkout@v2
-      - name: Clone submodules
-        run: git submodule update --init --recursive
-      - name: Get cimgui dependencies
-        run: echo "TODO"
-      - name: Prepare cimgui
-        run: echo "TODO"
-      - name: Build cimgui
-        run: |          
-          rm -rf "./ImGui/dist/Debug-macOS"
-          rm -rf "./ImGui/dist/Release-macOS"
-          mkdir -p "./ImGui/dist/Debug-macOS"
-          mkdir -p "./ImGui/dist/Release-macOS"
-          cd ./cimgui/
-          cmake .
-          cmake -DIMGUI_STATIC=yes
-          cmake --build . --config Debug
-          cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
-          cmake --build . --config Release
-          cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
-      - name: Commit and push
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git checkout -b macOS-Build      
-          git add ImGui/dist/*
-          git commit -m "Generation"
-          git push origin macOS-Build
       
   Merge:
     runs-on: ubuntu-latest
-    needs: [Windows, Linux, macOS]
+    needs: [Linux]
     steps:
       - uses: actions/checkout@v2
       - name: Merge builds
@@ -122,9 +59,7 @@ jobs:
           git config user.email github-actions@github.com
           git fetch
           git checkout -b Build
-          git merge origin/Windows-Build
           git merge origin/Linux-Build
-          git merge origin/macOS-Build
           git checkout master
           git merge --squash Build
           git commit -m "Generation"
@@ -153,7 +88,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch
-          git push origin -d Windows-Build          
-          git push origin -d macOS-Build
           git push origin -d Linux-Build
           git push origin -d Build
