@@ -68,10 +68,9 @@ jobs:
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
+          mv -f "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
-          cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
-          cd ..
+          mv -f "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
         continue-on-error: true
         run: |
