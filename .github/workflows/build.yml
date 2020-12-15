@@ -39,15 +39,11 @@ jobs:
           Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
+        continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout -b Windows-Build          
-          Remove-Item ImGui/dist/Debug-Win64\* -Recurse -Force
-          Remove-Item ImGui/dist/Release-Win64\* -Recurse -Force
-          git add .
-          git commit -m 'cleanup dist'
-          git push origin Windows-Build
+          git checkout -b Windows-Build                  
           git add ImGui/dist/\*          
           git commit -m "Generation"
           git push origin Windows-Build
@@ -72,15 +68,11 @@ jobs:
           cmake --build . --config Release
           \cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
+        continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com       
           git checkout -b Linux-Build
-          rm -rf ImGui/dist/Debug-Linux64/*
-          rm -rf ImGui/dist/Release-Linux64/*
-          git add .
-          git commit -m 'cleanup dist'
-          git push origin Linux-Build
           git add ImGui/dist/\*        
           git commit -m "Generation"
           git push origin Linux-Build
@@ -105,15 +97,11 @@ jobs:
           cmake --build . --config Release
           \cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
       - name: Commit and push
+        continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout -b macOS-Build
-          rm -rf ImGui/dist/Debug-macOS/*
-          rm -rf ImGui/dist/Release-macOS/*
-          git add .
-          git commit -m 'cleanup dist'
-          git push origin macOS-Build
+          git checkout -b macOS-Build       
           git add ImGui/dist/\*       
           git commit -m "Generation"
           git push origin macOS-Build
