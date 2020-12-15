@@ -64,9 +64,9 @@ jobs:
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          \cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
+          mkdir -p "../ImGui/dist/Debug-Linux64/" && cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
-          \cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+          mkdir -p "../ImGui/dist/Release-Linux64/" && cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
         continue-on-error: true
         run: |
@@ -93,9 +93,9 @@ jobs:
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          \cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
+          mkdir -p "../ImGui/dist/Debug-macOS/" && cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
-          \cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
+          mkdir -p "../ImGui/dist/Release-macOS/" && cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
       - name: Commit and push
         continue-on-error: true
         run: |
