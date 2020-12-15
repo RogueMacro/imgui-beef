@@ -39,7 +39,6 @@ jobs:
           Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
       - name: Commit and push
-        continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -72,16 +71,13 @@ jobs:
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
-        continue-on-error: true
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git checkout master
-          git branch -d Linux-Build      
+        run: |        
           git checkout -b Linux-Build
           git add ImGui/dist/*
-          git status
           git commit -m "Generation"
+          
+          git config user.name github-actions
+          git config user.email github-actions@github.com    
           git push origin Linux-Build
 
   macOS:
@@ -108,7 +104,6 @@ jobs:
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"         
       - name: Commit and push
-        continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
