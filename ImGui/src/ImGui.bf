@@ -3057,7 +3057,6 @@ namespace ImGui
             {
                 this = *CtorImpl(_key, _val_p);
             }
-            
             [CRepr, Union]
             public struct StoragePairUnion0
             {
@@ -3152,7 +3151,6 @@ namespace ImGui
             {
                 this = *CtorImpl(idx, v);
             }
-            
             [CRepr, Union]
             public struct StyleModUnion0
             {
