@@ -45,7 +45,8 @@ jobs:
           git checkout -b Windows-Build          
           Remove-Item ImGui/dist/Debug-Win64\* -Recurse -Force
           Remove-Item ImGui/dist/Release-Win64\* -Recurse -Force
-          git rm -r --cached .
+          git rm -r --cached ImGui/dist/Debug-Win64\*
+          git rm -r --cached ImGui/dist/Release-Win64\*
           git add .
           git commit -m 'cleanup dist'
           git push origin Windows-Build
@@ -79,7 +80,8 @@ jobs:
           git checkout -b Linux-Build
           rm -rf ImGui/dist/Debug-Linux64/*
           rm -rf ImGui/dist/Release-Linux64/*
-          git rm -r --cached .
+          git rm -r --cached ImGui/dist/Debug-Linux64/*
+          git rm -r --cached ImGui/dist/Release-Linux64/*
           git add .
           git commit -m 'cleanup dist'
           git push origin Linux-Build
@@ -113,7 +115,8 @@ jobs:
           git checkout -b macOS-Build
           rm -rf ImGui/dist/Debug-macOS/*
           rm -rf ImGui/dist/Release-macOS/*
-          git rm -r --cached .
+          git rm -r --cached ImGui/dist/Debug-macOS/*
+          git rm -r --cached ImGui/dist/Release-macOS/*
           git add .
           git commit -m 'cleanup dist'
           git push origin macOS-Build
