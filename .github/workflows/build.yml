@@ -44,7 +44,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Windows-Build                  
-          git add ImGui/dist/\*          
+          git add ImGui/dist/*          
           git commit -m "Generation"
           git push origin Windows-Build
           
@@ -73,7 +73,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com       
           git checkout -b Linux-Build
-          git add ImGui/dist/\*        
+          git add ImGui/dist/*     
           git commit -m "Generation"
           git push origin Linux-Build
 
@@ -102,7 +102,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b macOS-Build       
-          git add ImGui/dist/\*       
+          git add ImGui/dist/*  
           git commit -m "Generation"
           git push origin macOS-Build
       
