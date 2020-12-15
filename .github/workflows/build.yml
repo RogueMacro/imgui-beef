@@ -147,7 +147,7 @@ jobs:
           git config user.email github-actions@github.com
           git checkout master
           git add .
-          git commit -m 'imgui bindings'
+          git commit -m 'Generate bindings'
           git push origin master
           
   Cleanup:
