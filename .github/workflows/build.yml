@@ -71,13 +71,12 @@ jobs:
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
-        run: |        
+        run: |    
           git checkout -b Linux-Build
           git add ImGui/dist/*
-          git commit -m "Generation"
-          
           git config user.name github-actions
-          git config user.email github-actions@github.com    
+          git config user.email github-actions@github.com  
+          git commit -m "Generation"        
           git push origin Linux-Build
 
   macOS:
