@@ -59,11 +59,11 @@ jobs:
       - name: Prepare cimgui
         run: echo "TODO"
       - name: Build cimgui
-        run: |
-          mkdir -p "./ImGui/dist/Debug-Linux64/"
-          mkdir -p "./ImGui/dist/Release-Linux64/"
-          rm "./ImGui/dist/Debug-Linux64/*"
-          rm "./ImGui/dist/Release-Linux64/*"
+        run: |         
+          rm -rf "./ImGui/dist/Debug-Linux64"
+          rm -rf "./ImGui/dist/Release-Linux64"
+          mkdir -p "./ImGui/dist/Debug-Linux64"
+          mkdir -p "./ImGui/dist/Release-Linux64"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
@@ -92,11 +92,11 @@ jobs:
       - name: Prepare cimgui
         run: echo "TODO"
       - name: Build cimgui
-        run: |
-          mkdir -p "./ImGui/dist/Debug-macOS/"
-          mkdir -p "./ImGui/dist/Release-macOS/"
-          rm "./ImGui/dist/Debug-macOS/*"
-          rm "./ImGui/dist/Release-macOS/*"
+        run: |          
+          rm -rf "./ImGui/dist/Debug-macOS"
+          rm -rf "./ImGui/dist/Release-macOS"
+          mkdir -p "./ImGui/dist/Debug-macOS"
+          mkdir -p "./ImGui/dist/Release-macOS"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
