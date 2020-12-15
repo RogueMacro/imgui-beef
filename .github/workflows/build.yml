@@ -43,7 +43,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Windows-Build          
-          del /S "ImGui/dist/\*"
+          Remove-Item ImGui/dist/\* -Recurse -Force
           git add .
           git commit -m 'cleanup dist'
           git push origin Windows-Build
