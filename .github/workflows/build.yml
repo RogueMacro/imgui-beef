@@ -51,6 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:   
       - uses: actions/checkout@v2
+        with:
+          token: ${{secrets.PAT}}
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Get cimgui dependencies
@@ -70,9 +72,8 @@ jobs:
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
-          cd ..
-          git config user.name github-actions
-          git config user.email github-actions@github.com 
+      - name: Commit and push
+        run: |
           git checkout -b Linux-Build
           git add ImGui/dist/* 
           git commit -m "Generation"        
