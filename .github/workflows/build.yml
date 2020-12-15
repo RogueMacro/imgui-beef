@@ -68,14 +68,16 @@ jobs:
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake --build . --config Debug
-          mv -f "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
-          mv -f "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
       - name: Commit and push
         continue-on-error: true
         run: |
           git config user.name github-actions
-          git config user.email github-actions@github.com       
+          git config user.email github-actions@github.com
+          git checkout master
+          git branch -d Linux-Build      
           git checkout -b Linux-Build
           git add ImGui/dist/*
           git status
