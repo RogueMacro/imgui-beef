@@ -44,8 +44,8 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Windows-Build    
-          git add -A                   
-          git commit -am "Generation"
+          git add ImGui/dist/*              
+          git commit -m "Generation"
           git push origin Windows-Build
           
   Linux:
@@ -71,14 +71,15 @@ jobs:
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+          cd ..
       - name: Commit and push
         continue-on-error: true
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com       
           git checkout -b Linux-Build
-          git add -A 
-          git commit -am "Generation"
+          git add ImGui/dist/*
+          git commit -m "Generation"
           git push origin Linux-Build
 
   macOS:
@@ -110,8 +111,8 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b macOS-Build      
-          git add -A  
-          git commit -am "Generation"
+          git add ImGui/dist/*
+          git commit -m "Generation"
           git push origin macOS-Build
       
   Merge:
