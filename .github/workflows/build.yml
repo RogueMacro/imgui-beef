@@ -57,12 +57,20 @@ jobs:
         run: echo "TODO"
       - name: Prepare cimgui
         run: echo "TODO"
+      - name: Prepare branch
+        run: |
+           git config user.name github-actions
+           git config user.email github-actions@github.com
+           git checkout -b Linux-Build
+           rm -rf "./ImGui/dist/Debug-Linux64"
+           rm -rf "./ImGui/dist/Release-Linux64"
+           mkdir -p "./ImGui/dist/Debug-Linux64"
+           mkdir -p "./ImGui/dist/Release-Linux64"
+           ggit add ImGui/dist/*
+           git commit -m "preparation"        
+           git push origin Linux-Build
       - name: Build cimgui
-        run: |         
-          rm -rf "./ImGui/dist/Debug-Linux64"
-          rm -rf "./ImGui/dist/Release-Linux64"
-          mkdir -p "./ImGui/dist/Debug-Linux64"
-          mkdir -p "./ImGui/dist/Release-Linux64"
+        run: |                
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
@@ -75,7 +83,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Linux-Build
-          git add ./ImGui/dist/Debug-Linux64/cimgui.a ./ImGui/dist/Release-Linux64/cimgui.a
+          git add ImGui/dist/*
           git commit -m "Generation"        
           git push origin Linux-Build
 
