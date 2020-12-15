@@ -79,6 +79,7 @@ jobs:
           git config user.email github-actions@github.com       
           git checkout -b Linux-Build
           git add ImGui/dist/*
+          git status
           git commit -m "Generation"
           git push origin Linux-Build
 
