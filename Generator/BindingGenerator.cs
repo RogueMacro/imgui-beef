@@ -40,6 +40,7 @@ namespace ImGuiBeefGenerator
             {
 				imguiFile +=
 $@"// -- GENERATION INFORMATION --
+// Date: {DateTime.Now}
 // Constructors: {Bindings.Count(b => b is ImGuiConstructorDefinition)}
 // Destructors: {Bindings.Count(b => b is ImGuiDestructorDefinition)}
 // Enums: {Bindings.Count(b => b is ImGuiEnum)}
