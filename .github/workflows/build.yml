@@ -27,14 +27,16 @@ jobs:
       - name: Prepare cimgui
         run: echo "TODO"
       - name: Build cimgui
-        run: |         
+        run: |       
+          sudo apt-get update  
           rm -rf "./ImGui/dist/Debug-Linux64"
           rm -rf "./ImGui/dist/Release-Linux64"
           mkdir -p "./ImGui/dist/Debug-Linux64"
           mkdir -p "./ImGui/dist/Release-Linux64"
           cd ./cimgui/
-          cmake .
-          cmake -DIMGUI_STATIC=yes
+          mkdir cmake-build
+          cd cmake-build
+          cmake -DIMGUI_STATIC=yes ..
           cmake --build . --config Debug
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
