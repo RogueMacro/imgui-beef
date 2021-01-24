@@ -26,7 +26,7 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git checkout master
+          git checkout docking_inter
           cd imgui
           git checkout master
       - name: Prepare cimgui
@@ -64,7 +64,7 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git checkout master
+          git checkout docking_inter
           cd imgui
           git checkout master
       - name: Prepare cimgui
@@ -112,7 +112,7 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git checkout master
+          git checkout docking_inter
           cd imgui
           git checkout master
       - name: Prepare cimgui
