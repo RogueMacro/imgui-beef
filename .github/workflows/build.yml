@@ -163,6 +163,11 @@ jobs:
           git commit -m "merge cimgui windows, macOS, linux"
         # git merge origin/Linux-Build
         # git merge origin/macOS-Build
+      - name: Get latest cimgui binding info
+        run: |
+          git submodule update --init
+          cd cimgui
+          git checkout master
       - name: Generate ImGui bindings
         run: |
           cd ./Generator/
