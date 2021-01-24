@@ -64,7 +64,9 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git pull origin master
+          git checkout master
+          cd imgui
+          git checkout master
       - name: Get cimgui dependencies
         run: echo "TODO"
       - name: Prepare cimgui
@@ -110,7 +112,9 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git pull origin master
+          git checkout master
+          cd imgui
+          git checkout master
       - name: Get cimgui dependencies
         run: echo "TODO"
       - name: Prepare cimgui
