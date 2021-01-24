@@ -99,7 +99,7 @@ jobs:
     steps:   
       - uses: actions/checkout@v2
         with:
-          fetch_depth: 0  
+          fetch-depth: 0  
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Get cimgui dependencies
