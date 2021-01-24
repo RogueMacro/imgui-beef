@@ -23,10 +23,6 @@ namespace ImGui
         private static extern void KeyCallbackImpl(GLFWwindow* window, int32 key, int32 scancode, int32 action, int32 mods);
         public static void KeyCallback(GLFWwindow* window, int32 key, int32 scancode, int32 action, int32 mods) => KeyCallbackImpl(window, key, scancode, action, mods);
         
-        [LinkName("ImGui_ImplGlfw_MonitorCallback")]
-        private static extern void MonitorCallbackImpl(GLFWmonitor* monitor, int32 event);
-        public static void MonitorCallback(GLFWmonitor* monitor, int32 event) => MonitorCallbackImpl(monitor, event);
-        
         [LinkName("ImGui_ImplGlfw_MouseButtonCallback")]
         private static extern void MouseButtonCallbackImpl(GLFWwindow* window, int32 button, int32 action, int32 mods);
         public static void MouseButtonCallback(GLFWwindow* window, int32 button, int32 action, int32 mods) => MouseButtonCallbackImpl(window, button, action, mods);
