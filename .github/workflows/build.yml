@@ -26,12 +26,12 @@ jobs:
         run: |
           git submodule update --init --recursive
           cd cimgui
-          git pull origin master
-      - name: Get cimgui dependencies
-        run: Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
+          git checkout master
+          cd imgui
+          git checkout master
       - name: Prepare cimgui
         run: |
-          Copy-item -Force -Verbose .\cimgui-deps\CMakeLists.txt -Destination .\cimgui\
+          Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
           ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#define CIMGUI_NO_EXPORT`n#include `"cimgui.h`"`n#include <imgui/examples/imgui_impl_opengl3.h>`n#include <imgui/examples/imgui_impl_opengl2.h>`n#include <imgui/examples/imgui_impl_glfw.h>") | Set-Content .\cimgui\cimgui.cpp
       - name: Build cimgui
         run: |
