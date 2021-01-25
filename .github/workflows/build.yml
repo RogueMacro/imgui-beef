@@ -25,6 +25,8 @@ jobs:
       - name: Clone submodules
         run: |
           git submodule update --init --recursive
+          cd cimgui
+          git checkout docking_inter
       - name: Prepare cimgui
         run: |
           Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
@@ -59,6 +61,8 @@ jobs:
       - name: Clone submodules
         run: |
           git submodule update --init --recursive
+          cd cimgui
+          git checkout docking_inter
       - name: Prepare cimgui
         run: |
           cp -a cimgui-deps/. cimgui/
@@ -103,6 +107,8 @@ jobs:
       - name: Clone submodules
         run: |
           git submodule update --init --recursive
+          cd cimgui
+          git checkout docking_inter
       - name: Prepare cimgui
         run: |
           cp -R cimgui-deps/ cimgui/
