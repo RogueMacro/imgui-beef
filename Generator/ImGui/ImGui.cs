@@ -49,7 +49,7 @@ namespace ImGuiBeefGenerator.ImGui
             {
                 var returnType = fixedType.Substring(0, fixedType.IndexOf('('));
                 var args = ImGuiMethodParameter.From(fixedType.Substring(fixedType.IndexOf(')') + 1));
-                fixedType = $"function {returnType}({args.ToLinkableDefinitionArg()})";
+                fixedType = $"function {returnType}({args.ToLinkableDefinitionArg()})".Replace("...", "VarArgs args");
             }
 
             return fixedType;
