@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 01/26/2021 11:06:08
+// Date: 01/26/2021 15:13:56
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -4886,7 +4886,11 @@ namespace ImGui
         
         [LinkName("igAcceptDragDropPayload")]
         private static extern Payload* AcceptDragDropPayloadImpl(char* type, DragDropFlags flags);
+        #if IMGUI_USE_REF
         public static ref Payload AcceptDragDropPayload(char* type, DragDropFlags flags = (DragDropFlags) 0) { return ref *AcceptDragDropPayloadImpl(type, flags); }
+        #else
+        public static Payload* AcceptDragDropPayload(char* type, DragDropFlags flags = (DragDropFlags) 0) => AcceptDragDropPayloadImpl(type, flags);
+        #endif
         
         [LinkName("igActivateItem")]
         private static extern void ActivateItemImpl(ID id);
@@ -5265,11 +5269,19 @@ namespace ImGui
         
         [LinkName("igCreateContext")]
         private static extern Context* CreateContextImpl(FontAtlas* shared_font_atlas);
+        #if IMGUI_USE_REF
         public static ref Context CreateContext(FontAtlas* shared_font_atlas = null) { return ref *CreateContextImpl(shared_font_atlas); }
+        #else
+        public static Context* CreateContext(FontAtlas* shared_font_atlas = null) => CreateContextImpl(shared_font_atlas);
+        #endif
         
         [LinkName("igCreateNewWindowSettings")]
         private static extern WindowSettings* CreateNewWindowSettingsImpl(char* name);
+        #if IMGUI_USE_REF
         public static ref WindowSettings CreateNewWindowSettings(char* name) { return ref *CreateNewWindowSettingsImpl(name); }
+        #else
+        public static WindowSettings* CreateNewWindowSettings(char* name) => CreateNewWindowSettingsImpl(name);
+        #endif
         
         [LinkName("igDataTypeApplyOp")]
         private static extern void DataTypeApplyOpImpl(DataType data_type, int32 op, void* output, void* arg_1, void* arg_2);
@@ -5293,7 +5305,11 @@ namespace ImGui
         
         [LinkName("igDataTypeGetInfo")]
         private static extern DataTypeInfo* DataTypeGetInfoImpl(DataType data_type);
+        #if IMGUI_USE_REF
         public static ref DataTypeInfo DataTypeGetInfo(DataType data_type) { return ref *DataTypeGetInfoImpl(data_type); }
+        #else
+        public static DataTypeInfo* DataTypeGetInfo(DataType data_type) => DataTypeGetInfoImpl(data_type);
+        #endif
         
         [LinkName("igDebugCheckVersionAndDataLayout")]
         private static extern bool DebugCheckVersionAndDataLayoutImpl(char* version_str, size sz_io, size sz_style, size sz_vec2, size sz_vec4, size sz_drawvert, size sz_drawidx);
@@ -5396,11 +5412,19 @@ namespace ImGui
         
         [LinkName("igDockBuilderGetCentralNode")]
         private static extern DockNode* DockBuilderGetCentralNodeImpl(ID node_id);
+        #if IMGUI_USE_REF
         public static ref DockNode DockBuilderGetCentralNode(ID node_id) { return ref *DockBuilderGetCentralNodeImpl(node_id); }
+        #else
+        public static DockNode* DockBuilderGetCentralNode(ID node_id) => DockBuilderGetCentralNodeImpl(node_id);
+        #endif
         
         [LinkName("igDockBuilderGetNode")]
         private static extern DockNode* DockBuilderGetNodeImpl(ID node_id);
+        #if IMGUI_USE_REF
         public static ref DockNode DockBuilderGetNode(ID node_id) { return ref *DockBuilderGetNodeImpl(node_id); }
+        #else
+        public static DockNode* DockBuilderGetNode(ID node_id) => DockBuilderGetNodeImpl(node_id);
+        #endif
         
         [LinkName("igDockBuilderRemoveNode")]
         private static extern void DockBuilderRemoveNodeImpl(ID node_id);
@@ -5493,7 +5517,11 @@ namespace ImGui
         
         [LinkName("igDockNodeGetRootNode")]
         private static extern DockNode* DockNodeGetRootNodeImpl(DockNode* node);
+        #if IMGUI_USE_REF
         public static ref DockNode DockNodeGetRootNode(DockNode* node) { return ref *DockNodeGetRootNodeImpl(node); }
+        #else
+        public static DockNode* DockNodeGetRootNode(DockNode* node) => DockNodeGetRootNodeImpl(node);
+        #endif
         
         [LinkName("igDockSpace")]
         private static extern void DockSpaceImpl(ID id, Vec2 size, DockNodeFlags flags, WindowClass* window_class);
@@ -5532,16 +5560,16 @@ namespace ImGui
         public static bool DragInt(char* label, int32* v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragIntImpl(label, v, v_speed, v_min, v_max, format, flags);
         
         [LinkName("igDragInt2")]
-        private static extern bool DragInt2Impl(char* label, int[2] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool DragInt2(char* label, int[2] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt2Impl(label, v, v_speed, v_min, v_max, format, flags);
+        private static extern bool DragInt2Impl(char* label, int32[2] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool DragInt2(char* label, int32[2] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt2Impl(label, v, v_speed, v_min, v_max, format, flags);
         
         [LinkName("igDragInt3")]
-        private static extern bool DragInt3Impl(char* label, int[3] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool DragInt3(char* label, int[3] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt3Impl(label, v, v_speed, v_min, v_max, format, flags);
+        private static extern bool DragInt3Impl(char* label, int32[3] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool DragInt3(char* label, int32[3] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt3Impl(label, v, v_speed, v_min, v_max, format, flags);
         
         [LinkName("igDragInt4")]
-        private static extern bool DragInt4Impl(char* label, int[4] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool DragInt4(char* label, int[4] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt4Impl(label, v, v_speed, v_min, v_max, format, flags);
+        private static extern bool DragInt4Impl(char* label, int32[4] v, float v_speed, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool DragInt4(char* label, int32[4] v, float v_speed = (float) 1.0f, int32 v_min = (int32) 0, int32 v_max = (int32) 0, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => DragInt4Impl(label, v, v_speed, v_min, v_max, format, flags);
         
         [LinkName("igDragIntRange2")]
         private static extern bool DragIntRange2Impl(char* label, int32* v_current_min, int32* v_current_max, float v_speed, int32 v_min, int32 v_max, char* format, char* format_max, SliderFlags flags);
@@ -5651,39 +5679,75 @@ namespace ImGui
         
         [LinkName("igFindOrCreateColumns")]
         private static extern OldColumns* FindOrCreateColumnsImpl(Window* window, ID id);
+        #if IMGUI_USE_REF
         public static ref OldColumns FindOrCreateColumns(Window* window, ID id) { return ref *FindOrCreateColumnsImpl(window, id); }
+        #else
+        public static OldColumns* FindOrCreateColumns(Window* window, ID id) => FindOrCreateColumnsImpl(window, id);
+        #endif
         
         [LinkName("igFindOrCreateWindowSettings")]
         private static extern WindowSettings* FindOrCreateWindowSettingsImpl(char* name);
+        #if IMGUI_USE_REF
         public static ref WindowSettings FindOrCreateWindowSettings(char* name) { return ref *FindOrCreateWindowSettingsImpl(name); }
+        #else
+        public static WindowSettings* FindOrCreateWindowSettings(char* name) => FindOrCreateWindowSettingsImpl(name);
+        #endif
         
         [LinkName("igFindRenderedTextEnd")]
         private static extern char* FindRenderedTextEndImpl(char* text, char* text_end);
+        #if IMGUI_USE_REF
         public static ref char FindRenderedTextEnd(char* text, char* text_end = null) { return ref *FindRenderedTextEndImpl(text, text_end); }
+        #else
+        public static char* FindRenderedTextEnd(char* text, char* text_end = null) => FindRenderedTextEndImpl(text, text_end);
+        #endif
         
         [LinkName("igFindSettingsHandler")]
         private static extern SettingsHandler* FindSettingsHandlerImpl(char* type_name);
+        #if IMGUI_USE_REF
         public static ref SettingsHandler FindSettingsHandler(char* type_name) { return ref *FindSettingsHandlerImpl(type_name); }
+        #else
+        public static SettingsHandler* FindSettingsHandler(char* type_name) => FindSettingsHandlerImpl(type_name);
+        #endif
         
         [LinkName("igFindViewportByID")]
         private static extern Viewport* FindViewportByIDImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref Viewport FindViewportByID(ID id) { return ref *FindViewportByIDImpl(id); }
+        #else
+        public static Viewport* FindViewportByID(ID id) => FindViewportByIDImpl(id);
+        #endif
         
         [LinkName("igFindViewportByPlatformHandle")]
         private static extern Viewport* FindViewportByPlatformHandleImpl(void* platform_handle);
+        #if IMGUI_USE_REF
         public static ref Viewport FindViewportByPlatformHandle(void* platform_handle) { return ref *FindViewportByPlatformHandleImpl(platform_handle); }
+        #else
+        public static Viewport* FindViewportByPlatformHandle(void* platform_handle) => FindViewportByPlatformHandleImpl(platform_handle);
+        #endif
         
         [LinkName("igFindWindowByID")]
         private static extern Window* FindWindowByIDImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref Window FindWindowByID(ID id) { return ref *FindWindowByIDImpl(id); }
+        #else
+        public static Window* FindWindowByID(ID id) => FindWindowByIDImpl(id);
+        #endif
         
         [LinkName("igFindWindowByName")]
         private static extern Window* FindWindowByNameImpl(char* name);
+        #if IMGUI_USE_REF
         public static ref Window FindWindowByName(char* name) { return ref *FindWindowByNameImpl(name); }
+        #else
+        public static Window* FindWindowByName(char* name) => FindWindowByNameImpl(name);
+        #endif
         
         [LinkName("igFindWindowSettings")]
         private static extern WindowSettings* FindWindowSettingsImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref WindowSettings FindWindowSettings(ID id) { return ref *FindWindowSettingsImpl(id); }
+        #else
+        public static WindowSettings* FindWindowSettings(ID id) => FindWindowSettingsImpl(id);
+        #endif
         
         [LinkName("igFocusTopMostWindowUnderOne")]
         private static extern void FocusTopMostWindowUnderOneImpl(Window* under_this_window, Window* ignore_window);
@@ -5719,15 +5783,27 @@ namespace ImGui
         
         [LinkName("igGetBackgroundDrawListNil")]
         private static extern DrawList* GetBackgroundDrawListImpl();
+        #if IMGUI_USE_REF
         public static ref DrawList GetBackgroundDrawList() { return ref *GetBackgroundDrawListImpl(); }
+        #else
+        public static DrawList* GetBackgroundDrawList() => GetBackgroundDrawListImpl();
+        #endif
         
         [LinkName("igGetBackgroundDrawListViewportPtr")]
         private static extern DrawList* GetBackgroundDrawListImpl(Viewport* viewport);
+        #if IMGUI_USE_REF
         public static ref DrawList GetBackgroundDrawList(Viewport* viewport) { return ref *GetBackgroundDrawListImpl(viewport); }
+        #else
+        public static DrawList* GetBackgroundDrawList(Viewport* viewport) => GetBackgroundDrawListImpl(viewport);
+        #endif
         
         [LinkName("igGetClipboardText")]
         private static extern char* GetClipboardTextImpl();
+        #if IMGUI_USE_REF
         public static ref char GetClipboardText() { return ref *GetClipboardTextImpl(); }
+        #else
+        public static char* GetClipboardText() => GetClipboardTextImpl();
+        #endif
         
         [LinkName("igGetColorU32Col")]
         private static extern U32 GetColorU32Impl(Col idx, float alpha_mul);
@@ -5798,15 +5874,27 @@ namespace ImGui
         
         [LinkName("igGetCurrentContext")]
         private static extern Context* GetCurrentContextImpl();
+        #if IMGUI_USE_REF
         public static ref Context GetCurrentContext() { return ref *GetCurrentContextImpl(); }
+        #else
+        public static Context* GetCurrentContext() => GetCurrentContextImpl();
+        #endif
         
         [LinkName("igGetCurrentWindow")]
         private static extern Window* GetCurrentWindowImpl();
+        #if IMGUI_USE_REF
         public static ref Window GetCurrentWindow() { return ref *GetCurrentWindowImpl(); }
+        #else
+        public static Window* GetCurrentWindow() => GetCurrentWindowImpl();
+        #endif
         
         [LinkName("igGetCurrentWindowRead")]
         private static extern Window* GetCurrentWindowReadImpl();
+        #if IMGUI_USE_REF
         public static ref Window GetCurrentWindowRead() { return ref *GetCurrentWindowReadImpl(); }
+        #else
+        public static Window* GetCurrentWindowRead() => GetCurrentWindowReadImpl();
+        #endif
         
         [LinkName("igGetCursorPos")]
         private static extern Vec2 GetCursorPosImpl(Vec2* pOut);
@@ -5845,19 +5933,35 @@ namespace ImGui
         
         [LinkName("igGetDefaultFont")]
         private static extern Font* GetDefaultFontImpl();
+        #if IMGUI_USE_REF
         public static ref Font GetDefaultFont() { return ref *GetDefaultFontImpl(); }
+        #else
+        public static Font* GetDefaultFont() => GetDefaultFontImpl();
+        #endif
         
         [LinkName("igGetDragDropPayload")]
         private static extern Payload* GetDragDropPayloadImpl();
+        #if IMGUI_USE_REF
         public static ref Payload GetDragDropPayload() { return ref *GetDragDropPayloadImpl(); }
+        #else
+        public static Payload* GetDragDropPayload() => GetDragDropPayloadImpl();
+        #endif
         
         [LinkName("igGetDrawData")]
         private static extern DrawData* GetDrawDataImpl();
+        #if IMGUI_USE_REF
         public static ref DrawData GetDrawData() { return ref *GetDrawDataImpl(); }
+        #else
+        public static DrawData* GetDrawData() => GetDrawDataImpl();
+        #endif
         
         [LinkName("igGetDrawListSharedData")]
         private static extern DrawListSharedData* GetDrawListSharedDataImpl();
+        #if IMGUI_USE_REF
         public static ref DrawListSharedData GetDrawListSharedData() { return ref *GetDrawListSharedDataImpl(); }
+        #else
+        public static DrawListSharedData* GetDrawListSharedData() => GetDrawListSharedDataImpl();
+        #endif
         
         [LinkName("igGetFocusID")]
         private static extern ID GetFocusIDImpl();
@@ -5873,7 +5977,11 @@ namespace ImGui
         
         [LinkName("igGetFont")]
         private static extern Font* GetFontImpl();
+        #if IMGUI_USE_REF
         public static ref Font GetFont() { return ref *GetFontImpl(); }
+        #else
+        public static Font* GetFont() => GetFontImpl();
+        #endif
         
         [LinkName("igGetFontSize")]
         private static extern float GetFontSizeImpl();
@@ -5890,15 +5998,27 @@ namespace ImGui
         
         [LinkName("igGetForegroundDrawListNil")]
         private static extern DrawList* GetForegroundDrawListImpl();
+        #if IMGUI_USE_REF
         public static ref DrawList GetForegroundDrawList() { return ref *GetForegroundDrawListImpl(); }
+        #else
+        public static DrawList* GetForegroundDrawList() => GetForegroundDrawListImpl();
+        #endif
         
         [LinkName("igGetForegroundDrawListViewportPtr")]
         private static extern DrawList* GetForegroundDrawListImpl(Viewport* viewport);
+        #if IMGUI_USE_REF
         public static ref DrawList GetForegroundDrawList(Viewport* viewport) { return ref *GetForegroundDrawListImpl(viewport); }
+        #else
+        public static DrawList* GetForegroundDrawList(Viewport* viewport) => GetForegroundDrawListImpl(viewport);
+        #endif
         
         [LinkName("igGetForegroundDrawListWindowPtr")]
         private static extern DrawList* GetForegroundDrawListImpl(Window* window);
+        #if IMGUI_USE_REF
         public static ref DrawList GetForegroundDrawList(Window* window) { return ref *GetForegroundDrawListImpl(window); }
+        #else
+        public static DrawList* GetForegroundDrawList(Window* window) => GetForegroundDrawListImpl(window);
+        #endif
         
         [LinkName("igGetFrameCount")]
         private static extern int32 GetFrameCountImpl();
@@ -5934,11 +6054,19 @@ namespace ImGui
         
         [LinkName("igGetIO")]
         private static extern IO* GetIOImpl();
+        #if IMGUI_USE_REF
         public static ref IO GetIO() { return ref *GetIOImpl(); }
+        #else
+        public static IO* GetIO() => GetIOImpl();
+        #endif
         
         [LinkName("igGetInputTextState")]
         private static extern InputTextState* GetInputTextStateImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref InputTextState GetInputTextState(ID id) { return ref *GetInputTextStateImpl(id); }
+        #else
+        public static InputTextState* GetInputTextState(ID id) => GetInputTextStateImpl(id);
+        #endif
         
         [LinkName("igGetItemID")]
         private static extern ID GetItemIDImpl();
@@ -5989,7 +6117,11 @@ namespace ImGui
         
         [LinkName("igGetMainViewport")]
         private static extern Viewport* GetMainViewportImpl();
+        #if IMGUI_USE_REF
         public static ref Viewport GetMainViewport() { return ref *GetMainViewportImpl(); }
+        #else
+        public static Viewport* GetMainViewport() => GetMainViewportImpl();
+        #endif
         
         [LinkName("igGetMergedKeyModFlags")]
         private static extern KeyModFlags GetMergedKeyModFlagsImpl();
@@ -6041,7 +6173,11 @@ namespace ImGui
         
         [LinkName("igGetPlatformIO")]
         private static extern PlatformIO* GetPlatformIOImpl();
+        #if IMGUI_USE_REF
         public static ref PlatformIO GetPlatformIO() { return ref *GetPlatformIOImpl(); }
+        #else
+        public static PlatformIO* GetPlatformIO() => GetPlatformIOImpl();
+        #endif
         
         [LinkName("igGetScrollMaxX")]
         private static extern float GetScrollMaxXImpl();
@@ -6061,19 +6197,35 @@ namespace ImGui
         
         [LinkName("igGetStateStorage")]
         private static extern Storage* GetStateStorageImpl();
+        #if IMGUI_USE_REF
         public static ref Storage GetStateStorage() { return ref *GetStateStorageImpl(); }
+        #else
+        public static Storage* GetStateStorage() => GetStateStorageImpl();
+        #endif
         
         [LinkName("igGetStyle")]
         private static extern Style* GetStyleImpl();
+        #if IMGUI_USE_REF
         public static ref Style GetStyle() { return ref *GetStyleImpl(); }
+        #else
+        public static Style* GetStyle() => GetStyleImpl();
+        #endif
         
         [LinkName("igGetStyleColorName")]
         private static extern char* GetStyleColorNameImpl(Col idx);
+        #if IMGUI_USE_REF
         public static ref char GetStyleColorName(Col idx) { return ref *GetStyleColorNameImpl(idx); }
+        #else
+        public static char* GetStyleColorName(Col idx) => GetStyleColorNameImpl(idx);
+        #endif
         
         [LinkName("igGetStyleColorVec4")]
         private static extern Vec4* GetStyleColorVec4Impl(Col idx);
+        #if IMGUI_USE_REF
         public static ref Vec4 GetStyleColorVec4(Col idx) { return ref *GetStyleColorVec4Impl(idx); }
+        #else
+        public static Vec4* GetStyleColorVec4(Col idx) => GetStyleColorVec4Impl(idx);
+        #endif
         
         [LinkName("igGetTextLineHeight")]
         private static extern float GetTextLineHeightImpl();
@@ -6089,7 +6241,11 @@ namespace ImGui
         
         [LinkName("igGetTopMostPopupModal")]
         private static extern Window* GetTopMostPopupModalImpl();
+        #if IMGUI_USE_REF
         public static ref Window GetTopMostPopupModal() { return ref *GetTopMostPopupModalImpl(); }
+        #else
+        public static Window* GetTopMostPopupModal() => GetTopMostPopupModalImpl();
+        #endif
         
         [LinkName("igGetTreeNodeToLabelSpacing")]
         private static extern float GetTreeNodeToLabelSpacingImpl();
@@ -6097,7 +6253,11 @@ namespace ImGui
         
         [LinkName("igGetVersion")]
         private static extern char* GetVersionImpl();
+        #if IMGUI_USE_REF
         public static ref char GetVersion() { return ref *GetVersionImpl(); }
+        #else
+        public static char* GetVersion() => GetVersionImpl();
+        #endif
         
         [LinkName("igGetWindowAllowedExtentRect")]
         private static extern Rect GetWindowAllowedExtentRectImpl(Rect* pOut, Window* window);
@@ -6140,7 +6300,11 @@ namespace ImGui
         
         [LinkName("igGetWindowDockNode")]
         private static extern DockNode* GetWindowDockNodeImpl();
+        #if IMGUI_USE_REF
         public static ref DockNode GetWindowDockNode() { return ref *GetWindowDockNodeImpl(); }
+        #else
+        public static DockNode* GetWindowDockNode() => GetWindowDockNodeImpl();
+        #endif
         
         [LinkName("igGetWindowDpiScale")]
         private static extern float GetWindowDpiScaleImpl();
@@ -6148,7 +6312,11 @@ namespace ImGui
         
         [LinkName("igGetWindowDrawList")]
         private static extern DrawList* GetWindowDrawListImpl();
+        #if IMGUI_USE_REF
         public static ref DrawList GetWindowDrawList() { return ref *GetWindowDrawListImpl(); }
+        #else
+        public static DrawList* GetWindowDrawList() => GetWindowDrawListImpl();
+        #endif
         
         [LinkName("igGetWindowHeight")]
         private static extern float GetWindowHeightImpl();
@@ -6191,7 +6359,11 @@ namespace ImGui
         
         [LinkName("igGetWindowViewport")]
         private static extern Viewport* GetWindowViewportImpl();
+        #if IMGUI_USE_REF
         public static ref Viewport GetWindowViewport() { return ref *GetWindowViewportImpl(); }
+        #else
+        public static Viewport* GetWindowViewport() => GetWindowViewportImpl();
+        #endif
         
         [LinkName("igGetWindowWidth")]
         private static extern float GetWindowWidthImpl();
@@ -6292,7 +6464,11 @@ namespace ImGui
         
         [LinkName("igImFileLoadToMemory")]
         private static extern void* ImFileLoadToMemoryImpl(char* filename, char* mode, size* out_file_size, int32 padding_bytes);
+        #if IMGUI_USE_REF
         public static ref void ImFileLoadToMemory(char* filename, char* mode, size* out_file_size = null, int32 padding_bytes = (int32) 0) { return ref *ImFileLoadToMemoryImpl(filename, mode, out_file_size, padding_bytes); }
+        #else
+        public static void* ImFileLoadToMemory(char* filename, char* mode, size* out_file_size = null, int32 padding_bytes = (int32) 0) => ImFileLoadToMemoryImpl(filename, mode, out_file_size, padding_bytes);
+        #endif
         
         [LinkName("igImFileOpen")]
         private static extern FileHandle ImFileOpenImpl(char* filename, char* mode);
@@ -6468,11 +6644,19 @@ namespace ImGui
         
         [LinkName("igImParseFormatFindEnd")]
         private static extern char* ImParseFormatFindEndImpl(char* format);
+        #if IMGUI_USE_REF
         public static ref char ImParseFormatFindEnd(char* format) { return ref *ImParseFormatFindEndImpl(format); }
+        #else
+        public static char* ImParseFormatFindEnd(char* format) => ImParseFormatFindEndImpl(format);
+        #endif
         
         [LinkName("igImParseFormatFindStart")]
         private static extern char* ImParseFormatFindStartImpl(char* format);
+        #if IMGUI_USE_REF
         public static ref char ImParseFormatFindStart(char* format) { return ref *ImParseFormatFindStartImpl(format); }
+        #else
+        public static char* ImParseFormatFindStart(char* format) => ImParseFormatFindStartImpl(format);
+        #endif
         
         [LinkName("igImParseFormatPrecision")]
         private static extern int32 ImParseFormatPrecisionImpl(char* format, int32 default_value);
@@ -6480,7 +6664,11 @@ namespace ImGui
         
         [LinkName("igImParseFormatTrimDecorations")]
         private static extern char* ImParseFormatTrimDecorationsImpl(char* format, char* buf, size buf_size);
+        #if IMGUI_USE_REF
         public static ref char ImParseFormatTrimDecorations(char* format, char* buf, size buf_size) { return ref *ImParseFormatTrimDecorationsImpl(format, buf, buf_size); }
+        #else
+        public static char* ImParseFormatTrimDecorations(char* format, char* buf, size buf_size) => ImParseFormatTrimDecorationsImpl(format, buf, buf_size);
+        #endif
         
         [LinkName("igImPowFloat")]
         private static extern float ImPowImpl(float x, float y);
@@ -6513,7 +6701,11 @@ namespace ImGui
         
         [LinkName("igImStrSkipBlank")]
         private static extern char* ImStrSkipBlankImpl(char* str);
+        #if IMGUI_USE_REF
         public static ref char ImStrSkipBlank(char* str) { return ref *ImStrSkipBlankImpl(str); }
+        #else
+        public static char* ImStrSkipBlank(char* str) => ImStrSkipBlankImpl(str);
+        #endif
         
         [LinkName("igImStrTrimBlanks")]
         private static extern void ImStrTrimBlanksImpl(char* str);
@@ -6521,23 +6713,43 @@ namespace ImGui
         
         [LinkName("igImStrbolW")]
         private static extern Wchar* ImStrbolWImpl(Wchar* buf_mid_line, Wchar* buf_begin);
+        #if IMGUI_USE_REF
         public static ref Wchar ImStrbolW(Wchar* buf_mid_line, Wchar* buf_begin) { return ref *ImStrbolWImpl(buf_mid_line, buf_begin); }
+        #else
+        public static Wchar* ImStrbolW(Wchar* buf_mid_line, Wchar* buf_begin) => ImStrbolWImpl(buf_mid_line, buf_begin);
+        #endif
         
         [LinkName("igImStrchrRange")]
         private static extern char* ImStrchrRangeImpl(char* str_begin, char* str_end, char c);
+        #if IMGUI_USE_REF
         public static ref char ImStrchrRange(char* str_begin, char* str_end, char c) { return ref *ImStrchrRangeImpl(str_begin, str_end, c); }
+        #else
+        public static char* ImStrchrRange(char* str_begin, char* str_end, char c) => ImStrchrRangeImpl(str_begin, str_end, c);
+        #endif
         
         [LinkName("igImStrdup")]
         private static extern char* ImStrdupImpl(char* str);
+        #if IMGUI_USE_REF
         public static ref char ImStrdup(char* str) { return ref *ImStrdupImpl(str); }
+        #else
+        public static char* ImStrdup(char* str) => ImStrdupImpl(str);
+        #endif
         
         [LinkName("igImStrdupcpy")]
         private static extern char* ImStrdupcpyImpl(char* dst, size* p_dst_size, char* str);
+        #if IMGUI_USE_REF
         public static ref char ImStrdupcpy(char* dst, size* p_dst_size, char* str) { return ref *ImStrdupcpyImpl(dst, p_dst_size, str); }
+        #else
+        public static char* ImStrdupcpy(char* dst, size* p_dst_size, char* str) => ImStrdupcpyImpl(dst, p_dst_size, str);
+        #endif
         
         [LinkName("igImStreolRange")]
         private static extern char* ImStreolRangeImpl(char* str, char* str_end);
+        #if IMGUI_USE_REF
         public static ref char ImStreolRange(char* str, char* str_end) { return ref *ImStreolRangeImpl(str, str_end); }
+        #else
+        public static char* ImStreolRange(char* str, char* str_end) => ImStreolRangeImpl(str, str_end);
+        #endif
         
         [LinkName("igImStricmp")]
         private static extern int32 ImStricmpImpl(char* str1, char* str2);
@@ -6545,7 +6757,11 @@ namespace ImGui
         
         [LinkName("igImStristr")]
         private static extern char* ImStristrImpl(char* haystack, char* haystack_end, char* needle, char* needle_end);
+        #if IMGUI_USE_REF
         public static ref char ImStristr(char* haystack, char* haystack_end, char* needle, char* needle_end) { return ref *ImStristrImpl(haystack, haystack_end, needle, needle_end); }
+        #else
+        public static char* ImStristr(char* haystack, char* haystack_end, char* needle, char* needle_end) => ImStristrImpl(haystack, haystack_end, needle, needle_end);
+        #endif
         
         [LinkName("igImStrlenW")]
         private static extern int32 ImStrlenWImpl(Wchar* str);
@@ -6662,16 +6878,16 @@ namespace ImGui
         public static bool InputInt(char* label, int32* v, int32 step = (int32) 1, int32 step_fast = (int32) 100, InputTextFlags flags = (InputTextFlags) 0) => InputIntImpl(label, v, step, step_fast, flags);
         
         [LinkName("igInputInt2")]
-        private static extern bool InputInt2Impl(char* label, int[2] v, InputTextFlags flags);
-        public static bool InputInt2(char* label, int[2] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt2Impl(label, v, flags);
+        private static extern bool InputInt2Impl(char* label, int32[2] v, InputTextFlags flags);
+        public static bool InputInt2(char* label, int32[2] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt2Impl(label, v, flags);
         
         [LinkName("igInputInt3")]
-        private static extern bool InputInt3Impl(char* label, int[3] v, InputTextFlags flags);
-        public static bool InputInt3(char* label, int[3] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt3Impl(label, v, flags);
+        private static extern bool InputInt3Impl(char* label, int32[3] v, InputTextFlags flags);
+        public static bool InputInt3(char* label, int32[3] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt3Impl(label, v, flags);
         
         [LinkName("igInputInt4")]
-        private static extern bool InputInt4Impl(char* label, int[4] v, InputTextFlags flags);
-        public static bool InputInt4(char* label, int[4] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt4Impl(label, v, flags);
+        private static extern bool InputInt4Impl(char* label, int32[4] v, InputTextFlags flags);
+        public static bool InputInt4(char* label, int32[4] v, InputTextFlags flags = (InputTextFlags) 0) => InputInt4Impl(label, v, flags);
         
         [LinkName("igInputScalar")]
         private static extern bool InputScalarImpl(char* label, DataType data_type, void* p_data, void* p_step, void* p_step_fast, char* format, InputTextFlags flags);
@@ -6987,7 +7203,11 @@ namespace ImGui
         
         [LinkName("igMemAlloc")]
         private static extern void* MemAllocImpl(size size);
+        #if IMGUI_USE_REF
         public static ref void MemAlloc(size size) { return ref *MemAllocImpl(size); }
+        #else
+        public static void* MemAlloc(size size) => MemAllocImpl(size);
+        #endif
         
         [LinkName("igMemFree")]
         private static extern void MemFreeImpl(void* ptr);
@@ -7295,7 +7515,11 @@ namespace ImGui
         
         [LinkName("igSaveIniSettingsToMemory")]
         private static extern char* SaveIniSettingsToMemoryImpl(size* out_ini_size);
+        #if IMGUI_USE_REF
         public static ref char SaveIniSettingsToMemory(size* out_ini_size = null) { return ref *SaveIniSettingsToMemoryImpl(out_ini_size); }
+        #else
+        public static char* SaveIniSettingsToMemory(size* out_ini_size = null) => SaveIniSettingsToMemoryImpl(out_ini_size);
+        #endif
         
         [LinkName("igScaleWindowsInViewport")]
         private static extern void ScaleWindowsInViewportImpl(ViewportP* viewport, float scale);
@@ -7667,16 +7891,16 @@ namespace ImGui
         public static bool SliderInt(char* label, int32* v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderIntImpl(label, v, v_min, v_max, format, flags);
         
         [LinkName("igSliderInt2")]
-        private static extern bool SliderInt2Impl(char* label, int[2] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool SliderInt2(char* label, int[2] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt2Impl(label, v, v_min, v_max, format, flags);
+        private static extern bool SliderInt2Impl(char* label, int32[2] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool SliderInt2(char* label, int32[2] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt2Impl(label, v, v_min, v_max, format, flags);
         
         [LinkName("igSliderInt3")]
-        private static extern bool SliderInt3Impl(char* label, int[3] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool SliderInt3(char* label, int[3] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt3Impl(label, v, v_min, v_max, format, flags);
+        private static extern bool SliderInt3Impl(char* label, int32[3] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool SliderInt3(char* label, int32[3] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt3Impl(label, v, v_min, v_max, format, flags);
         
         [LinkName("igSliderInt4")]
-        private static extern bool SliderInt4Impl(char* label, int[4] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
-        public static bool SliderInt4(char* label, int[4] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt4Impl(label, v, v_min, v_max, format, flags);
+        private static extern bool SliderInt4Impl(char* label, int32[4] v, int32 v_min, int32 v_max, char* format, SliderFlags flags);
+        public static bool SliderInt4(char* label, int32[4] v, int32 v_min, int32 v_max, char* format = "%d", SliderFlags flags = (SliderFlags) 0) => SliderInt4Impl(label, v, v_min, v_max, format, flags);
         
         [LinkName("igSliderScalar")]
         private static extern bool SliderScalarImpl(char* label, DataType data_type, void* p_data, void* p_min, void* p_max, char* format, SliderFlags flags);
@@ -7728,11 +7952,19 @@ namespace ImGui
         
         [LinkName("igTabBarFindMostRecentlySelectedTabForActiveWindow")]
         private static extern TabItem* TabBarFindMostRecentlySelectedTabForActiveWindowImpl(TabBar* tab_bar);
+        #if IMGUI_USE_REF
         public static ref TabItem TabBarFindMostRecentlySelectedTabForActiveWindow(TabBar* tab_bar) { return ref *TabBarFindMostRecentlySelectedTabForActiveWindowImpl(tab_bar); }
+        #else
+        public static TabItem* TabBarFindMostRecentlySelectedTabForActiveWindow(TabBar* tab_bar) => TabBarFindMostRecentlySelectedTabForActiveWindowImpl(tab_bar);
+        #endif
         
         [LinkName("igTabBarFindTabByID")]
         private static extern TabItem* TabBarFindTabByIDImpl(TabBar* tab_bar, ID tab_id);
+        #if IMGUI_USE_REF
         public static ref TabItem TabBarFindTabByID(TabBar* tab_bar, ID tab_id) { return ref *TabBarFindTabByIDImpl(tab_bar, tab_id); }
+        #else
+        public static TabItem* TabBarFindTabByID(TabBar* tab_bar, ID tab_id) => TabBarFindTabByIDImpl(tab_bar, tab_id);
+        #endif
         
         [LinkName("igTabBarProcessReorder")]
         private static extern bool TabBarProcessReorderImpl(TabBar* tab_bar);
@@ -7809,7 +8041,11 @@ namespace ImGui
         
         [LinkName("igTableFindByID")]
         private static extern Table* TableFindByIDImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref Table TableFindByID(ID id) { return ref *TableFindByIDImpl(id); }
+        #else
+        public static Table* TableFindByID(ID id) => TableFindByIDImpl(id);
+        #endif
         
         [LinkName("igTableFixColumnSortDirection")]
         private static extern void TableFixColumnSortDirectionImpl(Table* table, TableColumn* column);
@@ -7825,7 +8061,11 @@ namespace ImGui
         
         [LinkName("igTableGetBoundSettings")]
         private static extern TableSettings* TableGetBoundSettingsImpl(Table* table);
+        #if IMGUI_USE_REF
         public static ref TableSettings TableGetBoundSettings(Table* table) { return ref *TableGetBoundSettingsImpl(table); }
+        #else
+        public static TableSettings* TableGetBoundSettings(Table* table) => TableGetBoundSettingsImpl(table);
+        #endif
         
         [LinkName("igTableGetCellBgRect")]
         private static extern Rect TableGetCellBgRectImpl(Rect* pOut, Table* table, int32 column_n);
@@ -7850,11 +8090,19 @@ namespace ImGui
         
         [LinkName("igTableGetColumnNameInt")]
         private static extern char* TableGetColumnNameImpl(int32 column_n);
+        #if IMGUI_USE_REF
         public static ref char TableGetColumnName(int32 column_n = -1) { return ref *TableGetColumnNameImpl(column_n); }
+        #else
+        public static char* TableGetColumnName(int32 column_n = -1) => TableGetColumnNameImpl(column_n);
+        #endif
         
         [LinkName("igTableGetColumnNameTablePtr")]
         private static extern char* TableGetColumnNameImpl(Table* table, int32 column_n);
+        #if IMGUI_USE_REF
         public static ref char TableGetColumnName(Table* table, int32 column_n) { return ref *TableGetColumnNameImpl(table, column_n); }
+        #else
+        public static char* TableGetColumnName(Table* table, int32 column_n) => TableGetColumnNameImpl(table, column_n);
+        #endif
         
         [LinkName("igTableGetColumnNextSortDirection")]
         private static extern SortDirection TableGetColumnNextSortDirectionImpl(TableColumn* column);
@@ -7886,7 +8134,11 @@ namespace ImGui
         
         [LinkName("igTableGetSortSpecs")]
         private static extern TableSortSpecs* TableGetSortSpecsImpl();
+        #if IMGUI_USE_REF
         public static ref TableSortSpecs TableGetSortSpecs() { return ref *TableGetSortSpecsImpl(); }
+        #else
+        public static TableSortSpecs* TableGetSortSpecs() => TableGetSortSpecsImpl();
+        #endif
         
         [LinkName("igTableHeader")]
         private static extern void TableHeaderImpl(char* label);
@@ -7962,11 +8214,19 @@ namespace ImGui
         
         [LinkName("igTableSettingsCreate")]
         private static extern TableSettings* TableSettingsCreateImpl(ID id, int32 columns_count);
+        #if IMGUI_USE_REF
         public static ref TableSettings TableSettingsCreate(ID id, int32 columns_count) { return ref *TableSettingsCreateImpl(id, columns_count); }
+        #else
+        public static TableSettings* TableSettingsCreate(ID id, int32 columns_count) => TableSettingsCreateImpl(id, columns_count);
+        #endif
         
         [LinkName("igTableSettingsFindByID")]
         private static extern TableSettings* TableSettingsFindByIDImpl(ID id);
+        #if IMGUI_USE_REF
         public static ref TableSettings TableSettingsFindByID(ID id) { return ref *TableSettingsFindByIDImpl(id); }
+        #else
+        public static TableSettings* TableSettingsFindByID(ID id) => TableSettingsFindByIDImpl(id);
+        #endif
         
         [LinkName("igTableSettingsInstallHandler")]
         private static extern void TableSettingsInstallHandlerImpl(Context* context);
