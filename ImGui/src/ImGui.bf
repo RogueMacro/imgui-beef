@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 01/26/2021 10:13:38
+// Date: 01/26/2021 11:06:08
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -136,7 +136,7 @@ namespace ImGui
         public typealias DrawIdx = ushort;
         public typealias FileHandle = FILE*;
         public typealias ContextHookCallback = function void(Context* ctx, ContextHook* hook);
-        public typealias ErrorLogCallback = function void(void* user_data, char* fmt,  ...);
+        public typealias ErrorLogCallback = function void(void* user_data, char* fmt,  VarArgs args);
         public typealias ID = uint32;
         public typealias InputTextCallback = function int(InputTextCallbackData* data);
         public typealias SizeCallback = function void(SizeCallbackData* data);
