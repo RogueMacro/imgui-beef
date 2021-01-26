@@ -45,6 +45,8 @@ namespace ImGuiBeefGenerator.ImGui
             else if (fixedType.EndsWith("int*"))
                 fixedType = $"{fixedType.Remove(fixedType.Length - 4, 4)}int32*";
 
+            fixedType = fixedType.Replace("int[", "int32[");
+
             if (IsFunctionPointer(fixedType))
             {
                 var returnType = fixedType.Substring(0, fixedType.IndexOf('('));
