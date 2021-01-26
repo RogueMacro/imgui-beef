@@ -66,8 +66,9 @@ namespace ImGuiBeefGenerator.ImGui
                 var arraySpecifier = Name.Substring(Name.IndexOf('['));
                 Name = Name.Replace(arraySpecifier, "");
                 Type += arraySpecifier;
-                Type = Type.Replace("char*[]", "char**");
             }
+
+            Type = Type.Replace("char*[]", "char**");
 
             Name = ImGui.MakeSafeName(Name);
         }
