@@ -165,7 +165,7 @@ jobs:
         run: |
           git submodule update --init
           cd cimgui
-          git checkout master
+          git checkout docking_inter
       - name: Generate ImGui bindings
         run: |
           cd ./Generator/
