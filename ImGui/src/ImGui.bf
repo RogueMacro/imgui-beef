@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 01/26/2021 15:13:56
+// Date: 01/26/2021 15:21:09
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -5256,8 +5256,8 @@ namespace ImGui
         public static void Columns(int32 count = (int32) 1, char* id = null, bool border = true) => ColumnsImpl(count, id, border);
         
         [LinkName("igComboStr_arr")]
-        private static extern bool ComboImpl(char* label, int32* current_item, char*[] items, int32 items_count, int32 popup_max_height_in_items);
-        public static bool Combo(char* label, int32* current_item, char*[] items, int32 items_count, int32 popup_max_height_in_items = -1) => ComboImpl(label, current_item, items, items_count, popup_max_height_in_items);
+        private static extern bool ComboImpl(char* label, int32* current_item, char** items, int32 items_count, int32 popup_max_height_in_items);
+        public static bool Combo(char* label, int32* current_item, char** items, int32 items_count, int32 popup_max_height_in_items = -1) => ComboImpl(label, current_item, items, items_count, popup_max_height_in_items);
         
         [LinkName("igComboStr")]
         private static extern bool ComboImpl(char* label, int32* current_item, char* items_separated_by_zeros, int32 popup_max_height_in_items);
@@ -7126,8 +7126,8 @@ namespace ImGui
         public static void LabelText(char* label, char* fmt, params Object[] args) => LabelTextImpl(label, scope String()..AppendF(StringView(fmt), params args));
         
         [LinkName("igListBoxStr_arr")]
-        private static extern bool ListBoxImpl(char* label, int32* current_item, char*[] items, int32 items_count, int32 height_in_items);
-        public static bool ListBox(char* label, int32* current_item, char*[] items, int32 items_count, int32 height_in_items = -1) => ListBoxImpl(label, current_item, items, items_count, height_in_items);
+        private static extern bool ListBoxImpl(char* label, int32* current_item, char** items, int32 items_count, int32 height_in_items);
+        public static bool ListBox(char* label, int32* current_item, char** items, int32 items_count, int32 height_in_items = -1) => ListBoxImpl(label, current_item, items, items_count, height_in_items);
         
         [LinkName("igListBoxFnBoolPtr")]
         private static extern bool ListBoxImpl(char* label, int32* current_item, function bool(void* data, int32 idx, char** outext) items_getter, void* data, int32 items_count, int32 height_in_items);
