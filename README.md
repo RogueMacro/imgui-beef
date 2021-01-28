@@ -8,7 +8,7 @@ Note: SDL binaries are not automatically generated yet
 
 Generation happens at 06:00 UTC every day
 
-The generator uses the docking_inter branch of https://github.com/cimgui/cimgui. I have not made any other branches, so docking and viewports can be enabled on demand. It is however, not by default.
+The generator uses the docking_inter branch of https://github.com/cimgui/cimgui.
 
 ## Usage
 
