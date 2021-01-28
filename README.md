@@ -12,6 +12,5 @@ The generator uses the docking_inter branch of https://github.com/cimgui/cimgui.
 
 ## Usage
 
-Add the ImGui project along with the implementation you use, i.e. ImGuiImplGlfw if you're using GLFW.
-
-**Make sure to change the *C Library* in your project's properties to dynamic or else it won't work**
+Clone the project into BeefLibs, then in the IDE, right click your workspace and go Add From Installed > ImGui, ImGuiImpl...your impl...
+You can also clone it to any other directory then go Add existing project > /path/to/ImGui
