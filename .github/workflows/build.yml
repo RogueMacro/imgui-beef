@@ -24,10 +24,11 @@ jobs:
           fetch-depth: 0
       - name: Clone submodules
         run: |
-          git submodule update --init
+          git submodule update --init --recursive
           cd cimgui
           git checkout docking_inter
-          git submodule update --init
+          cd imgui
+          git checkout docking
       - name: Prepare cimgui
         run: |
           Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
