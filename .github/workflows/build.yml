@@ -170,9 +170,11 @@ jobs:
           git commit -m "Generate Bindings"
       - name: Push generated files
         run: |
+          git checkout Build
+          git merge Bindings
           git checkout master
-          git merge Build --squash
-          git merge Bindings --squash
+          git merge --squash Build
+          git commit -m "Generation"
           git push origin master
 
   Cleanup:
