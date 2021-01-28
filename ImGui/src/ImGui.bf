@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 01/28/2021 10:10:57
+// Date: 01/28/2021 14:35:42
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -7335,7 +7335,7 @@ namespace ImGui
         
         [LinkName("igProgressBar")]
         private static extern void ProgressBarImpl(float fraction, Vec2 size_arg, char* overlay);
-        public static void ProgressBar(float fraction, Vec2 size_arg = .MIN,0), char* overlay = null) => ProgressBarImpl(fraction, size_arg, overlay);
+        public static void ProgressBar(float fraction, Vec2 size_arg = .(-float.MinValue,0), char* overlay = null) => ProgressBarImpl(fraction, size_arg, overlay);
         
         [LinkName("igPushAllowKeyboardFocus")]
         private static extern void PushAllowKeyboardFocusImpl(bool allow_keyboard_focus);
