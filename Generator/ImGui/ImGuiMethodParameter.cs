@@ -47,9 +47,11 @@ namespace ImGuiBeefGenerator.ImGui
                     else
                         DefaultValue = ImGui.RemovePrefix(defaultValue);
 
-                    if (DefaultValue == "FLT_MAX")
-                        DefaultValue = "float.MaxValue";
-                    else if (DefaultValue.Contains("_"))
+                    DefaultValue = DefaultValue
+                                        .Replace("FLT_MAX", "float.MaxValue")
+                                        .Replace("FLT_MIN", "float.MinValue");
+
+                    if (DefaultValue.Contains("_"))
                         DefaultValue = DefaultValue.Remove(0, DefaultValue.IndexOf('_') + 1).Insert(0, ".");
 
                     if (char.IsDigit(DefaultValue[0]))
