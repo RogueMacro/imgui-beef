@@ -171,10 +171,8 @@ jobs:
       - name: Push generated files
         run: |
           git checkout master
-          git merge Build
-          git merge Bindings
-          git add .
-          git commit -m 'Generation'
+          git merge Build --squash
+          git merge Bindings --squash
           git push origin master
 
   Cleanup:
