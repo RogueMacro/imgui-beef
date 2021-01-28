@@ -2,7 +2,7 @@
 
 ![Generation](https://github.com/RogueMacro/imgui-beef/workflows/Generation/badge.svg)
 
-Note: SDL binaries are not automatically generated yet, but it is coming soon.
+Note: SDL binaries are not automatically generated yet
 
 ## Generation
 
