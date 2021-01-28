@@ -163,27 +163,18 @@ jobs:
           git checkout docking_inter
       - name: Generate ImGui bindings
         run: |
-          echo CHECKOUT BINDINGS
           git checkout -b Bindings
           cd ./Generator/
           dotnet run
-          echo ADD
-          git add .
-          echo COMMIT
+          git add ..
           git commit -m "Generate Bindings"
       - name: Push generated files
         run: |
-          echo CHECKOUT MASTER
           git checkout master
-          echo MERGE BUILD
           git merge Build
-          echo MERGE BINDINGS
           git merge Bindings
-          echo ADD
           git add .
-          echo COMMIT
           git commit -m 'Generation'
-          echo PUSH
           git push origin master
 
   Cleanup:
