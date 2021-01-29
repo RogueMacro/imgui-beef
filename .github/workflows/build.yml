@@ -23,7 +23,7 @@ jobs:
         run: |
           git submodule update --init
           cd cimgui
-          git checkout 0d96f60
+          git checkout 3eec69f
           git submodule update --init
       - name: Prepare cimgui
         run: |
