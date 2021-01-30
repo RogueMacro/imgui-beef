@@ -106,9 +106,9 @@ jobs:
       - name: Clone submodules
         run: |
           git submodule update --init
-            cd cimgui
-            git checkout docking_inter
-            git submodule update --init
+          cd cimgui
+          git checkout docking_inter
+          git submodule update --init
       - name: Prepare cimgui
         run: |
           cp -R cimgui-deps/ cimgui/
