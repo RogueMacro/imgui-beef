@@ -9,10 +9,11 @@ file(GLOB IMGUI_SOURCES
     imgui/imgui_draw.cpp
     imgui/imgui_demo.cpp
     imgui/imgui_widgets.cpp
-    imgui/examples/imgui_impl_glfw.h
-    imgui/examples/imgui_impl_glfw.cpp
-    imgui/examples/imgui_impl_opengl3.h
-    imgui/examples/imgui_impl_opengl3.cpp
+    imgui/imgui_tables.cpp
+    imgui/backends/imgui_impl_glfw.h
+    imgui/backends/imgui_impl_glfw.cpp
+    imgui/backends/imgui_impl_opengl3.h
+    imgui/backends/imgui_impl_opengl3.cpp
     glad/glad.h
     glad/glad.c
     KHR/khrplatform.h
