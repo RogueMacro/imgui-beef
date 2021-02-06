@@ -67,7 +67,7 @@ public static class {Name}
                 serialized +=
 @"
     private typealias SDL_Window = SDL2.SDL.Window;
-    private typealias SDL_Event = SDL2.SDL.Window;
+    private typealias SDL_Event = SDL2.SDL.Event;
 ";
             }
 
