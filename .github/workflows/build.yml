@@ -65,7 +65,7 @@ jobs:
       - name: Prepare cimgui
         run: |
           cp -a cimgui-deps/. cimgui/
-          sed -i "s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT\n#include \"cimgui.h\"\n#include <imgui\/backends\/imgui_impl_opengl3.h>\n#include <imgui\/backends\/imgui_impl_opengl2.h>\n#include <imgui\/backends\/imgui_impl_glfw.h>/g" cimgui/cimgui.cpp
+          sed -i "s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT\n#include \"cimgui.h\"\n#include <generator/output/cimgui_impl.h>/g" cimgui/cimgui.cpp
       - name: Prepare branch
         continue-on-error: true
         run: |
@@ -112,7 +112,7 @@ jobs:
       - name: Prepare cimgui
         run: |
           cp -R cimgui-deps/ cimgui/
-          sed -i'' -e "s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT #include \"cimgui.h\" #include <imgui\/backends\/imgui_impl_opengl3.h> #include <imgui\/backends\/imgui_impl_opengl2.h> #include <imgui\/backends\/imgui_impl_glfw.h>/g" cimgui/cimgui.cpp
+          sed -i'' -e "s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT #include \"cimgui.h\" #include <generator/output/cimgui_impl.h>/g" cimgui/cimgui.cpp
       - name: Build cimgui
         run: |
           rm -rf "./ImGui/dist/Debug-macOS"
