@@ -1,7 +1,9 @@
 FileVersion = 1
-Dependencies = {corlib = "*"}
+Dependencies = {corlib = "*", corlib = "*", SDL2 = "*", ImGui = "*"}
 
 [Project]
 Name = "ImGuiImplSDL"
-TargetType = "BeefLib"
 DefaultNamespace = "ImGui"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../ImGui/dist/$(Configuration)-$(Platform)/cimgui.lib"]
