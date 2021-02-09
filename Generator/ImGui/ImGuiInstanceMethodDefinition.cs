@@ -69,7 +69,7 @@ public static bool Init(char* glsl_version = default)
             var serialized = 
 $@"
 [LinkName(""{LinkName}"")]
-private {(isStatic ? "static " : "")}extern {ReturnType} {Name}Impl({implArgs});
+private static extern {ReturnType} {Name}Impl({implArgs});
 public {(isStatic ? "static " : "")}{ReturnType} {Name}({newArgs}) {(isStatic ? "" : "mut")}";
 
             if (outParams.Count() > 0)
@@ -88,6 +88,10 @@ public {(isStatic ? "static " : "")}{ReturnType} {Name}({newArgs}) {(isStatic ? 
                     serialized += $"    {Name}Impl({Args.ToCallArgs()});\n    return pOut;\n";
                 else if (ReturnType != "void")
                     serialized += $"    return {Name}Impl({Args.ToCallArgs()});\n";
+                else
+                {
+                    serialized += $"\t{Name}Impl({Args.ToCallArgs()});\n";
+                }
 
                 serialized += "}\n";
             }

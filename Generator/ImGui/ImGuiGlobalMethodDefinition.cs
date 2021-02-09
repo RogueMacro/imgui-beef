@@ -31,11 +31,56 @@ namespace ImGuiBeefGenerator.ImGui
                 outParams.Add(pOuts.Single());
             }
 
-            var serialized = 
+            var serialized =
 $@"
 [LinkName(""{LinkName}"")]
-private static extern {ReturnType} {Name}Impl({Args.ToLinkableDefinitionArg()});
+private static extern {ReturnType} {Name}Impl({Args.ToLinkableDefinitionArg()});";
+
+            if (fixedType.StartsWith("ref"))
+            {
+                serialized += 
+$@"
+#if IMGUI_USE_REF
 public static {fixedType} {Name}({Args.ToDefinitionArgs()})";
+
+                if (outParams.Count() > 0)
+                {
+                    serialized += "\n{\n";
+
+                    foreach (var arg in outParams)
+                    {
+                        if (arg.Name == "pOut")
+                            serialized += $"    {ReturnType} pOut = default;\n";
+                        else
+                            serialized += $"    {arg.Name} = ?;\n";
+                    }
+
+                    if (isPOut)
+                        serialized += $"    {Name}Impl({Args.ToCallArgs()});\n    return pOut;\n";
+                    else if (ReturnType != "void")
+                        serialized += $"    return {Name}Impl({Args.ToCallArgs()});\n";
+                    else
+                        serialized += $"   return ref *{Name}Impl({Args.ToCallArgs()});";
+
+                    serialized += "}\n";
+                }
+                else
+                {
+                    serialized += $" {{ return ref *{Name}Impl({Args.ToCallArgs()}); }}\n";
+                }
+
+                serialized += "#else";
+            }
+
+            var notRefType = fixedType;
+            if (notRefType.StartsWith("ref"))
+            {
+                notRefType = notRefType.Replace("ref ", "") + "*";
+            }
+
+            serialized += 
+$@"
+public static {notRefType} {Name}({Args.ToDefinitionArgs()})";
 
             if (outParams.Count() > 0)
             {
@@ -53,19 +98,16 @@ public static {fixedType} {Name}({Args.ToDefinitionArgs()})";
                     serialized += $"    {Name}Impl({Args.ToCallArgs()});\n    return pOut;\n";
                 else if (ReturnType != "void")
                     serialized += $"    return {Name}Impl({Args.ToCallArgs()});\n";
-                else if (fixedType.StartsWith("ref "))
-                    serialized += $"   return ref *{Name}Impl({Args.ToCallArgs()});";
 
                 serialized += "}\n";
-            }
-            else if (fixedType.StartsWith("ref "))
-            {
-                serialized += $" {{ return ref *{Name}Impl({Args.ToCallArgs()}); }}\n";
             }
             else
             {
                 serialized += $" => {Name}Impl({Args.ToCallArgs()});\n";
             }
+
+            if (fixedType.StartsWith("ref"))
+                serialized += "#endif\n";
 
             return serialized;
         }

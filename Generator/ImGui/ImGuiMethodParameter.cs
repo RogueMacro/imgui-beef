@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ImGuiBeefGenerator.ImGui
@@ -34,14 +35,23 @@ namespace ImGuiBeefGenerator.ImGui
                 }
                 else if (defaultValue != "")
                 {
-                    if (defaultValue.EndsWith(")"))
-                        DefaultValue = "default";
+                    if (defaultValue.StartsWith("sizeof("))
+                    {
+                        int start = defaultValue.IndexOf("(", StringComparison.Ordinal) + 1;
+                        int end = defaultValue.IndexOf(")", start, StringComparison.Ordinal);
+
+                        DefaultValue = $"sizeof({ImGui.FixType(defaultValue[start .. end])})";
+                    }
+                    else if (defaultValue.EndsWith(")"))
+                        DefaultValue = ImGui.FixDefaultValue(defaultValue);
                     else
                         DefaultValue = ImGui.RemovePrefix(defaultValue);
 
-                    if (DefaultValue == "FLT_MAX")
-                        DefaultValue = "float.MaxValue";
-                    else if (DefaultValue.Contains("_"))
+                    DefaultValue = DefaultValue
+                                        .Replace("FLT_MAX", "float.MaxValue")
+                                        .Replace("FLT_MIN", "float.MinValue");
+
+                    if (DefaultValue.Contains("_"))
                         DefaultValue = DefaultValue.Remove(0, DefaultValue.IndexOf('_') + 1).Insert(0, ".");
 
                     if (char.IsDigit(DefaultValue[0]))
@@ -59,6 +69,8 @@ namespace ImGuiBeefGenerator.ImGui
                 Name = Name.Replace(arraySpecifier, "");
                 Type += arraySpecifier;
             }
+
+            Type = Type.Replace("char*[]", "char**");
 
             Name = ImGui.MakeSafeName(Name);
         }
