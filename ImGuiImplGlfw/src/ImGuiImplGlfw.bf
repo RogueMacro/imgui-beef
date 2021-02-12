@@ -15,6 +15,10 @@ namespace ImGui
         private static extern bool InitForOpenGLImpl(GLFWwindow* window, bool install_callbacks);
         public static bool InitForOpenGL(GLFWwindow* window, bool install_callbacks) => InitForOpenGLImpl(window, install_callbacks);
         
+        [LinkName("ImGui_ImplGlfw_InitForOther")]
+        private static extern bool InitForOtherImpl(GLFWwindow* window, bool install_callbacks);
+        public static bool InitForOther(GLFWwindow* window, bool install_callbacks) => InitForOtherImpl(window, install_callbacks);
+        
         [LinkName("ImGui_ImplGlfw_InitForVulkan")]
         private static extern bool InitForVulkanImpl(GLFWwindow* window, bool install_callbacks);
         public static bool InitForVulkan(GLFWwindow* window, bool install_callbacks) => InitForVulkanImpl(window, install_callbacks);

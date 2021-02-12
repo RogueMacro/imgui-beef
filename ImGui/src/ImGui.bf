@@ -1,11 +1,11 @@
 // -- GENERATION INFORMATION --
-// Date: 02/11/2021 06:30:25
+// Date: 02/12/2021 06:26:55
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
-// Global methods: 748
+// Global methods: 752
 // Instance methods: 0
-// Structs: 85
+// Structs: 86
 // Typedefs: 23
 
 using System;
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.80";
-		public static int VERSION_NUM = 18000;
+		public static char8* VERSION = "1.81";
+		public static int VERSION_NUM = 18100;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -404,6 +404,7 @@ namespace ImGui
             RenderPre = 4,
             RenderPost = 5,
             Shutdown = 6,
+            PendingRemoval_ = 7,
         
         }
         
@@ -1155,16 +1156,19 @@ namespace ImGui
         public enum ViewportFlags : int32
         {
             None = 0,
-            NoDecoration = 1,
-            NoTaskBarIcon = 2,
-            NoFocusOnAppearing = 4,
-            NoFocusOnClick = 8,
-            NoInputs = 16,
-            NoRendererClear = 32,
-            TopMost = 64,
-            Minimized = 128,
-            NoAutoMerge = 256,
-            CanHostOtherWindows = 512,
+            IsPlatformWindow = 1,
+            IsPlatformMonitor = 2,
+            OwnedByApp = 4,
+            NoDecoration = 8,
+            NoTaskBarIcon = 16,
+            NoFocusOnAppearing = 32,
+            NoFocusOnClick = 64,
+            NoInputs = 128,
+            NoRendererClear = 256,
+            TopMost = 512,
+            Minimized = 1024,
+            NoAutoMerge = 2048,
+            CanHostOtherWindows = 4096,
         
         }
         
@@ -1333,10 +1337,10 @@ namespace ImGui
         public struct DrawData
         {
             public bool Valid;
-            public DrawList** CmdLists;
             public int32 CmdListsCount;
             public int32 TotalIdxCount;
             public int32 TotalVtxCount;
+            public DrawList** CmdLists;
             public Vec2 DisplayPos;
             public Vec2 DisplaySize;
             public Vec2 FramebufferScale;
@@ -1379,6 +1383,10 @@ namespace ImGui
             [LinkName("ImDrawDataBuilder_FlattenIntoSingleLayer")]
             private static extern void FlattenIntoSingleLayerImpl(DrawDataBuilder* self);
             public void FlattenIntoSingleLayer() mut=> FlattenIntoSingleLayerImpl(&this);
+            
+            [LinkName("ImDrawDataBuilder_GetDrawListCount")]
+            private static extern int32 GetDrawListCountImpl(DrawDataBuilder* self);
+            public int32 GetDrawListCount() mut=> GetDrawListCountImpl(&this);
             
         }
         
@@ -1845,6 +1853,8 @@ namespace ImGui
             public Vector<FontAtlasCustomRect> CustomRects;
             public Vector<FontConfig> ConfigData;
             public Vec4[64] TexUvLines;
+            public FontBuilderIO* FontBuilderIO;
+            public uint32 FontBuilderFlags;
             public int32 PackIdMouseCursors;
             public int32 PackIdLines;
         
@@ -2017,6 +2027,13 @@ namespace ImGui
         }
         
         [CRepr]
+        public struct FontBuilderIO
+        {
+            public function bool(FontAtlas* atlas) FontBuilder_Build;
+        
+        }
+        
+        [CRepr]
         public struct FontConfig
         {
             public void* FontData;
@@ -2033,7 +2050,7 @@ namespace ImGui
             public float GlyphMinAdvanceX;
             public float GlyphMaxAdvanceX;
             public bool MergeMode;
-            public uint32 RasterizerFlags;
+            public uint32 FontBuilderFlags;
             public float RasterizerMultiply;
             public Wchar EllipsisChar;
             public char[40] Name;
@@ -2051,8 +2068,9 @@ namespace ImGui
         [CRepr]
         public struct FontGlyph
         {
-            public uint32 Codepoint;
+            public uint32 Colored;
             public uint32 Visible;
+            public uint32 Codepoint;
             public float AdvanceX;
             public float X0;
             public float Y0;
@@ -2202,6 +2220,7 @@ namespace ImGui
             public ViewportP* CurrentViewport;
             public ViewportP* MouseViewport;
             public ViewportP* MouseLastHoveredViewport;
+            public ID PlatformLastFocusedViewportId;
             public int32 ViewportFrontMostStampCount;
             public Window* NavWindow;
             public ID NavId;
@@ -2313,10 +2332,13 @@ namespace ImGui
             public ChunkStream<WindowSettings> SettingsWindows;
             public ChunkStream<TableSettings> SettingsTables;
             public Vector<ContextHook> Hooks;
+            public ID HookIdNext;
             public bool LogEnabled;
             public LogType LogType;
             public FileHandle LogFile;
             public TextBuffer LogBuffer;
+            public char* LogNextPrefix;
+            public char* LogNextSuffix;
             public float LogLinePosY;
             public bool LogLineFirstItem;
             public int32 LogDepthRef;
@@ -2345,6 +2367,7 @@ namespace ImGui
         [CRepr]
         public struct ContextHook
         {
+            public ID HookId;
             public ContextHookType Type;
             public ID Owner;
             public ContextHookCallback Callback;
@@ -3056,7 +3079,6 @@ namespace ImGui
             public function void(Viewport* vp, void* render_arg) Renderer_RenderWindow;
             public function void(Viewport* vp, void* render_arg) Renderer_SwapBuffers;
             public Vector<PlatformMonitor> Monitors;
-            public Viewport* MainViewport;
             public Vector<Viewport*> Viewports;
         
             [LinkName("ImGuiPlatformIO_ImGuiPlatformIO")]
@@ -3857,11 +3879,11 @@ namespace ImGui
             public ViewportFlags Flags;
             public Vec2 Pos;
             public Vec2 Size;
-            public Vec2 WorkOffsetMin;
-            public Vec2 WorkOffsetMax;
+            public Vec2 WorkPos;
+            public Vec2 WorkSize;
             public float DpiScale;
-            public DrawData* DrawData;
             public ID ParentViewportId;
+            public DrawData* DrawData;
             public void* RendererUserData;
             public void* PlatformUserData;
             public void* PlatformHandle;
@@ -3886,21 +3908,12 @@ namespace ImGui
                 return pOut;
             }
             
-            [LinkName("ImGuiViewport_GetWorkPos")]
-            private static extern Vec2 GetWorkPosImpl(Vec2* pOut, Viewport* self);
-            public Vec2 GetWorkPos() mut
+            [LinkName("ImGuiViewport_GetWorkCenter")]
+            private static extern Vec2 GetWorkCenterImpl(Vec2* pOut, Viewport* self);
+            public Vec2 GetWorkCenter() mut
             {
                 Vec2 pOut = default;
-                GetWorkPosImpl(&pOut, &this);
-                return pOut;
-            }
-            
-            [LinkName("ImGuiViewport_GetWorkSize")]
-            private static extern Vec2 GetWorkSizeImpl(Vec2* pOut, Viewport* self);
-            public Vec2 GetWorkSize() mut
-            {
-                Vec2 pOut = default;
-                GetWorkSizeImpl(&pOut, &this);
+                GetWorkCenterImpl(&pOut, &this);
                 return pOut;
             }
             
@@ -3912,7 +3925,6 @@ namespace ImGui
             public Viewport _ImGuiViewport;
             public int32 Idx;
             public int32 LastFrameActive;
-            public int32[2] LastFrameDrawLists;
             public int32 LastFrontMostStampCount;
             public ID LastNameHash;
             public Vec2 LastPos;
@@ -3921,12 +3933,15 @@ namespace ImGui
             public short PlatformMonitor;
             public bool PlatformWindowCreated;
             public Window* Window;
+            public int32[2] DrawListsLastFrame;
             public DrawList*[2] DrawLists;
             public DrawData DrawDataP;
             public DrawDataBuilder DrawDataBuilder;
             public Vec2 LastPlatformPos;
             public Vec2 LastPlatformSize;
             public Vec2 LastRendererSize;
+            public Vec2 WorkOffsetMin;
+            public Vec2 WorkOffsetMax;
             public Vec2 CurrWorkOffsetMin;
             public Vec2 CurrWorkOffsetMax;
         
@@ -3958,6 +3973,10 @@ namespace ImGui
                 GetWorkRectImpl(&pOut, &this);
                 return pOut;
             }
+            
+            [LinkName("ImGuiViewportP_UpdateWorkRect")]
+            private static extern void UpdateWorkRectImpl(ViewportP* self);
+            public void UpdateWorkRect() mut=> UpdateWorkRectImpl(&this);
             
         }
         
@@ -4897,8 +4916,8 @@ namespace ImGui
         public static void ActivateItem(ID id) => ActivateItemImpl(id);
         
         [LinkName("igAddContextHook")]
-        private static extern void AddContextHookImpl(Context* context, ContextHook* hook);
-        public static void AddContextHook(Context* context, ContextHook* hook) => AddContextHookImpl(context, hook);
+        private static extern ID AddContextHookImpl(Context* context, ContextHook* hook);
+        public static ID AddContextHook(Context* context, ContextHook* hook) => AddContextHookImpl(context, hook);
         
         [LinkName("igAlignTextToFramePadding")]
         private static extern void AlignTextToFramePaddingImpl();
@@ -4967,6 +4986,10 @@ namespace ImGui
         [LinkName("igBeginGroup")]
         private static extern void BeginGroupImpl();
         public static void BeginGroup() => BeginGroupImpl();
+        
+        [LinkName("igBeginListBox")]
+        private static extern bool BeginListBoxImpl(char* label, Vec2 size);
+        public static bool BeginListBox(char* label, Vec2 size = Vec2.Zero) => BeginListBoxImpl(label, size);
         
         [LinkName("igBeginMainMenuBar")]
         private static extern bool BeginMainMenuBarImpl();
@@ -5370,6 +5393,10 @@ namespace ImGui
         private static extern void DebugNodeWindowsListImpl(Vector<Window**> windows, char* label);
         public static void DebugNodeWindowsList(Vector<Window**> windows, char* label) => DebugNodeWindowsListImpl(windows, label);
         
+        [LinkName("igDebugRenderViewportThumbnail")]
+        private static extern void DebugRenderViewportThumbnailImpl(DrawList* draw_list, ViewportP* viewport, Rect bb);
+        public static void DebugRenderViewportThumbnail(DrawList* draw_list, ViewportP* viewport, Rect bb) => DebugRenderViewportThumbnailImpl(draw_list, viewport, bb);
+        
         [LinkName("igDebugStartItemPicker")]
         private static extern void DebugStartItemPickerImpl();
         public static void DebugStartItemPicker() => DebugStartItemPickerImpl();
@@ -5622,6 +5649,10 @@ namespace ImGui
         [LinkName("igEndGroup")]
         private static extern void EndGroupImpl();
         public static void EndGroup() => EndGroupImpl();
+        
+        [LinkName("igEndListBox")]
+        private static extern void EndListBoxImpl();
+        public static void EndListBox() => EndListBoxImpl();
         
         [LinkName("igEndMainMenuBar")]
         private static extern void EndMainMenuBarImpl();
@@ -6515,17 +6546,25 @@ namespace ImGui
         private static extern void ImFontAtlasBuildPackCustomRectsImpl(FontAtlas* atlas, void* stbrp_context_opaque);
         public static void ImFontAtlasBuildPackCustomRects(FontAtlas* atlas, void* stbrp_context_opaque) => ImFontAtlasBuildPackCustomRectsImpl(atlas, stbrp_context_opaque);
         
-        [LinkName("igImFontAtlasBuildRender1bppRectFromString")]
-        private static extern void ImFontAtlasBuildRender1bppRectFromStringImpl(FontAtlas* atlas, int32 atlas_x, int32 atlas_y, int32 w, int32 h, char* in_str, char in_marker_char, uchar in_marker_pixel_value);
-        public static void ImFontAtlasBuildRender1bppRectFromString(FontAtlas* atlas, int32 atlas_x, int32 atlas_y, int32 w, int32 h, char* in_str, char in_marker_char, uchar in_marker_pixel_value) => ImFontAtlasBuildRender1bppRectFromStringImpl(atlas, atlas_x, atlas_y, w, h, in_str, in_marker_char, in_marker_pixel_value);
+        [LinkName("igImFontAtlasBuildRender32bppRectFromString")]
+        private static extern void ImFontAtlasBuildRender32bppRectFromStringImpl(FontAtlas* atlas, int32 x, int32 y, int32 w, int32 h, char* in_str, char in_marker_char, uint32 in_marker_pixel_value);
+        public static void ImFontAtlasBuildRender32bppRectFromString(FontAtlas* atlas, int32 x, int32 y, int32 w, int32 h, char* in_str, char in_marker_char, uint32 in_marker_pixel_value) => ImFontAtlasBuildRender32bppRectFromStringImpl(atlas, x, y, w, h, in_str, in_marker_char, in_marker_pixel_value);
+        
+        [LinkName("igImFontAtlasBuildRender8bppRectFromString")]
+        private static extern void ImFontAtlasBuildRender8bppRectFromStringImpl(FontAtlas* atlas, int32 x, int32 y, int32 w, int32 h, char* in_str, char in_marker_char, uchar in_marker_pixel_value);
+        public static void ImFontAtlasBuildRender8bppRectFromString(FontAtlas* atlas, int32 x, int32 y, int32 w, int32 h, char* in_str, char in_marker_char, uchar in_marker_pixel_value) => ImFontAtlasBuildRender8bppRectFromStringImpl(atlas, x, y, w, h, in_str, in_marker_char, in_marker_pixel_value);
         
         [LinkName("igImFontAtlasBuildSetupFont")]
         private static extern void ImFontAtlasBuildSetupFontImpl(FontAtlas* atlas, Font* font, FontConfig* font_config, float ascent, float descent);
         public static void ImFontAtlasBuildSetupFont(FontAtlas* atlas, Font* font, FontConfig* font_config, float ascent, float descent) => ImFontAtlasBuildSetupFontImpl(atlas, font, font_config, ascent, descent);
         
-        [LinkName("igImFontAtlasBuildWithStbTruetype")]
-        private static extern bool ImFontAtlasBuildWithStbTruetypeImpl(FontAtlas* atlas);
-        public static bool ImFontAtlasBuildWithStbTruetype(FontAtlas* atlas) => ImFontAtlasBuildWithStbTruetypeImpl(atlas);
+        [LinkName("igImFontAtlasGetBuilderForStbTruetype")]
+        private static extern FontBuilderIO* ImFontAtlasGetBuilderForStbTruetypeImpl();
+        #if IMGUI_USE_REF
+        public static ref FontBuilderIO ImFontAtlasGetBuilderForStbTruetype() { return ref *ImFontAtlasGetBuilderForStbTruetypeImpl(); }
+        #else
+        public static FontBuilderIO* ImFontAtlasGetBuilderForStbTruetype() => ImFontAtlasGetBuilderForStbTruetypeImpl();
+        #endif
         
         [LinkName("igImFormatString")]
         private static extern int32 ImFormatStringImpl(char* buf, size buf_size, char* fmt, ...);
@@ -7133,18 +7172,6 @@ namespace ImGui
         private static extern bool ListBoxImpl(char* label, int32* current_item, function bool(void* data, int32 idx, char** outext) items_getter, void* data, int32 items_count, int32 height_in_items);
         public static bool ListBox(char* label, int32* current_item, function bool(void* data, int32 idx, char** outext) items_getter, void* data, int32 items_count, int32 height_in_items = -1) => ListBoxImpl(label, current_item, items_getter, data, items_count, height_in_items);
         
-        [LinkName("igListBoxFooter")]
-        private static extern void ListBoxFooterImpl();
-        public static void ListBoxFooter() => ListBoxFooterImpl();
-        
-        [LinkName("igListBoxHeaderVec2")]
-        private static extern bool ListBoxHeaderImpl(char* label, Vec2 size);
-        public static bool ListBoxHeader(char* label, Vec2 size = Vec2.Zero) => ListBoxHeaderImpl(label, size);
-        
-        [LinkName("igListBoxHeaderInt")]
-        private static extern bool ListBoxHeaderImpl(char* label, int32 items_count, int32 height_in_items);
-        public static bool ListBoxHeader(char* label, int32 items_count, int32 height_in_items = -1) => ListBoxHeaderImpl(label, items_count, height_in_items);
-        
         [LinkName("igLoadIniSettingsFromDisk")]
         private static extern void LoadIniSettingsFromDiskImpl(char* ini_filename);
         public static void LoadIniSettingsFromDisk(char* ini_filename) => LoadIniSettingsFromDiskImpl(ini_filename);
@@ -7168,6 +7195,10 @@ namespace ImGui
         [LinkName("igLogRenderedText")]
         private static extern void LogRenderedTextImpl(Vec2* ref_pos, char* text, char* text_end);
         public static void LogRenderedText(Vec2* ref_pos, char* text, char* text_end = null) => LogRenderedTextImpl(ref_pos, text, text_end);
+        
+        [LinkName("igLogSetNextTextDecoration")]
+        private static extern void LogSetNextTextDecorationImpl(char* prefix, char* suffix);
+        public static void LogSetNextTextDecoration(char* prefix, char* suffix) => LogSetNextTextDecorationImpl(prefix, suffix);
         
         [LinkName("igLogText")]
         private static extern void LogTextImpl(char* fmt, ...);
@@ -7424,6 +7455,10 @@ namespace ImGui
         [LinkName("igRadioButtonIntPtr")]
         private static extern bool RadioButtonImpl(char* label, int32* v, int32 v_button);
         public static bool RadioButton(char* label, int32* v, int32 v_button) => RadioButtonImpl(label, v, v_button);
+        
+        [LinkName("igRemoveContextHook")]
+        private static extern void RemoveContextHookImpl(Context* context, ID hook_to_remove);
+        public static void RemoveContextHook(Context* context, ID hook_to_remove) => RemoveContextHookImpl(context, hook_to_remove);
         
         [LinkName("igRender")]
         private static extern void RenderImpl();
@@ -8191,6 +8226,10 @@ namespace ImGui
         [LinkName("igTableSetBgColor")]
         private static extern void TableSetBgColorImpl(TableBgTarget target, U32 color, int32 column_n);
         public static void TableSetBgColor(TableBgTarget target, U32 color, int32 column_n = -1) => TableSetBgColorImpl(target, color, column_n);
+        
+        [LinkName("igTableSetColumnEnabled")]
+        private static extern void TableSetColumnEnabledImpl(int32 column_n, bool enabled);
+        public static void TableSetColumnEnabled(int32 column_n, bool enabled) => TableSetColumnEnabledImpl(column_n, enabled);
         
         [LinkName("igTableSetColumnIndex")]
         private static extern bool TableSetColumnIndexImpl(int32 column_n);
