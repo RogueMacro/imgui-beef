@@ -1,12 +1,12 @@
 // -- GENERATION INFORMATION --
-// Date: 03/16/2021 06:27:43
+// Date: 03/17/2021 06:27:57
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
-// Global methods: 752
+// Global methods: 754
 // Instance methods: 0
 // Structs: 86
-// Typedefs: 23
+// Typedefs: 25
 
 using System;
 
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.81";
-		public static int VERSION_NUM = 18100;
+		public static char8* VERSION = "1.82";
+		public static int VERSION_NUM = 18200;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -139,6 +139,8 @@ namespace ImGui
         public typealias ErrorLogCallback = function void(void* user_data, char* fmt,  ...);
         public typealias ID = uint32;
         public typealias InputTextCallback = function int(InputTextCallbackData* data);
+        public typealias MemAllocFunc = function void*(size sz, void* user_data);
+        public typealias MemFreeFunc = function void(void* ptr, void* user_data);
         public typealias SizeCallback = function void(SizeCallbackData* data);
         public typealias TableColumnIdx = S8;
         public typealias TableDrawChannelIdx = U8;
@@ -157,18 +159,22 @@ namespace ImGui
         public typealias Wchar32 = uint32;
         
         [AllowDuplicates]
-        public enum DrawCornerFlags : int32
+        public enum DrawFlags : int32
         {
             None = 0,
-            TopLeft = 1,
-            TopRight = 2,
-            BotLeft = 4,
-            BotRight = 8,
-            Top = 3,
-            Bot = 12,
-            Left = 5,
-            Right = 10,
-            All = 15,
+            Closed = 1,
+            RoundCornersTopLeft = 16,
+            RoundCornersTopRight = 32,
+            RoundCornersBottomLeft = 64,
+            RoundCornersBottomRight = 128,
+            RoundCornersNone = 256,
+            RoundCornersTop = 48,
+            RoundCornersBottom = 192,
+            RoundCornersLeft = 80,
+            RoundCornersRight = 160,
+            RoundCornersAll = 240,
+            RoundCornersDefault_ = 240,
+            RoundCornersMask_ = 496,
         
         }
         
@@ -563,9 +569,9 @@ namespace ImGui
         {
             None = 0,
             Mouse = 1,
-            Nav = 2,
-            NavKeyboard = 3,
-            NavGamepad = 4,
+            Keyboard = 2,
+            Gamepad = 3,
+            Nav = 4,
             COUNT = 5,
         
         }
@@ -587,7 +593,7 @@ namespace ImGui
             AllowTabInput = 1024,
             CtrlEnterForNewLine = 2048,
             NoHorizontalScroll = 4096,
-            AlwaysInsertMode = 8192,
+            AlwaysOverwrite = 8192,
             ReadOnly = 16384,
             Password = 32768,
             NoUndoRedo = 65536,
@@ -626,6 +632,7 @@ namespace ImGui
             ToggledOpen = 16,
             HasDeactivated = 32,
             Deactivated = 64,
+            HoveredWindow = 128,
         
         }
         
@@ -1453,8 +1460,8 @@ namespace ImGui
             public void AddImageQuad(TextureID user_texture_id, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, Vec2 uv1 = Vec2.Zero, Vec2 uv2 = Vec2.OneZero, Vec2 uv3 = Vec2.Ones, Vec2 uv4 = Vec2.ZeroOne, U32 col = (U32) 4294967295) mut=> AddImageQuadImpl(&this, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col);
             
             [LinkName("ImDrawList_AddImageRounded")]
-            private static extern void AddImageRoundedImpl(DrawList* self, TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col, float rounding, DrawCornerFlags rounding_corners);
-            public void AddImageRounded(TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col, float rounding, DrawCornerFlags rounding_corners = .All) mut=> AddImageRoundedImpl(&this, user_texture_id, p_min, p_max, uv_min, uv_max, col, rounding, rounding_corners);
+            private static extern void AddImageRoundedImpl(DrawList* self, TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col, float rounding, DrawFlags flags);
+            public void AddImageRounded(TextureID user_texture_id, Vec2 p_min, Vec2 p_max, Vec2 uv_min, Vec2 uv_max, U32 col, float rounding, DrawFlags flags = (DrawFlags) 0) mut=> AddImageRoundedImpl(&this, user_texture_id, p_min, p_max, uv_min, uv_max, col, rounding, flags);
             
             [LinkName("ImDrawList_AddLine")]
             private static extern void AddLineImpl(DrawList* self, Vec2 p1, Vec2 p2, U32 col, float thickness);
@@ -1469,8 +1476,8 @@ namespace ImGui
             public void AddNgonFilled(Vec2 center, float radius, U32 col, int32 num_segments) mut=> AddNgonFilledImpl(&this, center, radius, col, num_segments);
             
             [LinkName("ImDrawList_AddPolyline")]
-            private static extern void AddPolylineImpl(DrawList* self, Vec2* points, int32 num_points, U32 col, bool closed, float thickness);
-            public void AddPolyline(Vec2* points, int32 num_points, U32 col, bool closed, float thickness) mut=> AddPolylineImpl(&this, points, num_points, col, closed, thickness);
+            private static extern void AddPolylineImpl(DrawList* self, Vec2* points, int32 num_points, U32 col, DrawFlags flags, float thickness);
+            public void AddPolyline(Vec2* points, int32 num_points, U32 col, DrawFlags flags, float thickness) mut=> AddPolylineImpl(&this, points, num_points, col, flags, thickness);
             
             [LinkName("ImDrawList_AddQuad")]
             private static extern void AddQuadImpl(DrawList* self, Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, U32 col, float thickness);
@@ -1481,12 +1488,12 @@ namespace ImGui
             public void AddQuadFilled(Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4, U32 col) mut=> AddQuadFilledImpl(&this, p1, p2, p3, p4, col);
             
             [LinkName("ImDrawList_AddRect")]
-            private static extern void AddRectImpl(DrawList* self, Vec2 p_min, Vec2 p_max, U32 col, float rounding, DrawCornerFlags rounding_corners, float thickness);
-            public void AddRect(Vec2 p_min, Vec2 p_max, U32 col, float rounding = (float) 0.0f, DrawCornerFlags rounding_corners = .All, float thickness = (float) 1.0f) mut=> AddRectImpl(&this, p_min, p_max, col, rounding, rounding_corners, thickness);
+            private static extern void AddRectImpl(DrawList* self, Vec2 p_min, Vec2 p_max, U32 col, float rounding, DrawFlags flags, float thickness);
+            public void AddRect(Vec2 p_min, Vec2 p_max, U32 col, float rounding = (float) 0.0f, DrawFlags flags = (DrawFlags) 0, float thickness = (float) 1.0f) mut=> AddRectImpl(&this, p_min, p_max, col, rounding, flags, thickness);
             
             [LinkName("ImDrawList_AddRectFilled")]
-            private static extern void AddRectFilledImpl(DrawList* self, Vec2 p_min, Vec2 p_max, U32 col, float rounding, DrawCornerFlags rounding_corners);
-            public void AddRectFilled(Vec2 p_min, Vec2 p_max, U32 col, float rounding = (float) 0.0f, DrawCornerFlags rounding_corners = .All) mut=> AddRectFilledImpl(&this, p_min, p_max, col, rounding, rounding_corners);
+            private static extern void AddRectFilledImpl(DrawList* self, Vec2 p_min, Vec2 p_max, U32 col, float rounding, DrawFlags flags);
+            public void AddRectFilled(Vec2 p_min, Vec2 p_max, U32 col, float rounding = (float) 0.0f, DrawFlags flags = (DrawFlags) 0) mut=> AddRectFilledImpl(&this, p_min, p_max, col, rounding, flags);
             
             [LinkName("ImDrawList_AddRectFilledMultiColor")]
             private static extern void AddRectFilledMultiColorImpl(DrawList* self, Vec2 p_min, Vec2 p_max, U32 col_upr_left, U32 col_upr_right, U32 col_bot_right, U32 col_bot_left);
@@ -1544,7 +1551,7 @@ namespace ImGui
             
             [LinkName("ImDrawList_PathArcTo")]
             private static extern void PathArcToImpl(DrawList* self, Vec2 center, float radius, float a_min, float a_max, int32 num_segments);
-            public void PathArcTo(Vec2 center, float radius, float a_min, float a_max, int32 num_segments = (int32) 10) mut=> PathArcToImpl(&this, center, radius, a_min, a_max, num_segments);
+            public void PathArcTo(Vec2 center, float radius, float a_min, float a_max, int32 num_segments = (int32) 0) mut=> PathArcToImpl(&this, center, radius, a_min, a_max, num_segments);
             
             [LinkName("ImDrawList_PathArcToFast")]
             private static extern void PathArcToFastImpl(DrawList* self, Vec2 center, float radius, int32 a_min_of_12, int32 a_max_of_12);
@@ -1575,12 +1582,12 @@ namespace ImGui
             public void PathLineToMergeDuplicate(Vec2 pos) mut=> PathLineToMergeDuplicateImpl(&this, pos);
             
             [LinkName("ImDrawList_PathRect")]
-            private static extern void PathRectImpl(DrawList* self, Vec2 rect_min, Vec2 rect_max, float rounding, DrawCornerFlags rounding_corners);
-            public void PathRect(Vec2 rect_min, Vec2 rect_max, float rounding = (float) 0.0f, DrawCornerFlags rounding_corners = .All) mut=> PathRectImpl(&this, rect_min, rect_max, rounding, rounding_corners);
+            private static extern void PathRectImpl(DrawList* self, Vec2 rect_min, Vec2 rect_max, float rounding, DrawFlags flags);
+            public void PathRect(Vec2 rect_min, Vec2 rect_max, float rounding = (float) 0.0f, DrawFlags flags = (DrawFlags) 0) mut=> PathRectImpl(&this, rect_min, rect_max, rounding, flags);
             
             [LinkName("ImDrawList_PathStroke")]
-            private static extern void PathStrokeImpl(DrawList* self, U32 col, bool closed, float thickness);
-            public void PathStroke(U32 col, bool closed, float thickness = (float) 1.0f) mut=> PathStrokeImpl(&this, col, closed, thickness);
+            private static extern void PathStrokeImpl(DrawList* self, U32 col, DrawFlags flags, float thickness);
+            public void PathStroke(U32 col, DrawFlags flags = (DrawFlags) 0, float thickness = (float) 1.0f) mut=> PathStrokeImpl(&this, col, flags, thickness);
             
             [LinkName("ImDrawList_PopClipRect")]
             private static extern void PopClipRectImpl(DrawList* self);
@@ -1634,6 +1641,10 @@ namespace ImGui
             private static extern void PushTextureIDImpl(DrawList* self, TextureID texture_id);
             public void PushTextureID(TextureID texture_id) mut=> PushTextureIDImpl(&this, texture_id);
             
+            [LinkName("ImDrawList__CalcCircleAutoSegmentCount")]
+            private static extern int32 CalcCircleAutoSegmentCountImpl(DrawList* self, float radius);
+            public int32 CalcCircleAutoSegmentCount(float radius) mut=> CalcCircleAutoSegmentCountImpl(&this, radius);
+            
             [LinkName("ImDrawList__ClearFreeMemory")]
             private static extern void ClearFreeMemoryImpl(DrawList* self);
             public void ClearFreeMemory() mut=> ClearFreeMemoryImpl(&this);
@@ -1649,6 +1660,14 @@ namespace ImGui
             [LinkName("ImDrawList__OnChangedVtxOffset")]
             private static extern void OnChangedVtxOffsetImpl(DrawList* self);
             public void OnChangedVtxOffset() mut=> OnChangedVtxOffsetImpl(&this);
+            
+            [LinkName("ImDrawList__PathArcToFastEx")]
+            private static extern void PathArcToFastExImpl(DrawList* self, Vec2 center, float radius, int32 a_min_sample, int32 a_max_sample, int32 a_step);
+            public void PathArcToFastEx(Vec2 center, float radius, int32 a_min_sample, int32 a_max_sample, int32 a_step) mut=> PathArcToFastExImpl(&this, center, radius, a_min_sample, a_max_sample, a_step);
+            
+            [LinkName("ImDrawList__PathArcToN")]
+            private static extern void PathArcToNImpl(DrawList* self, Vec2 center, float radius, float a_min, float a_max, int32 num_segments);
+            public void PathArcToN(Vec2 center, float radius, float a_min, float a_max, int32 num_segments) mut=> PathArcToNImpl(&this, center, radius, a_min, a_max, num_segments);
             
             [LinkName("ImDrawList__PopUnusedDrawCmd")]
             private static extern void PopUnusedDrawCmdImpl(DrawList* self);
@@ -1670,7 +1689,8 @@ namespace ImGui
             public float CircleSegmentMaxError;
             public Vec4 ClipRectFullscreen;
             public DrawListFlags InitialFlags;
-            public Vec2[12] ArcFastVtx;
+            public Vec2[48] ArcFastVtx;
+            public float ArcFastRadiusCutoff;
             public U8[64] CircleSegmentCounts;
             public Vec4* TexUvLines;
         
@@ -1681,9 +1701,9 @@ namespace ImGui
                 this = *CtorImpl();
             }
             
-            [LinkName("ImDrawListSharedData_SetCircleSegmentMaxError")]
-            private static extern void SetCircleSegmentMaxErrorImpl(DrawListSharedData* self, float max_error);
-            public void SetCircleSegmentMaxError(float max_error) mut=> SetCircleSegmentMaxErrorImpl(&this, max_error);
+            [LinkName("ImDrawListSharedData_SetCircleTessellationMaxError")]
+            private static extern void SetCircleTessellationMaxErrorImpl(DrawListSharedData* self, float max_error);
+            public void SetCircleTessellationMaxError(float max_error) mut=> SetCircleTessellationMaxErrorImpl(&this, max_error);
             
         }
         
@@ -1838,11 +1858,12 @@ namespace ImGui
         [CRepr]
         public struct FontAtlas
         {
-            public bool Locked;
             public FontAtlasFlags Flags;
             public TextureID TexID;
             public int32 TexDesiredWidth;
             public int32 TexGlyphPadding;
+            public bool Locked;
+            public bool TexPixelsUseColors;
             public uchar* TexPixelsAlpha8;
             public uint32* TexPixelsRGBA32;
             public int32 TexWidth;
@@ -2167,7 +2188,6 @@ namespace ImGui
             public int32 WindowsActiveCount;
             public Window* CurrentWindow;
             public Window* HoveredWindow;
-            public Window* HoveredRootWindow;
             public Window* HoveredWindowUnderMovingWindow;
             public DockNode* HoveredDockNode;
             public Window* MovingWindow;
@@ -2221,6 +2241,7 @@ namespace ImGui
             public ViewportP* MouseViewport;
             public ViewportP* MouseLastHoveredViewport;
             public ID PlatformLastFocusedViewportId;
+            public PlatformMonitor FallbackMonitor;
             public int32 ViewportFrontMostStampCount;
             public Window* NavWindow;
             public ID NavId;
@@ -2266,13 +2287,13 @@ namespace ImGui
             public float NavWindowingTimer;
             public float NavWindowingHighlightAlpha;
             public bool NavWindowingToggleLayer;
-            public Window* FocusRequestCurrWindow;
-            public Window* FocusRequestNextWindow;
-            public int32 FocusRequestCurrCounterRegular;
-            public int32 FocusRequestCurrCounterTabStop;
-            public int32 FocusRequestNextCounterRegular;
-            public int32 FocusRequestNextCounterTabStop;
-            public bool FocusTabPressed;
+            public Window* TabFocusRequestCurrWindow;
+            public Window* TabFocusRequestNextWindow;
+            public int32 TabFocusRequestCurrCounterRegular;
+            public int32 TabFocusRequestCurrCounterTabStop;
+            public int32 TabFocusRequestNextCounterRegular;
+            public int32 TabFocusRequestNextCounterTabStop;
+            public bool TabFocusPressed;
             public float DimBgRatio;
             public MouseCursor MouseCursor;
             public bool DragDropActive;
@@ -2449,7 +2470,6 @@ namespace ImGui
             public bool IsFocused;
             public bool HasCloseButton;
             public bool HasWindowMenuButton;
-            public bool EnableCloseButton;
             public bool WantCloseAll;
             public bool WantLockSizeOnce;
             public bool WantMouseMove;
@@ -2527,6 +2547,7 @@ namespace ImGui
             public float BackupCurrLineTextBaseOffset;
             public ID BackupActiveIdIsAlive;
             public bool BackupActiveIdPreviousFrameIsAlive;
+            public bool BackupHoveredIdIsAlive;
             public bool EmitItem;
         
         }
@@ -3365,7 +3386,7 @@ namespace ImGui
             public bool AntiAliasedLinesUseTex;
             public bool AntiAliasedFill;
             public float CurveTessellationTol;
-            public float CircleSegmentMaxError;
+            public float CircleTessellationMaxError;
             public Vec4[55] Colors;
         
             [LinkName("ImGuiStyle_ImGuiStyle")]
@@ -3581,9 +3602,10 @@ namespace ImGui
             public TableColumnIdx HeldHeaderColumn;
             public TableColumnIdx ReorderColumn;
             public TableColumnIdx ReorderColumnDir;
+            public TableColumnIdx LeftMostEnabledColumn;
+            public TableColumnIdx RightMostEnabledColumn;
             public TableColumnIdx LeftMostStretchedColumn;
             public TableColumnIdx RightMostStretchedColumn;
-            public TableColumnIdx RightMostEnabledColumn;
             public TableColumnIdx ContextPopupColumn;
             public TableColumnIdx FreezeRowsRequest;
             public TableColumnIdx FreezeRowsCount;
@@ -4036,6 +4058,7 @@ namespace ImGui
             public S8 HiddenFramesCanSkipItems;
             public S8 HiddenFramesCannotSkipItems;
             public S8 HiddenFramesForRenderOnly;
+            public S8 DisableInputsFrames;
             public Cond SetWindowPosAllowFlags;
             public Cond SetWindowSizeAllowFlags;
             public Cond SetWindowCollapsedAllowFlags;
@@ -4066,7 +4089,7 @@ namespace ImGui
             public DrawList DrawListInst;
             public Window* ParentWindow;
             public Window* RootWindow;
-            public Window* RootWindowDockStop;
+            public Window* RootWindowDockTree;
             public Window* RootWindowForTitleBarHighlight;
             public Window* RootWindowForNav;
             public Window* NavLastChildNavWindow;
@@ -4334,6 +4357,10 @@ namespace ImGui
             [LinkName("ImRect_Floor")]
             private static extern void FloorImpl(Rect* self);
             public void Floor() mut=> FloorImpl(&this);
+            
+            [LinkName("ImRect_GetArea")]
+            private static extern float GetAreaImpl(Rect* self);
+            public float GetArea() mut=> GetAreaImpl(&this);
             
             [LinkName("ImRect_GetBL")]
             private static extern Vec2 GetBLImpl(Vec2* pOut, Rect* self);
@@ -4859,9 +4886,9 @@ namespace ImGui
             private static extern void* GetSpanPtrEndImpl(SpanAllocator<T>* self, int32 n);
             public void* GetSpanPtrEnd(int32 n) mut=> GetSpanPtrEndImpl(&this, n);
             
-            [LinkName("ImSpanAllocator_ReserveBytes")]
-            private static extern void ReserveBytesImpl(SpanAllocator<T>* self, int32 n, size sz);
-            public void ReserveBytes(int32 n, size sz) mut=> ReserveBytesImpl(&this, n, sz);
+            [LinkName("ImSpanAllocator_Reserve")]
+            private static extern void ReserveImpl(SpanAllocator<T>* self, int32 n, size sz, int32 a);
+            public void Reserve(int32 n, size sz, int32 a = (int32) 4) mut=> ReserveImpl(&this, n, sz, a);
             
             [LinkName("ImSpanAllocator_SetArenaBasePtr")]
             private static extern void SetArenaBasePtrImpl(SpanAllocator<T>* self, void* base_ptr);
@@ -5812,6 +5839,10 @@ namespace ImGui
         private static extern ID GetActiveIDImpl();
         public static ID GetActiveID() => GetActiveIDImpl();
         
+        [LinkName("igGetAllocatorFunctions")]
+        private static extern void GetAllocatorFunctionsImpl(MemAllocFunc* p_alloc_func, MemFreeFunc* p_free_func, void** p_user_data);
+        public static void GetAllocatorFunctions(MemAllocFunc* p_alloc_func, MemFreeFunc* p_free_func, void** p_user_data) => GetAllocatorFunctionsImpl(p_alloc_func, p_free_func, p_user_data);
+        
         [LinkName("igGetBackgroundDrawListNil")]
         private static extern DrawList* GetBackgroundDrawListImpl();
         #if IMGUI_USE_REF
@@ -5909,6 +5940,14 @@ namespace ImGui
         public static ref Context GetCurrentContext() { return ref *GetCurrentContextImpl(); }
         #else
         public static Context* GetCurrentContext() => GetCurrentContextImpl();
+        #endif
+        
+        [LinkName("igGetCurrentTable")]
+        private static extern Table* GetCurrentTableImpl();
+        #if IMGUI_USE_REF
+        public static ref Table GetCurrentTable() { return ref *GetCurrentTableImpl(); }
+        #else
+        public static Table* GetCurrentTable() => GetCurrentTableImpl();
         #endif
         
         [LinkName("igGetCurrentWindow")]
@@ -6288,6 +6327,14 @@ namespace ImGui
         public static ref char GetVersion() { return ref *GetVersionImpl(); }
         #else
         public static char* GetVersion() => GetVersionImpl();
+        #endif
+        
+        [LinkName("igGetViewportPlatformMonitor")]
+        private static extern PlatformMonitor* GetViewportPlatformMonitorImpl(Viewport* viewport);
+        #if IMGUI_USE_REF
+        public static ref PlatformMonitor GetViewportPlatformMonitor(Viewport* viewport) { return ref *GetViewportPlatformMonitorImpl(viewport); }
+        #else
+        public static PlatformMonitor* GetViewportPlatformMonitor(Viewport* viewport) => GetViewportPlatformMonitorImpl(viewport);
         #endif
         
         [LinkName("igGetWindowAllowedExtentRect")]
@@ -7485,8 +7532,8 @@ namespace ImGui
         public static void RenderCheckMark(DrawList* draw_list, Vec2 pos, U32 col, float sz) => RenderCheckMarkImpl(draw_list, pos, col, sz);
         
         [LinkName("igRenderColorRectWithAlphaCheckerboard")]
-        private static extern void RenderColorRectWithAlphaCheckerboardImpl(DrawList* draw_list, Vec2 p_min, Vec2 p_max, U32 fill_col, float grid_step, Vec2 grid_off, float rounding, int32 rounding_corners_flags);
-        public static void RenderColorRectWithAlphaCheckerboard(DrawList* draw_list, Vec2 p_min, Vec2 p_max, U32 fill_col, float grid_step, Vec2 grid_off, float rounding = (float) 0.0f, int32 rounding_corners_flags = ~0) => RenderColorRectWithAlphaCheckerboardImpl(draw_list, p_min, p_max, fill_col, grid_step, grid_off, rounding, rounding_corners_flags);
+        private static extern void RenderColorRectWithAlphaCheckerboardImpl(DrawList* draw_list, Vec2 p_min, Vec2 p_max, U32 fill_col, float grid_step, Vec2 grid_off, float rounding, DrawFlags flags);
+        public static void RenderColorRectWithAlphaCheckerboard(DrawList* draw_list, Vec2 p_min, Vec2 p_max, U32 fill_col, float grid_step, Vec2 grid_off, float rounding = (float) 0.0f, DrawFlags flags = (DrawFlags) 0) => RenderColorRectWithAlphaCheckerboardImpl(draw_list, p_min, p_max, fill_col, grid_step, grid_off, rounding, flags);
         
         [LinkName("igRenderFrame")]
         private static extern void RenderFrameImpl(Vec2 p_min, Vec2 p_max, U32 fill_col, bool border, float rounding);
@@ -7574,8 +7621,8 @@ namespace ImGui
         public static void Scrollbar(Axis axis) => ScrollbarImpl(axis);
         
         [LinkName("igScrollbarEx")]
-        private static extern bool ScrollbarExImpl(Rect bb, ID id, Axis axis, float* p_scroll_v, float avail_v, float contents_v, DrawCornerFlags rounding_corners);
-        public static bool ScrollbarEx(Rect bb, ID id, Axis axis, float* p_scroll_v, float avail_v, float contents_v, DrawCornerFlags rounding_corners) => ScrollbarExImpl(bb, id, axis, p_scroll_v, avail_v, contents_v, rounding_corners);
+        private static extern bool ScrollbarExImpl(Rect bb, ID id, Axis axis, float* p_scroll_v, float avail_v, float contents_v, DrawFlags flags);
+        public static bool ScrollbarEx(Rect bb, ID id, Axis axis, float* p_scroll_v, float avail_v, float contents_v, DrawFlags flags) => ScrollbarExImpl(bb, id, axis, p_scroll_v, avail_v, contents_v, flags);
         
         [LinkName("igSelectableBool")]
         private static extern bool SelectableImpl(char* label, bool selected, SelectableFlags flags, Vec2 size);
@@ -7598,8 +7645,8 @@ namespace ImGui
         public static void SetActiveID(ID id, Window* window) => SetActiveIDImpl(id, window);
         
         [LinkName("igSetAllocatorFunctions")]
-        private static extern void SetAllocatorFunctionsImpl(function void*(size sz, void* user_data) alloc_func, function void(void* ptr, void* user_data) free_func, void* user_data);
-        public static void SetAllocatorFunctions(function void*(size sz, void* user_data) alloc_func, function void(void* ptr, void* user_data) free_func, void* user_data = null) => SetAllocatorFunctionsImpl(alloc_func, free_func, user_data);
+        private static extern void SetAllocatorFunctionsImpl(MemAllocFunc alloc_func, MemFreeFunc free_func, void* user_data);
+        public static void SetAllocatorFunctions(MemAllocFunc alloc_func, MemFreeFunc free_func, void* user_data = null) => SetAllocatorFunctionsImpl(alloc_func, free_func, user_data);
         
         [LinkName("igSetClipboardText")]
         private static extern void SetClipboardTextImpl(char* text);
@@ -7678,12 +7725,8 @@ namespace ImGui
         public static void SetMouseCursor(MouseCursor cursor_type) => SetMouseCursorImpl(cursor_type);
         
         [LinkName("igSetNavID")]
-        private static extern void SetNavIDImpl(ID id, int32 nav_layer, ID focus_scope_id);
-        public static void SetNavID(ID id, int32 nav_layer, ID focus_scope_id) => SetNavIDImpl(id, nav_layer, focus_scope_id);
-        
-        [LinkName("igSetNavIDWithRectRel")]
-        private static extern void SetNavIDWithRectRelImpl(ID id, int32 nav_layer, ID focus_scope_id, Rect rect_rel);
-        public static void SetNavIDWithRectRel(ID id, int32 nav_layer, ID focus_scope_id, Rect rect_rel) => SetNavIDWithRectRelImpl(id, nav_layer, focus_scope_id, rect_rel);
+        private static extern void SetNavIDImpl(ID id, int32 nav_layer, ID focus_scope_id, Rect rect_rel);
+        public static void SetNavID(ID id, int32 nav_layer, ID focus_scope_id, Rect rect_rel) => SetNavIDImpl(id, nav_layer, focus_scope_id, rect_rel);
         
         [LinkName("igSetNextItemOpen")]
         private static extern void SetNextItemOpenImpl(bool is_open, Cond cond);
@@ -8272,8 +8315,8 @@ namespace ImGui
         public static void TableSettingsInstallHandler(Context* context) => TableSettingsInstallHandlerImpl(context);
         
         [LinkName("igTableSetupColumn")]
-        private static extern void TableSetupColumnImpl(char* label, TableColumnFlags flags, float init_width_or_weight, U32 user_id);
-        public static void TableSetupColumn(char* label, TableColumnFlags flags = (TableColumnFlags) 0, float init_width_or_weight = (float) 0.0f, U32 user_id = (U32) 0) => TableSetupColumnImpl(label, flags, init_width_or_weight, user_id);
+        private static extern void TableSetupColumnImpl(char* label, TableColumnFlags flags, float init_width_or_weight, ID user_id);
+        public static void TableSetupColumn(char* label, TableColumnFlags flags = (TableColumnFlags) 0, float init_width_or_weight = (float) 0.0f, ID user_id = (ID) 0) => TableSetupColumnImpl(label, flags, init_width_or_weight, user_id);
         
         [LinkName("igTableSetupDrawChannels")]
         private static extern void TableSetupDrawChannelsImpl(Table* table);
