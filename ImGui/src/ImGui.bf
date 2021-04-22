@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 04/22/2021 06:34:11
+// Date: 04/22/2021 20:41:37
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -1262,35 +1262,35 @@ namespace ImGui
         {
             public Vec4 Value;
         
-            [LinkName("ImColor_ImColor")]
+            [LinkName("ImColor_ImColor_Nil")]
             private static extern Color* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImColor_ImColor")]
+            [LinkName("ImColor_ImColor_Int")]
             private static extern Color* CtorImpl(int32 r, int32 g, int32 b, int32 a);
             public this(int32 r, int32 g, int32 b, int32 a = (int32) 255)
             {
                 this = *CtorImpl(r, g, b, a);
             }
             
-            [LinkName("ImColor_ImColor")]
+            [LinkName("ImColor_ImColor_U32")]
             private static extern Color* CtorImpl(U32 rgba);
             public this(U32 rgba)
             {
                 this = *CtorImpl(rgba);
             }
             
-            [LinkName("ImColor_ImColor")]
+            [LinkName("ImColor_ImColor_Float")]
             private static extern Color* CtorImpl(float r, float g, float b, float a);
             public this(float r, float g, float b, float a = (float) 1.0f)
             {
                 this = *CtorImpl(r, g, b, a);
             }
             
-            [LinkName("ImColor_ImColor")]
+            [LinkName("ImColor_ImColor_Vec4")]
             private static extern Color* CtorImpl(Vec4 col);
             public this(Vec4 col)
             {
@@ -3155,14 +3155,14 @@ namespace ImGui
             public void* Ptr;
             public int32 Index;
         
-            [LinkName("ImGuiPtrOrIndex_ImGuiPtrOrIndex")]
+            [LinkName("ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr")]
             private static extern PtrOrIndex* CtorImpl(void* ptr);
             public this(void* ptr)
             {
                 this = *CtorImpl(ptr);
             }
             
-            [LinkName("ImGuiPtrOrIndex_ImGuiPtrOrIndex")]
+            [LinkName("ImGuiPtrOrIndex_ImGuiPtrOrIndex_Int")]
             private static extern PtrOrIndex* CtorImpl(int32 index);
             public this(int32 index)
             {
@@ -3315,21 +3315,21 @@ namespace ImGui
             public float val_f { get { return Union0.val_f; } set mut { Union0.val_f = value; } };
             public void* val_p { get { return Union0.val_p; } set mut { Union0.val_p = value; } };
         
-            [LinkName("ImGuiStoragePair_ImGuiStoragePair")]
+            [LinkName("ImGuiStoragePair_ImGuiStoragePair_Int")]
             private static extern StoragePair* CtorImpl(ID _key, int32 _val_i);
             public this(ID _key, int32 _val_i)
             {
                 this = *CtorImpl(_key, _val_i);
             }
             
-            [LinkName("ImGuiStoragePair_ImGuiStoragePair")]
+            [LinkName("ImGuiStoragePair_ImGuiStoragePair_Float")]
             private static extern StoragePair* CtorImpl(ID _key, float _val_f);
             public this(ID _key, float _val_f)
             {
                 this = *CtorImpl(_key, _val_f);
             }
             
-            [LinkName("ImGuiStoragePair_ImGuiStoragePair")]
+            [LinkName("ImGuiStoragePair_ImGuiStoragePair_Ptr")]
             private static extern StoragePair* CtorImpl(ID _key, void* _val_p);
             public this(ID _key, void* _val_p)
             {
@@ -3410,21 +3410,21 @@ namespace ImGui
             public int32[2] BackupInt { get { return Union0.BackupInt; } set mut { Union0.BackupInt = value; } };
             public float[2] BackupFloat { get { return Union0.BackupFloat; } set mut { Union0.BackupFloat = value; } };
         
-            [LinkName("ImGuiStyleMod_ImGuiStyleMod")]
+            [LinkName("ImGuiStyleMod_ImGuiStyleMod_Int")]
             private static extern StyleMod* CtorImpl(StyleVar idx, int32 v);
             public this(StyleVar idx, int32 v)
             {
                 this = *CtorImpl(idx, v);
             }
             
-            [LinkName("ImGuiStyleMod_ImGuiStyleMod")]
+            [LinkName("ImGuiStyleMod_ImGuiStyleMod_Float")]
             private static extern StyleMod* CtorImpl(StyleVar idx, float v);
             public this(StyleVar idx, float v)
             {
                 this = *CtorImpl(idx, v);
             }
             
-            [LinkName("ImGuiStyleMod_ImGuiStyleMod")]
+            [LinkName("ImGuiStyleMod_ImGuiStyleMod_Vec2")]
             private static extern StyleMod* CtorImpl(StyleVar idx, Vec2 v);
             public this(StyleVar idx, Vec2 v)
             {
@@ -3870,14 +3870,14 @@ namespace ImGui
             public char* b;
             public char* e;
         
-            [LinkName("ImGuiTextRange_ImGuiTextRange")]
+            [LinkName("ImGuiTextRange_ImGuiTextRange_Nil")]
             private static extern TextRange* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImGuiTextRange_ImGuiTextRange")]
+            [LinkName("ImGuiTextRange_ImGuiTextRange_Str")]
             private static extern TextRange* CtorImpl(char* _b, char* _e);
             public this(char* _b, char* _e)
             {
@@ -4294,28 +4294,28 @@ namespace ImGui
             public Vec2 Min;
             public Vec2 Max;
         
-            [LinkName("ImRect_ImRect")]
+            [LinkName("ImRect_ImRect_Nil")]
             private static extern Rect* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImRect_ImRect")]
+            [LinkName("ImRect_ImRect_Vec2")]
             private static extern Rect* CtorImpl(Vec2 min, Vec2 max);
             public this(Vec2 min, Vec2 max)
             {
                 this = *CtorImpl(min, max);
             }
             
-            [LinkName("ImRect_ImRect")]
+            [LinkName("ImRect_ImRect_Vec4")]
             private static extern Rect* CtorImpl(Vec4 v);
             public this(Vec4 v)
             {
                 this = *CtorImpl(v);
             }
             
-            [LinkName("ImRect_ImRect")]
+            [LinkName("ImRect_ImRect_Float")]
             private static extern Rect* CtorImpl(float x1, float y1, float x2, float y2);
             public this(float x1, float y1, float x2, float y2)
             {
@@ -4460,14 +4460,14 @@ namespace ImGui
         {
             public float x;
         
-            [LinkName("ImVec1_ImVec1")]
+            [LinkName("ImVec1_ImVec1_Nil")]
             private static extern Vec1* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImVec1_ImVec1")]
+            [LinkName("ImVec1_ImVec1_Float")]
             private static extern Vec1* CtorImpl(float _x);
             public this(float _x)
             {
@@ -4482,16 +4482,18 @@ namespace ImGui
             public float x;
             public float y;
         
+            [LinkName("ImVec2_ImVec2_Nil")]
+            private static extern Vec2* CtorImpl();
             public this()
             {
-                x = 0;
-                y = 0;
+                this = *CtorImpl();
             }
             
-            public this(float x, float y)
+            [LinkName("ImVec2_ImVec2_Float")]
+            private static extern Vec2* CtorImpl(float _x, float _y);
+            public this(float _x, float _y)
             {
-                this.x = x;
-                this.y = y;
+                this = *CtorImpl(_x, _y);
             }
             
         }
@@ -4502,21 +4504,21 @@ namespace ImGui
             public short x;
             public short y;
         
-            [LinkName("ImVec2ih_ImVec2ih")]
+            [LinkName("ImVec2ih_ImVec2ih_Nil")]
             private static extern Vec2ih* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImVec2ih_ImVec2ih")]
+            [LinkName("ImVec2ih_ImVec2ih_short")]
             private static extern Vec2ih* CtorImpl(short _x, short _y);
             public this(short _x, short _y)
             {
                 this = *CtorImpl(_x, _y);
             }
             
-            [LinkName("ImVec2ih_ImVec2ih")]
+            [LinkName("ImVec2ih_ImVec2ih_Vec2")]
             private static extern Vec2ih* CtorImpl(Vec2 rhs);
             public this(Vec2 rhs)
             {
@@ -4533,20 +4535,18 @@ namespace ImGui
             public float z;
             public float w;
         
+            [LinkName("ImVec4_ImVec4_Nil")]
+            private static extern Vec4* CtorImpl();
             public this()
             {
-            	x = 0;
-            	y = 0;
-            	z = 0;
-            	w = 0;
+                this = *CtorImpl();
             }
             
-            public this(float x, float y, float z, float w)
+            [LinkName("ImVec4_ImVec4_Float")]
+            private static extern Vec4* CtorImpl(float _x, float _y, float _z, float _w);
+            public this(float _x, float _y, float _z, float _w)
             {
-            	this.x = x;
-            	this.y = y;
-            	this.z = z;
-            	this.w = w;
+                this = *CtorImpl(_x, _y, _z, _w);
             }
             
         }
@@ -4612,14 +4612,14 @@ namespace ImGui
             public int32 Capacity;
             public T* Data;
         
-            [LinkName("ImVector_ImVector")]
+            [LinkName("ImVector_ImVector_Nil")]
             private static extern Vector<T>* CtorImpl();
             public this()
             {
                 this = *CtorImpl();
             }
             
-            [LinkName("ImVector_ImVector")]
+            [LinkName("ImVector_ImVector_Vector")]
             private static extern Vector<T>* CtorImpl(Vector<T> src);
             public this(Vector<T> src)
             {
