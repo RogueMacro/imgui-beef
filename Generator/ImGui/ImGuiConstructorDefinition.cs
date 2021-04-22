@@ -5,7 +5,7 @@ namespace ImGuiBeefGenerator.ImGui
 {
     class ImGuiConstructorDefinition : ImGuiStructMethodDefinition
     {
-        public ImGuiConstructorDefinition(List<object> argsT, string structType, bool isGeneric, Dictionary<string, object> defaults) : base("this", $"{structType}_{structType}", argsT, structType, isGeneric, defaults) 
+        public ImGuiConstructorDefinition(string linkName, List<object> argsT, string structType, bool isGeneric, Dictionary<string, object> defaults) : base("this", linkName, argsT, structType, isGeneric, defaults) 
         {
             if (IsGeneric)
             {

@@ -67,6 +67,7 @@ namespace ImGuiBeefGenerator.ImGui
             else if (variation.ContainsKey("constructor"))
             {
                 return new ImGuiConstructorDefinition(
+                    (string) variation["ov_cimguiname"],
                     (List<object>) variation["argsT"],
                     (string) variation["stname"],
                     variation.ContainsKey("templated"),
