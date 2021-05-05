@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 05/05/2021 06:33:17
+// Date: 05/05/2021 18:01:13
 // Constructors: 0
 // Destructors: 0
 // Enums: 68
@@ -4482,18 +4482,16 @@ namespace ImGui
             public float x;
             public float y;
         
-            [LinkName("ImVec2_ImVec2_Nil")]
-            private static extern Vec2* CtorImpl();
             public this()
             {
-                this = *CtorImpl();
+                x = 0;
+                y = 0;
             }
             
-            [LinkName("ImVec2_ImVec2_Float")]
-            private static extern Vec2* CtorImpl(float _x, float _y);
-            public this(float _x, float _y)
+            public this(float x, float y)
             {
-                this = *CtorImpl(_x, _y);
+                this.x = x;
+                this.y = y;
             }
             
         }
@@ -4535,18 +4533,20 @@ namespace ImGui
             public float z;
             public float w;
         
-            [LinkName("ImVec4_ImVec4_Nil")]
-            private static extern Vec4* CtorImpl();
             public this()
             {
-                this = *CtorImpl();
+            	x = 0;
+            	y = 0;
+            	z = 0;
+            	w = 0;
             }
             
-            [LinkName("ImVec4_ImVec4_Float")]
-            private static extern Vec4* CtorImpl(float _x, float _y, float _z, float _w);
-            public this(float _x, float _y, float _z, float _w)
+            public this(float x, float y, float z, float w)
             {
-                this = *CtorImpl(_x, _y, _z, _w);
+            	this.x = x;
+            	this.y = y;
+            	this.z = z;
+            	this.w = w;
             }
             
         }
