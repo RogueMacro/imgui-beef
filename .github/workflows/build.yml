@@ -87,6 +87,7 @@ jobs:
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
+          cmake -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fPIC"
           cmake --build . --config Debug
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
@@ -128,6 +129,7 @@ jobs:
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
+          cmake -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fPIC"
           cmake --build . --config Debug
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
