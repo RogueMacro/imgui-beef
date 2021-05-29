@@ -36,7 +36,7 @@ LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 [Configs.Release.Linux64]
 LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 
-[Configs.Test.Linux64]
+[Configs.Paranoid.Linux64]
 LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 
 [Configs.Test.Linux64]
@@ -50,7 +50,7 @@ LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 [Configs.Release.macOS]
 LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 
-[Configs.Test.macOS]
+[Configs.Paranoid.macOS]
 LibPaths = ["$(ProjectDir)/dist/$(Configuration)-$(Platform)/cimgui.a"]
 
 [Configs.Test.macOS]
