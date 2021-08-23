@@ -11,6 +11,10 @@ namespace ImGui
         private static extern void CharCallbackImpl(GLFWwindow* window, uint32 c);
         public static void CharCallback(GLFWwindow* window, uint32 c) => CharCallbackImpl(window, c);
         
+        [LinkName("ImGui_ImplGlfw_CursorEnterCallback")]
+        private static extern void CursorEnterCallbackImpl(GLFWwindow* window, int32 entered);
+        public static void CursorEnterCallback(GLFWwindow* window, int32 entered) => CursorEnterCallbackImpl(window, entered);
+        
         [LinkName("ImGui_ImplGlfw_InitForOpenGL")]
         private static extern bool InitForOpenGLImpl(GLFWwindow* window, bool install_callbacks);
         public static bool InitForOpenGL(GLFWwindow* window, bool install_callbacks) => InitForOpenGLImpl(window, install_callbacks);
@@ -46,5 +50,9 @@ namespace ImGui
         [LinkName("ImGui_ImplGlfw_Shutdown")]
         private static extern void ShutdownImpl();
         public static void Shutdown() => ShutdownImpl();
+        
+        [LinkName("ImGui_ImplGlfw_WindowFocusCallback")]
+        private static extern void WindowFocusCallbackImpl(GLFWwindow* window, int32 focused);
+        public static void WindowFocusCallback(GLFWwindow* window, int32 focused) => WindowFocusCallbackImpl(window, focused);
     }
 }
