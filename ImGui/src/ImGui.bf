@@ -1,11 +1,11 @@
 // -- GENERATION INFORMATION --
-// Date: 10/18/2021 06:29:06
+// Date: 10/19/2021 06:28:22
 // Constructors: 0
 // Destructors: 0
 // Enums: 71
-// Global methods: 774
+// Global methods: 785
 // Instance methods: 0
-// Structs: 89
+// Structs: 91
 // Typedefs: 25
 
 using System;
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.84.1";
-		public static int VERSION_NUM = 184100;
+		public static char8* VERSION = "1.85";
+		public static int VERSION_NUM = 18500;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -196,6 +196,16 @@ namespace ImGui
             NoPowerOfTwoHeight = 1,
             NoMouseCursors = 2,
             NoBakedLines = 4,
+        
+        }
+        
+        [AllowDuplicates]
+        public enum ActivateFlags : int32
+        {
+            None = 0,
+            PreferInput = 1,
+            PreferTweak = 2,
+            TryToPreserveState = 4,
         
         }
         
@@ -539,6 +549,8 @@ namespace ImGui
             ChildWindows = 1,
             RootWindow = 2,
             AnyWindow = 4,
+            NoPopupHierarchy = 8,
+            DockHierarchy = 16,
             RootAndChildWindows = 3,
         
         }
@@ -550,11 +562,13 @@ namespace ImGui
             ChildWindows = 1,
             RootWindow = 2,
             AnyWindow = 4,
-            AllowWhenBlockedByPopup = 8,
-            AllowWhenBlockedByActiveItem = 32,
-            AllowWhenOverlapped = 64,
-            AllowWhenDisabled = 128,
-            RectOnly = 104,
+            NoPopupHierarchy = 8,
+            DockHierarchy = 16,
+            AllowWhenBlockedByPopup = 32,
+            AllowWhenBlockedByActiveItem = 128,
+            AllowWhenOverlapped = 256,
+            AllowWhenDisabled = 512,
+            RectOnly = 416,
             RootAndChildWindows = 3,
         
         }
@@ -621,14 +635,6 @@ namespace ImGui
         }
         
         [AllowDuplicates]
-        public enum ItemAddFlags : int32
-        {
-            None = 0,
-            Focusable = 1,
-        
-        }
-        
-        [AllowDuplicates]
         public enum ItemFlags : int32
         {
             None = 0,
@@ -640,6 +646,7 @@ namespace ImGui
             SelectableDontClosePopup = 32,
             MixedValue = 64,
             ReadOnly = 128,
+            Inputable = 256,
         
         }
         
@@ -655,9 +662,7 @@ namespace ImGui
             HasDeactivated = 32,
             Deactivated = 64,
             HoveredWindow = 128,
-            FocusedByCode = 256,
-            FocusedByTabbing = 512,
-            Focused = 768,
+            FocusedByTabbing = 256,
         
         }
         
@@ -758,15 +763,6 @@ namespace ImGui
         }
         
         [AllowDuplicates]
-        public enum NavForward 
-        {
-            None = 0,
-            ForwardQueued = 1,
-            ForwardActive = 2,
-        
-        }
-        
-        [AllowDuplicates]
         public enum NavHighlightFlags : int32
         {
             None = 0,
@@ -824,7 +820,12 @@ namespace ImGui
             WrapY = 8,
             AllowCurrentNavId = 16,
             AlsoScoreVisibleSet = 32,
-            ScrollToEdge = 64,
+            ScrollToEdgeY = 64,
+            Forwarded = 128,
+            DebugNoResult = 256,
+            Tabbing = 512,
+            Activate = 1024,
+            DontSetNavHighlight = 2048,
         
         }
         
@@ -898,6 +899,22 @@ namespace ImGui
             Default = 0,
             ComboBox = 1,
             Tooltip = 2,
+        
+        }
+        
+        [AllowDuplicates]
+        public enum ScrollFlags : int32
+        {
+            None = 0,
+            KeepVisibleEdgeX = 1,
+            KeepVisibleEdgeY = 2,
+            KeepVisibleCenterX = 4,
+            KeepVisibleCenterY = 8,
+            AlwaysCenterX = 16,
+            AlwaysCenterY = 32,
+            NoScrollParent = 64,
+            MaskX_ = 21,
+            MaskY_ = 42,
         
         }
         
@@ -2232,7 +2249,6 @@ namespace ImGui
             public bool WithinEndChild;
             public bool GcCompactAll;
             public bool TestEngineHookItems;
-            public ID TestEngineHookIdInfo;
             public void* TestEngine;
             public Vector<Window*> Windows;
             public Vector<Window*> WindowsFocusOrder;
@@ -2249,6 +2265,7 @@ namespace ImGui
             public Window* WheelingWindow;
             public Vec2 WheelingWindowRefMousePos;
             public float WheelingWindowTimer;
+            public ID DebugHookIdInfo;
             public ID HoveredId;
             public ID HoveredIdPreviousFrame;
             public bool HoveredIdAllowOverlap;
@@ -2306,15 +2323,15 @@ namespace ImGui
             public ID NavActivateId;
             public ID NavActivateDownId;
             public ID NavActivatePressedId;
-            public ID NavInputId;
+            public ID NavActivateInputId;
+            public ActivateFlags NavActivateFlags;
             public ID NavJustTabbedId;
             public ID NavJustMovedToId;
             public ID NavJustMovedToFocusScopeId;
             public KeyModFlags NavJustMovedToKeyMods;
             public ID NavNextActivateId;
+            public ActivateFlags NavNextActivateFlags;
             public InputSource NavInputSource;
-            public Rect NavScoringRect;
-            public int32 NavScoringCount;
             public NavLayer NavLayer;
             public int32 NavIdTabCounter;
             public bool NavIdIsAlive;
@@ -2326,18 +2343,21 @@ namespace ImGui
             public bool NavInitRequestFromMove;
             public ID NavInitResultId;
             public Rect NavInitResultRectRel;
-            public bool NavMoveRequest;
-            public NavMoveFlags NavMoveRequestFlags;
-            public NavForward NavMoveRequestForward;
-            public KeyModFlags NavMoveRequestKeyMods;
+            public bool NavMoveSubmitted;
+            public bool NavMoveScoringItems;
+            public bool NavMoveForwardToNextFrame;
+            public NavMoveFlags NavMoveFlags;
+            public ScrollFlags NavMoveScrollFlags;
+            public KeyModFlags NavMoveKeyMods;
             public Dir NavMoveDir;
-            public Dir NavMoveDirLast;
+            public Dir NavMoveDirForDebug;
             public Dir NavMoveClipDir;
+            public Rect NavScoringRect;
+            public int32 NavScoringDebugCount;
+            public int32 NavTabbingInputableRemaining;
             public NavItemData NavMoveResultLocal;
-            public NavItemData NavMoveResultLocalVisibleSet;
+            public NavItemData NavMoveResultLocalVisible;
             public NavItemData NavMoveResultOther;
-            public Window* NavWrapRequestWindow;
-            public NavMoveFlags NavWrapRequestFlags;
             public Window* NavWindowingTarget;
             public Window* NavWindowingTargetAnim;
             public Window* NavWindowingListWindow;
@@ -2346,9 +2366,7 @@ namespace ImGui
             public bool NavWindowingToggleLayer;
             public Window* TabFocusRequestCurrWindow;
             public Window* TabFocusRequestNextWindow;
-            public int32 TabFocusRequestCurrCounterRegular;
             public int32 TabFocusRequestCurrCounterTabStop;
-            public int32 TabFocusRequestNextCounterRegular;
             public int32 TabFocusRequestNextCounterTabStop;
             public bool TabFocusPressed;
             public float DimBgRatio;
@@ -2380,14 +2398,14 @@ namespace ImGui
             public Pool<TabBar> TabBars;
             public Vector<PtrOrIndex> CurrentTabBarStack;
             public Vector<ShrinkWidthItem> ShrinkWidthBuffer;
-            public Vec2 LastValidMousePos;
+            public Vec2 MouseLastValidPos;
             public InputTextState InputTextState;
             public Font InputTextPasswordFont;
             public ID TempInputId;
             public ColorEditFlags ColorEditOptions;
             public float ColorEditLastHue;
             public float ColorEditLastSat;
-            public float[3] ColorEditLastColor;
+            public U32 ColorEditLastColor;
             public Vec4 ColorPickerRef;
             public ComboPreviewData ComboPreviewData;
             public float SliderCurrentAccum;
@@ -2395,9 +2413,10 @@ namespace ImGui
             public bool DragCurrentAccumDirty;
             public float DragCurrentAccum;
             public float DragSpeedDefaultRatio;
-            public float DisabledAlphaBackup;
             public float ScrollbarClickDeltaToGrabCenter;
-            public int32 TooltipOverrideCount;
+            public float DisabledAlphaBackup;
+            public short DisabledStackSize;
+            public short TooltipOverrideCount;
             public float TooltipSlowDelay;
             public Vector<char> ClipboardHandlerData;
             public Vector<ID> MenusIdSubmittedThisFrame;
@@ -2428,6 +2447,7 @@ namespace ImGui
             public bool DebugItemPickerActive;
             public ID DebugItemPickerBreakId;
             public MetricsConfig DebugMetricsConfig;
+            public StackTool DebugStackTool;
             public float[120] FramerateSecPerFrame;
             public int32 FramerateSecPerFrameIdx;
             public int32 FramerateSecPerFrameCount;
@@ -2520,6 +2540,7 @@ namespace ImGui
             public Window* VisibleWindow;
             public DockNode* CentralNode;
             public DockNode* OnlyNodeWithWindows;
+            public int32 CountNodeWithWindows;
             public int32 LastFrameAlive;
             public int32 LastFrameActive;
             public int32 LastFrameFocused;
@@ -2533,6 +2554,7 @@ namespace ImGui
             public bool IsFocused;
             public bool HasCloseButton;
             public bool HasWindowMenuButton;
+            public bool HasCentralNodeChild;
             public bool WantCloseAll;
             public bool WantLockSizeOnce;
             public bool WantMouseMove;
@@ -2642,6 +2664,7 @@ namespace ImGui
             public Font* FontDefault;
             public Vec2 DisplayFramebufferScale;
             public bool ConfigDockingNoSplit;
+            public bool ConfigDockingWithShift;
             public bool ConfigDockingAlwaysTabBar;
             public bool ConfigDockingTransparentPayload;
             public bool ConfigViewportsNoAutoMerge;
@@ -2688,6 +2711,7 @@ namespace ImGui
             public int32 MetricsActiveWindows;
             public int32 MetricsActiveAllocations;
             public Vec2 MouseDelta;
+            public bool WantCaptureMouseUnlessPopupClose;
             public KeyModFlags KeyMods;
             public KeyModFlags KeyModsPrev;
             public Vec2 MousePosPrev;
@@ -2697,6 +2721,7 @@ namespace ImGui
             public bool[5] MouseDoubleClicked;
             public bool[5] MouseReleased;
             public bool[5] MouseDownOwned;
+            public bool[5] MouseDownOwnedUnlessPopupClose;
             public bool[5] MouseDownWasDoubleClick;
             public float[5] MouseDownDuration;
             public float[5] MouseDownDurationPrev;
@@ -2878,6 +2903,7 @@ namespace ImGui
             public ItemFlags InFlags;
             public ItemStatusFlags StatusFlags;
             public Rect Rect;
+            public Rect NavRect;
             public Rect DisplayRect;
         
             [LinkName("ImGuiLastItemData_ImGuiLastItemData")]
@@ -2957,6 +2983,7 @@ namespace ImGui
         [CRepr]
         public struct MetricsConfig
         {
+            public bool ShowStackTool;
             public bool ShowWindowsRects;
             public bool ShowWindowsBeginOrder;
             public bool ShowTablesRects;
@@ -2982,6 +3009,7 @@ namespace ImGui
             public ID ID;
             public ID FocusScopeId;
             public Rect RectRel;
+            public ItemFlags InFlags;
             public float DistBox;
             public float DistCenter;
             public float DistAxial;
@@ -3296,6 +3324,23 @@ namespace ImGui
         }
         
         [CRepr]
+        public struct StackLevelInfo
+        {
+            public ID ID;
+            public S8 QueryFrameCount;
+            public bool QuerySuccess;
+            public char[58] Desc;
+        
+            [LinkName("ImGuiStackLevelInfo_ImGuiStackLevelInfo")]
+            private static extern StackLevelInfo* CtorImpl();
+            public this()
+            {
+                this = *CtorImpl();
+            }
+            
+        }
+        
+        [CRepr]
         public struct StackSizes
         {
             public short SizeOfIDStack;
@@ -3304,7 +3349,9 @@ namespace ImGui
             public short SizeOfFontStack;
             public short SizeOfFocusScopeStack;
             public short SizeOfGroupStack;
+            public short SizeOfItemFlagsStack;
             public short SizeOfBeginPopupStack;
+            public short SizeOfDisabledStack;
         
             [LinkName("ImGuiStackSizes_ImGuiStackSizes")]
             private static extern StackSizes* CtorImpl();
@@ -3320,6 +3367,23 @@ namespace ImGui
             [LinkName("ImGuiStackSizes_SetToCurrentState")]
             private static extern void SetToCurrentStateImpl(StackSizes* self);
             public void SetToCurrentState() mut=> SetToCurrentStateImpl(&this);
+            
+        }
+        
+        [CRepr]
+        public struct StackTool
+        {
+            public int32 LastActiveFrame;
+            public int32 StackLevel;
+            public ID QueryId;
+            public Vector<StackLevelInfo> Results;
+        
+            [LinkName("ImGuiStackTool_ImGuiStackTool")]
+            private static extern StackTool* CtorImpl();
+            public this()
+            {
+                this = *CtorImpl();
+            }
             
         }
         
@@ -4220,6 +4284,7 @@ namespace ImGui
             public DrawList DrawListInst;
             public Window* ParentWindow;
             public Window* RootWindow;
+            public Window* RootWindowPopupTree;
             public Window* RootWindowDockTree;
             public Window* RootWindowForTitleBarHighlight;
             public Window* RootWindowForNav;
@@ -4377,6 +4442,7 @@ namespace ImGui
         {
             public Window* Window;
             public LastItemData ParentLastItemDataBackup;
+            public StackSizes StackSizesOnBegin;
         
         }
         
@@ -4412,13 +4478,11 @@ namespace ImGui
             public int32 CurrentTableIdx;
             public LayoutType LayoutType;
             public LayoutType ParentLayoutType;
-            public int32 FocusCounterRegular;
             public int32 FocusCounterTabStop;
             public float ItemWidth;
             public float TextWrapPos;
             public Vector<float> ItemWidthStack;
             public Vector<float> TextWrapPosStack;
-            public StackSizes StackSizesOnBegin;
         
         }
         
@@ -5196,6 +5260,10 @@ namespace ImGui
         private static extern bool BeginMenuBarImpl();
         public static bool BeginMenuBar() => BeginMenuBarImpl();
         
+        [LinkName("igBeginMenuEx")]
+        private static extern bool BeginMenuExImpl(char* label, char* icon, bool enabled);
+        public static bool BeginMenuEx(char* label, char* icon, bool enabled = true) => BeginMenuExImpl(label, icon, enabled);
+        
         [LinkName("igBeginPopup")]
         private static extern bool BeginPopupImpl(char* str_id, WindowFlags flags);
         public static bool BeginPopup(char* str_id, WindowFlags flags = (WindowFlags) 0) => BeginPopupImpl(str_id, flags);
@@ -5392,6 +5460,10 @@ namespace ImGui
         private static extern void ClosePopupToLevelImpl(int32 remaining, bool restore_focus_to_window_under_popup);
         public static void ClosePopupToLevel(int32 remaining, bool restore_focus_to_window_under_popup) => ClosePopupToLevelImpl(remaining, restore_focus_to_window_under_popup);
         
+        [LinkName("igClosePopupsExceptModals")]
+        private static extern void ClosePopupsExceptModalsImpl();
+        public static void ClosePopupsExceptModals() => ClosePopupsExceptModalsImpl();
+        
         [LinkName("igClosePopupsOverWindow")]
         private static extern void ClosePopupsOverWindowImpl(Window* ref_window, bool restore_focus_to_window_under_popup);
         public static void ClosePopupsOverWindow(Window* ref_window, bool restore_focus_to_window_under_popup) => ClosePopupsOverWindowImpl(ref_window, restore_focus_to_window_under_popup);
@@ -5538,6 +5610,10 @@ namespace ImGui
         [LinkName("igDebugDrawItemRect")]
         private static extern void DebugDrawItemRectImpl(U32 col);
         public static void DebugDrawItemRect(U32 col = (U32) 4278190335) => DebugDrawItemRectImpl(col);
+        
+        [LinkName("igDebugHookIdInfo")]
+        private static extern void DebugHookIdInfoImpl(ID id, DataType data_type, void* data_id, void* data_id_end);
+        public static void DebugHookIdInfo(ID id, DataType data_type, void* data_id, void* data_id_end) => DebugHookIdInfoImpl(id, data_type, data_id, data_id_end);
         
         [LinkName("igDebugNodeColumns")]
         private static extern void DebugNodeColumnsImpl(OldColumns* columns);
@@ -5902,6 +5978,10 @@ namespace ImGui
         [LinkName("igErrorCheckEndFrameRecover")]
         private static extern void ErrorCheckEndFrameRecoverImpl(ErrorLogCallback log_callback, void* user_data);
         public static void ErrorCheckEndFrameRecover(ErrorLogCallback log_callback, void* user_data = null) => ErrorCheckEndFrameRecoverImpl(log_callback, user_data);
+        
+        [LinkName("igErrorCheckEndWindowRecover")]
+        private static extern void ErrorCheckEndWindowRecoverImpl(ErrorLogCallback log_callback, void* user_data);
+        public static void ErrorCheckEndWindowRecover(ErrorLogCallback log_callback, void* user_data = null) => ErrorCheckEndWindowRecoverImpl(log_callback, user_data);
         
         [LinkName("igFindBestWindowPosForPopup")]
         private static extern Vec2 FindBestWindowPosForPopupImpl(Vec2* pOut, Window* window);
@@ -6545,10 +6625,6 @@ namespace ImGui
             GetWindowContentRegionMinImpl(&pOut);
             return pOut;
         }
-        
-        [LinkName("igGetWindowContentRegionWidth")]
-        private static extern float GetWindowContentRegionWidthImpl();
-        public static float GetWindowContentRegionWidth() => GetWindowContentRegionWidthImpl();
         
         [LinkName("igGetWindowDockID")]
         private static extern ID GetWindowDockIDImpl();
@@ -7246,8 +7322,8 @@ namespace ImGui
         public static bool IsAnyMouseDown() => IsAnyMouseDownImpl();
         
         [LinkName("igIsClippedEx")]
-        private static extern bool IsClippedExImpl(Rect bb, ID id, bool clip_even_when_logged);
-        public static bool IsClippedEx(Rect bb, ID id, bool clip_even_when_logged) => IsClippedExImpl(bb, id, clip_even_when_logged);
+        private static extern bool IsClippedExImpl(Rect bb, ID id);
+        public static bool IsClippedEx(Rect bb, ID id) => IsClippedExImpl(bb, id);
         
         [LinkName("igIsDragDropPayloadBeingAccepted")]
         private static extern bool IsDragDropPayloadBeingAcceptedImpl();
@@ -7378,8 +7454,8 @@ namespace ImGui
         public static bool IsWindowAppearing() => IsWindowAppearingImpl();
         
         [LinkName("igIsWindowChildOf")]
-        private static extern bool IsWindowChildOfImpl(Window* window, Window* potential_parent);
-        public static bool IsWindowChildOf(Window* window, Window* potential_parent) => IsWindowChildOfImpl(window, potential_parent);
+        private static extern bool IsWindowChildOfImpl(Window* window, Window* potential_parent, bool popup_hierarchy, bool dock_hierarchy);
+        public static bool IsWindowChildOf(Window* window, Window* potential_parent, bool popup_hierarchy, bool dock_hierarchy) => IsWindowChildOfImpl(window, potential_parent, popup_hierarchy, dock_hierarchy);
         
         [LinkName("igIsWindowCollapsed")]
         private static extern bool IsWindowCollapsedImpl();
@@ -7402,16 +7478,16 @@ namespace ImGui
         public static bool IsWindowNavFocusable(Window* window) => IsWindowNavFocusableImpl(window);
         
         [LinkName("igItemAdd")]
-        private static extern bool ItemAddImpl(Rect bb, ID id, Rect* nav_bb, ItemAddFlags flags);
-        public static bool ItemAdd(Rect bb, ID id, Rect* nav_bb = null, ItemAddFlags flags = (ItemAddFlags) 0) => ItemAddImpl(bb, id, nav_bb, flags);
-        
-        [LinkName("igItemFocusable")]
-        private static extern void ItemFocusableImpl(Window* window, ID id);
-        public static void ItemFocusable(Window* window, ID id) => ItemFocusableImpl(window, id);
+        private static extern bool ItemAddImpl(Rect bb, ID id, Rect* nav_bb, ItemFlags extra_flags);
+        public static bool ItemAdd(Rect bb, ID id, Rect* nav_bb = null, ItemFlags extra_flags = (ItemFlags) 0) => ItemAddImpl(bb, id, nav_bb, extra_flags);
         
         [LinkName("igItemHoverable")]
         private static extern bool ItemHoverableImpl(Rect bb, ID id);
         public static bool ItemHoverable(Rect bb, ID id) => ItemHoverableImpl(bb, id);
+        
+        [LinkName("igItemInputable")]
+        private static extern void ItemInputableImpl(Window* window, ID id);
+        public static void ItemInputable(Window* window, ID id) => ItemInputableImpl(window, id);
         
         [LinkName("igItemSize_Vec2")]
         private static extern void ItemSizeImpl(Vec2 size, float text_baseline_y);
@@ -7521,9 +7597,17 @@ namespace ImGui
         private static extern bool MenuItemExImpl(char* label, char* icon, char* shortcut, bool selected, bool enabled);
         public static bool MenuItemEx(char* label, char* icon, char* shortcut = null, bool selected = false, bool enabled = true) => MenuItemExImpl(label, icon, shortcut, selected, enabled);
         
+        [LinkName("igNavInitRequestApplyResult")]
+        private static extern void NavInitRequestApplyResultImpl();
+        public static void NavInitRequestApplyResult() => NavInitRequestApplyResultImpl();
+        
         [LinkName("igNavInitWindow")]
         private static extern void NavInitWindowImpl(Window* window, bool force_reinit);
         public static void NavInitWindow(Window* window, bool force_reinit) => NavInitWindowImpl(window, force_reinit);
+        
+        [LinkName("igNavMoveRequestApplyResult")]
+        private static extern void NavMoveRequestApplyResultImpl();
+        public static void NavMoveRequestApplyResult() => NavMoveRequestApplyResultImpl();
         
         [LinkName("igNavMoveRequestButNoResultYet")]
         private static extern bool NavMoveRequestButNoResultYetImpl();
@@ -7534,8 +7618,16 @@ namespace ImGui
         public static void NavMoveRequestCancel() => NavMoveRequestCancelImpl();
         
         [LinkName("igNavMoveRequestForward")]
-        private static extern void NavMoveRequestForwardImpl(Dir move_dir, Dir clip_dir, Rect bb_rel, NavMoveFlags move_flags);
-        public static void NavMoveRequestForward(Dir move_dir, Dir clip_dir, Rect bb_rel, NavMoveFlags move_flags) => NavMoveRequestForwardImpl(move_dir, clip_dir, bb_rel, move_flags);
+        private static extern void NavMoveRequestForwardImpl(Dir move_dir, Dir clip_dir, NavMoveFlags move_flags, ScrollFlags scroll_flags);
+        public static void NavMoveRequestForward(Dir move_dir, Dir clip_dir, NavMoveFlags move_flags, ScrollFlags scroll_flags) => NavMoveRequestForwardImpl(move_dir, clip_dir, move_flags, scroll_flags);
+        
+        [LinkName("igNavMoveRequestResolveWithLastItem")]
+        private static extern void NavMoveRequestResolveWithLastItemImpl();
+        public static void NavMoveRequestResolveWithLastItem() => NavMoveRequestResolveWithLastItemImpl();
+        
+        [LinkName("igNavMoveRequestSubmit")]
+        private static extern void NavMoveRequestSubmitImpl(Dir move_dir, Dir clip_dir, NavMoveFlags move_flags, ScrollFlags scroll_flags);
+        public static void NavMoveRequestSubmit(Dir move_dir, Dir clip_dir, NavMoveFlags move_flags, ScrollFlags scroll_flags) => NavMoveRequestSubmitImpl(move_dir, clip_dir, move_flags, scroll_flags);
         
         [LinkName("igNavMoveRequestTryWrapping")]
         private static extern void NavMoveRequestTryWrappingImpl(Window* window, NavMoveFlags move_flags);
@@ -7834,11 +7926,23 @@ namespace ImGui
         public static void ScaleWindowsInViewport(ViewportP* viewport, float scale) => ScaleWindowsInViewportImpl(viewport, scale);
         
         [LinkName("igScrollToBringRectIntoView")]
-        private static extern Vec2 ScrollToBringRectIntoViewImpl(Vec2* pOut, Window* window, Rect item_rect);
-        public static Vec2 ScrollToBringRectIntoView(Window* window, Rect item_rect)
+        private static extern void ScrollToBringRectIntoViewImpl(Window* window, Rect rect);
+        public static void ScrollToBringRectIntoView(Window* window, Rect rect) => ScrollToBringRectIntoViewImpl(window, rect);
+        
+        [LinkName("igScrollToItem")]
+        private static extern void ScrollToItemImpl(ScrollFlags flags);
+        public static void ScrollToItem(ScrollFlags flags = (ScrollFlags) 0) => ScrollToItemImpl(flags);
+        
+        [LinkName("igScrollToRect")]
+        private static extern void ScrollToRectImpl(Window* window, Rect rect, ScrollFlags flags);
+        public static void ScrollToRect(Window* window, Rect rect, ScrollFlags flags = (ScrollFlags) 0) => ScrollToRectImpl(window, rect, flags);
+        
+        [LinkName("igScrollToRectEx")]
+        private static extern Vec2 ScrollToRectExImpl(Vec2* pOut, Window* window, Rect rect, ScrollFlags flags);
+        public static Vec2 ScrollToRectEx(Window* window, Rect rect, ScrollFlags flags = (ScrollFlags) 0)
         {
             Vec2 pOut = default;
-            ScrollToBringRectIntoViewImpl(&pOut, window, item_rect);
+            ScrollToRectExImpl(&pOut, window, rect, flags);
             return pOut;
         }
         
@@ -8153,6 +8257,10 @@ namespace ImGui
         [LinkName("igShowMetricsWindow")]
         private static extern void ShowMetricsWindowImpl(bool* p_open);
         public static void ShowMetricsWindow(bool* p_open = null) => ShowMetricsWindowImpl(p_open);
+        
+        [LinkName("igShowStackToolWindow")]
+        private static extern void ShowStackToolWindowImpl(bool* p_open);
+        public static void ShowStackToolWindow(bool* p_open = null) => ShowStackToolWindowImpl(p_open);
         
         [LinkName("igShowStyleEditor")]
         private static extern void ShowStyleEditorImpl(Style* ref_);
