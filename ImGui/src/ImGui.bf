@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 01/31/2022 06:29:34
+// Date: 02/01/2022 06:28:28
 // Constructors: 0
 // Destructors: 0
 // Enums: 71
@@ -4856,9 +4856,9 @@ namespace ImGui
                 this = *CtorImpl();
             }
             
-            [LinkName("ImVector_ImVector_Vector")]
-            private static extern Vector<T>* CtorImpl(Vector<T> src);
-            public this(Vector<T> src)
+            [LinkName("ImVector_ImVector_Vector_T_")]
+            private static extern Vector<T>* CtorImpl(Vector<T > src);
+            public this(Vector<T > src)
             {
                 this = *CtorImpl(src);
             }
@@ -4980,8 +4980,8 @@ namespace ImGui
             public int32 SizeInBytes() mut=> SizeInBytesImpl(&this);
             
             [LinkName("ImVector_swap")]
-            private static extern void SwapImpl(Vector<T>* self, Vector<T>* rhs);
-            public void Swap(Vector<T>* rhs) mut=> SwapImpl(&this, rhs);
+            private static extern void SwapImpl(Vector<T>* self, Vector<T *> rhs);
+            public void Swap(ref Vector<T * rhs) mut=> SwapImpl(&this, &rhs);
             
         }
         
@@ -5060,8 +5060,8 @@ namespace ImGui
             public int32 Size() mut=> SizeImpl(&this);
             
             [LinkName("ImChunkStream_swap")]
-            private static extern void SwapImpl(ChunkStream<T>* self, ChunkStream<T>* rhs);
-            public void Swap(ChunkStream<T>* rhs) mut=> SwapImpl(&this, rhs);
+            private static extern void SwapImpl(ChunkStream<T>* self, ChunkStream<T *> rhs);
+            public void Swap(ref ChunkStream<T * rhs) mut=> SwapImpl(&this, &rhs);
             
         }
         
