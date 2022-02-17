@@ -2,7 +2,7 @@
   "profiles": {
     "Generator": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Program Files\\BeefLang\\BeefLibs\\imgui-beef\\Generator"
+      "workingDirectory": "C:\\dev\\Beef\\imgui-beef\\Generator"
     }
   }
 }
