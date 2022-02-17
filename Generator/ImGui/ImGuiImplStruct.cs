@@ -47,8 +47,8 @@ public static class {Name}
             {
                 serialized +=
 @"
-    private typealias GLFWwindow = glfw_beef.GlfwWindow;
-    private typealias GLFWmonitor = glfw_beef.GlfwMonitor;
+    private typealias GLFWwindow = GLFW.GlfwWindow;
+    private typealias GLFWmonitor = GLFW.GlfwMonitor;
 ";
             }
             else if (Name.StartsWith("ImGuiImplOpenGL"))

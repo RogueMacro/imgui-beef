@@ -4,7 +4,7 @@ namespace ImGuiBeefGenerator.ImGui
 {
     public static class ImGui
     {
-        public static readonly string[] ReservedKeywords = { "in", "repeat", "ref", "out", "where" };
+        public static readonly string[] ReservedKeywords = { "in", "repeat", "ref", "out", "where", "base" };
 
         public static readonly Dictionary<string, string> WellKnownDefaultValues = new Dictionary<string, string>()
         {
@@ -38,6 +38,8 @@ namespace ImGuiBeefGenerator.ImGui
             fixedType = fixedType.Replace("unsigned ", "u");
             fixedType = fixedType.Replace("signed ", "");
             fixedType = fixedType.Replace("_t", "");
+            fixedType = fixedType.Replace("long long", "int64");
+            fixedType = fixedType.Replace("ulong long", "uint64");
             fixedType = RemovePrefix(fixedType);
 
             if (fixedType.EndsWith("int"))
@@ -66,6 +68,13 @@ namespace ImGuiBeefGenerator.ImGui
 
             fixedTemplate = fixedTemplate.Replace("const_", "");
 
+            bool isPointer = false;
+            if (fixedTemplate.EndsWith(" *"))
+            {
+                fixedTemplate = fixedTemplate.Substring(0, fixedTemplate.Length - 2);
+                isPointer = true;
+            }
+
             if (fixedTemplate.Contains("_"))
             {
                 var newTemplate = FixType(fixedTemplate.Substring(0, fixedTemplate.IndexOf('_')));
@@ -85,6 +94,7 @@ namespace ImGuiBeefGenerator.ImGui
             }
 
             fixedTemplate += ">";
+            if (isPointer) fixedTemplate += "*";
             return fixedTemplate;
         }
 
