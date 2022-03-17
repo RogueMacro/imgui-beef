@@ -1,5 +1,5 @@
 // -- GENERATION INFORMATION --
-// Date: 03/17/2022 06:30:16
+// Date: 03/17/2022 13:56:49
 // Constructors: 0
 // Destructors: 0
 // Enums: 73
@@ -132,7 +132,7 @@ namespace ImGui
 
         // -- Auto-Generated --
 
-        public typealias BitArrayForNamedKeys = BitArray<ImGuiKey<NamedKey<COUNT,-ImGuiKey<NamedKey<BEGIN>>>>>;
+        public typealias BitArrayForNamedKeys = BitArray<S32>;
         public typealias DrawCallback = function void(DrawList* parent_list, DrawCmd* cmd);
         public typealias DrawIdx = ushort;
         public typealias FileHandle = FILE*;
@@ -148,12 +148,12 @@ namespace ImGui
         public typealias PoolIdx = int32;
         public typealias S16 = short;
         public typealias S32 = int32;
-        public typealias S64 = long long;
+        public typealias S64 = int64;
         public typealias S8 = char;
         public typealias TextureID = void*;
         public typealias U16 = ushort;
         public typealias U32 = uint32;
-        public typealias U64 = ulong long;
+        public typealias U64 = uint64;
         public typealias U8 = uchar;
         public typealias Wchar = Wchar16;
         public typealias Wchar16 = ushort;
@@ -731,16 +731,16 @@ namespace ImGui
             RightAlt = 533,
             RightSuper = 534,
             Menu = 535,
-            0 = 536,
-            1 = 537,
-            2 = 538,
-            3 = 539,
-            4 = 540,
-            5 = 541,
-            6 = 542,
-            7 = 543,
-            8 = 544,
-            9 = 545,
+            Number0 = 536,
+            Number1 = 537,
+            Number2 = 538,
+            Number3 = 539,
+            Number4 = 540,
+            Number5 = 541,
+            Number6 = 542,
+            Number7 = 543,
+            Number8 = 544,
+            Number9 = 545,
             A = 546,
             B = 547,
             C = 548,
@@ -5271,8 +5271,8 @@ namespace ImGui
             public int32 SizeInBytes() mut=> SizeInBytesImpl(&this);
             
             [LinkName("ImVector_swap")]
-            private static extern void SwapImpl(Vector<T>* self, Vector<T *> rhs);
-            public void Swap(ref Vector<T * rhs) mut=> SwapImpl(&this, &rhs);
+            private static extern void SwapImpl(Vector<T>* self, Vector<T>* rhs);
+            public void Swap(ref Vector<T> rhs) mut=> SwapImpl(&this, &rhs);
             
         }
         
@@ -5351,8 +5351,8 @@ namespace ImGui
             public int32 Size() mut=> SizeImpl(&this);
             
             [LinkName("ImChunkStream_swap")]
-            private static extern void SwapImpl(ChunkStream<T>* self, ChunkStream<T *> rhs);
-            public void Swap(ref ChunkStream<T * rhs) mut=> SwapImpl(&this, &rhs);
+            private static extern void SwapImpl(ChunkStream<T>* self, ChunkStream<T>* rhs);
+            public void Swap(ref ChunkStream<T> rhs) mut=> SwapImpl(&this, &rhs);
             
         }
         
@@ -7442,8 +7442,8 @@ namespace ImGui
         public static double ImPow(double x, double y) => ImPowImpl(x, y);
         
         [LinkName("igImQsort")]
-        private static extern void ImQsortImpl(void* base, size count, size size_of_element, function int(void* , void* ) compare_func);
-        public static void ImQsort(void* base, size count, size size_of_element, function int(void* , void* ) compare_func) => ImQsortImpl(base, count, size_of_element, compare_func);
+        private static extern void ImQsortImpl(void* base_, size count, size size_of_element, function int(void* , void* ) compare_func);
+        public static void ImQsort(void* base_, size count, size size_of_element, function int(void* , void* ) compare_func) => ImQsortImpl(base_, count, size_of_element, compare_func);
         
         [LinkName("igImRotate")]
         private static extern Vec2 ImRotateImpl(Vec2* pOut, Vec2 v, float cos_a, float sin_a);
