@@ -33,6 +33,8 @@ namespace ImGuiBeefGenerator.ImGui
                     var valueName = ImGui.RemovePrefix(value["name"].Replace(key, ""));
                     if (valueName.StartsWith("_"))
                         valueName = valueName.Remove(0, 1);
+                    else if (char.IsDigit(valueName[0]))
+                        valueName = "Number" + valueName;
 
                     var actualValue = value["calc_value"].ToString();
                     values[valueName] = actualValue;

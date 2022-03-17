@@ -25,7 +25,13 @@ namespace ImGuiBeefGenerator.ImGui
                     typedef.Key == "value_type")
                     continue;
 
-                list.Add(new ImGuiTypeDef(ImGui.RemovePrefix(typedef.Key), ImGui.FixType(typedef.Value.Replace(";", ""))));
+                string name = ImGui.RemovePrefix(typedef.Key);
+                string value;
+
+                if (name == "BitArrayForNamedKeys") value = "BitArray<S32>";
+                else value = ImGui.FixType(typedef.Value.Replace(";", ""));
+
+                list.Add(new ImGuiTypeDef(name, value));
             }
 
             return list;

@@ -4,8 +4,8 @@ namespace ImGui
 {
     public static class ImGuiImplGlfw
     {
-        private typealias GLFWwindow = glfw_beef.GlfwWindow;
-        private typealias GLFWmonitor = glfw_beef.GlfwMonitor;
+        private typealias GLFWwindow = GLFW.GlfwWindow;
+        private typealias GLFWmonitor = GLFW.GlfwMonitor;
     
         [LinkName("ImGui_ImplGlfw_CharCallback")]
         private static extern void CharCallbackImpl(GLFWwindow* window, uint32 c);

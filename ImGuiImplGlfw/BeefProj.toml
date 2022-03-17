@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {ImGui = "*", glfw-beef = "*"}
+Dependencies = {ImGui = "*", GLFW = "*"}
 
 [Project]
 Name = "ImGuiImplGlfw"
