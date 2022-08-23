@@ -1,31 +1,33 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Testing
 
-# Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  tag-exists:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: mukunku/tag-exists-action@v1.0.0
-        id: checkTag
-        with: 
-          tag: '0.1.0'
+      - uses: octokit/request-action@v2.x
+        id: get_tags
+        with:
+          route: GET /repos/{owner}/{repo}/git/refs/tags
+          owner: cimgui
+          repo: cimgui
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo tag: ${{ steps.get_tags.output.*.ref }}"
       
-      - if: steps.checkTag.outputs.exists == 'true'
-        run: echo This tag DOES exists
+#       - uses: mukunku/tag-exists-action@v1.0.0
+#         id: checkTag
+#         with: 
+#           tag: '0.1.0'
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - if: steps.checkTag.outputs.exists == 'false'
-        run: echo This tag does NOT exists
+#       - if: steps.checkTag.outputs.exists == 'true'
+#         run: echo This tag DOES exists
+      
+#       - if: steps.checkTag.outputs.exists == 'false'
+#         run: echo This tag does NOT exists
 
