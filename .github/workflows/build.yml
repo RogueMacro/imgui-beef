@@ -1,11 +1,8 @@
-name: Generation
+name: Build
 
 on:
   schedule:
     - cron: "0 6 * * *"
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
 env:
@@ -13,34 +10,91 @@ env:
   VERBOSE: true
 
 jobs:
-  Windows:
+  compare-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      is-new-version: ${{ steps.compare.outputs.not_equal }}
+      new-tag: ${{ steps.get_latest_tag.outputs.cimgui_tag }}
+
+    steps:
+      - uses: octokit/request-action@v2.x
+        id: get_cimgui_tags
+        with:
+          route: GET /repos/cimgui/cimgui/git/refs/tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: octokit/request-action@v2.x
+        id: get_imgui_beef_tags
+        with:
+          route: GET /repos/roguemacro/imgui-beef/git/refs/tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Get latest tags
+        id: get_latest_tag
+        env:
+          cimgui_tags: ${{ toJson(fromJson(steps.get_cimgui_tags.outputs.data).*.ref) }}
+          imgui_beef_tags: ${{ toJson(fromJson(steps.get_imgui_beef_tags.outputs.data).*.ref) }}
+        run: |
+          # Get the version from the ref
+          CT=$(echo $cimgui_tags | jq '. | .[-1] | .[10:]')
+          # Remove quotes from env variable
+          CT="${CT%\"}"
+          CT="${CT#\"}"
+          
+          IBT=$(echo $imgui_beef_tags | jq '. | .[-1] | .[10:]')
+          IBT="${IBT%\"}"
+          IBT="${IBT#\"}"
+            
+          echo "::set-output name=cimgui_tag::$CT"
+          echo "::set-output name=imgui_beef_tag::$IBT"
+          
+          echo $CT
+          echo $IBT
+          
+      - name: Compare tags
+        id: compare
+        run: |
+          NOT_EQ=${{ steps.get_latest_tag.outputs.cimgui_tag != steps.get_latest_tag.outputs.imgui_beef_tag }}
+          echo "::set-output name=not_equal::$NOT_EQ"
+
+  windows:
     runs-on: windows-latest
+    needs: [compare-tags]
+    if: needs.compare-tags.outputs.is-new-version == 'true'
+    
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
       - name: Clone submodules
         run: |
           git submodule update --init
           cd cimgui
           git checkout docking_inter
           git submodule update --init
+      
       - name: Prepare cimgui
         run: |
           Copy-item -Force -Recurse -Verbose ".\cimgui-deps\*" -Destination ".\cimgui\"
           ((Get-Content .\cimgui\cimgui.cpp -Raw) -replace "#include `"cimgui.h`"","#define CIMGUI_NO_EXPORT`n#include `"cimgui.h`"`n#include <generator/output/cimgui_impl.h>") | Set-Content .\cimgui\cimgui.cpp
+      
       - name: Build cimgui
         run: |
           cd .\cimgui\
           cmake .
           cmake --build . --target ALL_BUILD --config Debug -- /nologo /maxcpucount
           cmake --build . --target ALL_BUILD --config Release -- /nologo /maxcpucount
+      
       - name: Copy binaries to dist
         run: |
           New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Debug-Win64\"
           New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Release-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
           Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
+      
       - name: Commit and push
         run: |
           git config user.name github-actions
@@ -50,25 +104,32 @@ jobs:
           git commit -m "Generation"
           git push origin Windows-Build
 
-  Linux:
+  linux:
     runs-on: ubuntu-latest
+    needs: [compare-tags]
+    if: needs.compare-tags.outputs.is-new-version == 'true'
+    
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libglfw3-dev libsdl2-dev gcc-multilib g++-multilib libfreetype6-dev
+      
       - name: Clone submodules
         run: |
           git submodule update --init
           cd cimgui
           git checkout docking_inter
           git submodule update --init
+      
       - name: Prepare cimgui
         run: |
           sed -i "s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT\n#include \"cimgui.h\"\n#include \"generator\/output\/cimgui_impl.h\"/g" cimgui/cimgui.cpp
+      
       - name: Prepare branch
         continue-on-error: true
         run: |
@@ -82,6 +143,7 @@ jobs:
           git add ImGui/dist/*
           git commit -m "preparation"        
           git push origin Linux-Build
+      
       - name: Build cimgui
         run: |
           cd ./cimgui/
@@ -92,6 +154,7 @@ jobs:
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+      
       - name: Commit and push
         run: |
           git config user.name github-actions
@@ -103,23 +166,30 @@ jobs:
 
   macOS:
     runs-on: macOS-latest
+    needs: [compare-tags]
+    if: needs.compare-tags.outputs.is-new-version == 'true'
+    
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
       - name: Install Dependencies
         run: |
           brew install glfw3
           brew install sdl2
+      
       - name: Clone submodules
         run: |
           git submodule update --init
           cd cimgui
           git checkout docking_inter
           git submodule update --init
+     
       - name: Prepare cimgui
         run: |
           perl -i -pe"s/#include \"cimgui.h\"/#define CIMGUI_NO_EXPORT\n#include \"cimgui.h\"\n#include \"generator\/output\/cimgui_impl.h\"/g" cimgui/cimgui.cpp
+      
       - name: Build cimgui
         run: |
           rm -rf "./ImGui/dist/Debug-macOS"
@@ -135,6 +205,7 @@ jobs:
           cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
           cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
+          
       - name: Commit and push
         run: |
           git config user.name github-actions
@@ -143,17 +214,20 @@ jobs:
           git add ImGui/dist/*
           git commit -m "Generation"
           git push origin macOS-Build
-  Merge:
+  merge:
     runs-on: ubuntu-latest
-    needs: [Windows, Linux, macOS]
+    needs: [compare-tags, windows, linux, macOS]
+    
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          
       - name: Login
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
+          
       - name: Merge builds
         run: |
           git fetch
@@ -162,11 +236,13 @@ jobs:
           git merge origin/Windows-Build
           git merge origin/Linux-Build
           git merge origin/macOS-Build
+          
       - name: Get latest cimgui binding info
         run: |
           git submodule update --init
           cd cimgui
           git checkout docking_inter
+          
       - name: Generate ImGui bindings
         run: |
           git checkout -b Bindings
@@ -174,7 +250,9 @@ jobs:
           dotnet run
           git add ..
           git commit -m "Generate Bindings"
+          
       - name: Push generated files
+        id: merge-all
         run: |
           git checkout Build
           git merge Bindings
@@ -182,11 +260,23 @@ jobs:
           git merge --squash Build
           git commit -m "Generation"
           git push origin master
+          
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "::set-output name=commit-id::$COMMIT_ID"
+      
+      - name: Create tag
+        uses: simpleactions/create-tag@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          sha: ${{ steps.merge-all.outputs.commit-id }}
+          tag: ${{ needs.compare-tags.outputs.new-tag }}
+          message: ""
 
-  Cleanup:
+  cleanup:
     runs-on: ubuntu-latest
-    needs: [Merge]
-    if: always()
+    needs: [merge, compare-tags]
+    if: needs.compare-tags.outputs.is-new-version == 'true'
     steps:
       - uses: actions/checkout@v2
         with:
