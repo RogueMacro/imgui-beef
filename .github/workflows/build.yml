@@ -65,9 +65,7 @@ jobs:
     if: needs.compare-tags.outputs.is-new-version == 'true'
     
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
       
       - name: Clone submodules
         run: |
@@ -110,9 +108,7 @@ jobs:
     if: needs.compare-tags.outputs.is-new-version == 'true'
     
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
       
       - name: Install dependencies
         run: |
@@ -170,9 +166,7 @@ jobs:
     if: needs.compare-tags.outputs.is-new-version == 'true'
     
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
       
       - name: Install Dependencies
         run: |
@@ -219,9 +213,7 @@ jobs:
     needs: [compare-tags, windows, linux, macOS]
     
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
           
       - name: Login
         run: |
@@ -278,9 +270,8 @@ jobs:
     needs: [merge, compare-tags]
     if: needs.compare-tags.outputs.is-new-version == 'true'
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
+
       - name: cleanup branches
         run: |
           git config user.name github-actions
