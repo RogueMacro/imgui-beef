@@ -1,0 +1,7 @@
+[Package]
+Name = "ImGuiImplGlfw"
+Version = "1.88.0"
+Description = "GLFW Implementation for ImGui"
+
+[Dependencies]
+ImGui = { Path = ".." }

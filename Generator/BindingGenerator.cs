@@ -190,13 +190,13 @@ namespace ImGui
 			imguiFile = imguiFile.Remove(imguiFile.Length - 4);
 			imguiFile += "}\n}";
 
-			files.Add("ImGui.bf", imguiFile);
+			files.Add("src/ImGui.bf", imguiFile);
 
 
-			files["ImGuiImplGlfw.bf"] = GenerateImplFile("ImGuiImplGlfw", Bindings);
-			files["ImGuiImplOpenGL2.bf"] = GenerateImplFile("ImGuiImplOpenGL2", Bindings);
-			files["ImGuiImplOpenGL3.bf"] = GenerateImplFile("ImGuiImplOpenGL3", Bindings);
-			files["ImGuiImplSDL.bf"] = GenerateImplFile("ImGuiImplSDL2", Bindings);
+			files["ImGuiImplGlfw/src/ImGuiImplGlfw.bf"] = GenerateImplFile("ImGuiImplGlfw", Bindings);
+			files["ImGuiImplOpenGL2/src/ImGuiImplOpenGL2.bf"] = GenerateImplFile("ImGuiImplOpenGL2", Bindings);
+			files["ImGuiImplOpenGL3/src/ImGuiImplOpenGL3.bf"] = GenerateImplFile("ImGuiImplOpenGL3", Bindings);
+			files["ImGuiImplSDL/src/ImGuiImplSDL.bf"] = GenerateImplFile("ImGuiImplSDL2", Bindings);
 
 			return files;
         }

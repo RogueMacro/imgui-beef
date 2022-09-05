@@ -1,0 +1,7 @@
+[Package]
+Name = "ImGuiImplOpenGL3"
+Version = "1.88.0"
+Description = "OpenGL3 Implementation for ImGui"
+
+[Dependencies]
+ImGui = { Path = ".." }
