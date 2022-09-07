@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {"OpenGL-3.3.0" = "*", corlib = "*", "ImGui-1.88.1/GLFW" = "*", "ImGui-1.88.1" = "*", "ImGui-1.88.1/OpenGL3" = "*", "GLFW-3.3.4" = "*"}
+
+[Project]
+Name = "Example"
+TargetType = "BeefGUIApplication"
+StartupObject = "Example.Program"

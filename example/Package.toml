@@ -1,0 +1,9 @@
+[Package]
+Name = "Example"
+Version = "0.1.0"
+Description = "ImGui Example Demo"
+
+[Dependencies]
+ImGui = { Version = "1.88", Features = ["GLFW", "OpenGL3"] }
+GLFW = "3.3.4"
+OpenGL = "3.3"
