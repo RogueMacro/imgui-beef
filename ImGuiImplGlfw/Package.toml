@@ -5,3 +5,4 @@ Description = "GLFW Implementation for ImGui"
 
 [Dependencies]
 ImGui = { Path = ".." }
+GLFW = "*"
