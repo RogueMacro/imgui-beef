@@ -1,6 +1,6 @@
 [Package]
 Name = "ImGui"
-Version = "1.88.1"
+Version = "1.88.0"
 Description = "Dear ImGui wrapper for Beef"
 
 [Features]
