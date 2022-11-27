@@ -1,11 +1,11 @@
 // -- GENERATION INFORMATION --
-// Date: 11/16/2022 06:27:02
+// Date: 11/27/2022 06:22:58
 // Constructors: 0
 // Destructors: 0
-// Enums: 71
-// Global methods: 843
+// Enums: 72
+// Global methods: 847
 // Instance methods: 0
-// Structs: 108
+// Structs: 109
 // Typedefs: 28
 
 using System;
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.89";
-		public static int VERSION_NUM = 18900;
+		public static char8* VERSION = "1.89.1";
+		public static int VERSION_NUM = 189100;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -893,6 +893,20 @@ namespace ImGui
         {
             Horizontal = 0,
             Vertical = 1,
+        
+        }
+        
+        [AllowDuplicates]
+        public enum LocKey 
+        {
+            TableSizeOne = 0,
+            TableSizeAllFit = 1,
+            TableSizeAllDefault = 2,
+            TableResetOrder = 3,
+            WindowingMainMenuBar = 4,
+            WindowingPopup = 5,
+            WindowingUntitled = 6,
+            COUNT = 7,
         
         }
         
@@ -2616,6 +2630,7 @@ namespace ImGui
             public ChunkStream<TableSettings> SettingsTables;
             public Vector<ContextHook> Hooks;
             public ID HookIdNext;
+            public char*[7] LocalizationTable;
             public bool LogEnabled;
             public LogType LogType;
             public FileHandle LogFile;
@@ -3360,6 +3375,14 @@ namespace ImGui
             public bool PosToIndexConvert;
             public S8 PosToIndexOffsetMin;
             public S8 PosToIndexOffsetMax;
+        
+        }
+        
+        [CRepr]
+        public struct LocEntry
+        {
+            public LocKey Key;
+            public char* Text;
         
         }
         
@@ -4559,6 +4582,7 @@ namespace ImGui
             public void* PlatformUserData;
             public void* PlatformHandle;
             public void* PlatformHandleRaw;
+            public bool PlatformWindowCreated;
             public bool PlatformRequestMove;
             public bool PlatformRequestResize;
             public bool PlatformRequestClose;
@@ -4602,7 +4626,6 @@ namespace ImGui
             public float Alpha;
             public float LastAlpha;
             public short PlatformMonitor;
-            public bool PlatformWindowCreated;
             public Window* Window;
             public int32[2] DrawListsLastFrame;
             public DrawList*[2] DrawLists;
@@ -8049,6 +8072,10 @@ namespace ImGui
         private static extern bool IsKeyReleasedImpl(Key key, ID owner_id);
         public static bool IsKeyReleased(Key key, ID owner_id) => IsKeyReleasedImpl(key, owner_id);
         
+        [LinkName("igIsKeyboardKey")]
+        private static extern bool IsKeyboardKeyImpl(Key key);
+        public static bool IsKeyboardKey(Key key) => IsKeyboardKeyImpl(key);
+        
         [LinkName("igIsLegacyKey")]
         private static extern bool IsLegacyKeyImpl(Key key);
         public static bool IsLegacyKey(Key key) => IsLegacyKeyImpl(key);
@@ -8084,6 +8111,10 @@ namespace ImGui
         [LinkName("igIsMouseHoveringRect")]
         private static extern bool IsMouseHoveringRectImpl(Vec2 r_min, Vec2 r_max, bool clip);
         public static bool IsMouseHoveringRect(Vec2 r_min, Vec2 r_max, bool clip = true) => IsMouseHoveringRectImpl(r_min, r_max, clip);
+        
+        [LinkName("igIsMouseKey")]
+        private static extern bool IsMouseKeyImpl(Key key);
+        public static bool IsMouseKey(Key key) => IsMouseKeyImpl(key);
         
         [LinkName("igIsMousePosValid")]
         private static extern bool IsMousePosValidImpl(Vec2* mouse_pos);
@@ -8196,6 +8227,18 @@ namespace ImGui
         [LinkName("igLoadIniSettingsFromMemory")]
         private static extern void LoadIniSettingsFromMemoryImpl(char* ini_data, size ini_size);
         public static void LoadIniSettingsFromMemory(char* ini_data, size ini_size = (size) 0) => LoadIniSettingsFromMemoryImpl(ini_data, ini_size);
+        
+        [LinkName("igLocalizeGetMsg")]
+        private static extern char* LocalizeGetMsgImpl(LocKey key);
+        #if IMGUI_USE_REF
+        public static ref char LocalizeGetMsg(LocKey key) { return ref *LocalizeGetMsgImpl(key); }
+        #else
+        public static char* LocalizeGetMsg(LocKey key) => LocalizeGetMsgImpl(key);
+        #endif
+        
+        [LinkName("igLocalizeRegisterEntries")]
+        private static extern void LocalizeRegisterEntriesImpl(LocEntry* entries, int32 count);
+        public static void LocalizeRegisterEntries(LocEntry* entries, int32 count) => LocalizeRegisterEntriesImpl(entries, count);
         
         [LinkName("igLogBegin")]
         private static extern void LogBeginImpl(LogType type, int32 auto_open_depth);
