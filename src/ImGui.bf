@@ -32,7 +32,7 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.89.1";
+		public static char8* VERSION = "1.89.1 WIP";
 		public static int VERSION_NUM = 189100;
 		public static bool CHECKVERSION()
 		{
@@ -756,16 +756,16 @@ namespace ImGui
             RightAlt = 533,
             RightSuper = 534,
             Menu = 535,
-            0 = 536,
-            1 = 537,
-            2 = 538,
-            3 = 539,
-            4 = 540,
-            5 = 541,
-            6 = 542,
-            7 = 543,
-            8 = 544,
-            9 = 545,
+            N0 = 536,
+            N1 = 537,
+            N2 = 538,
+            N3 = 539,
+            N4 = 540,
+            N5 = 541,
+            N6 = 542,
+            N7 = 543,
+            N8 = 544,
+            N9 = 545,
             A = 546,
             B = 547,
             C = 548,
