@@ -88,17 +88,17 @@ jobs:
       
       - name: Copy binaries to dist
         run: |
-          New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Debug-Win64\"
-          New-Item -ItemType Directory -Force -Path ".\ImGui\dist\Release-Win64\"
-          Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\ImGui\dist\Debug-Win64\"
-          Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\ImGui\dist\Release-Win64\"
+          New-Item -ItemType Directory -Force -Path ".\dist\Debug-Win64\"
+          New-Item -ItemType Directory -Force -Path ".\dist\Release-Win64\"
+          Copy-item -Force -Verbose ".\cimgui\Debug\cimgui.lib" -Destination ".\dist\Debug-Win64\"
+          Copy-item -Force -Verbose ".\cimgui\Release\cimgui.lib" -Destination ".\dist\Release-Win64\"
       
       - name: Commit and push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Windows-Build    
-          git add ImGui/dist/*              
+          git add dist/*              
           git commit -m "Generation"
           git push origin Windows-Build
 
@@ -132,11 +132,11 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b Linux-Build
-          rm -rf "./ImGui/dist/Debug-Linux64"
-          rm -rf "./ImGui/dist/Release-Linux64"
-          mkdir -p "./ImGui/dist/Debug-Linux64"
-          mkdir -p "./ImGui/dist/Release-Linux64"
-          git add ImGui/dist/*
+          rm -rf "./dist/Debug-Linux64"
+          rm -rf "./dist/Release-Linux64"
+          mkdir -p "./dist/Debug-Linux64"
+          mkdir -p "./dist/Release-Linux64"
+          git add dist/*
           git commit -m "preparation"        
           git push origin Linux-Build
       
@@ -147,16 +147,16 @@ jobs:
           cmake -DIMGUI_STATIC=yes
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           cmake --build . --config Debug
-          cp -rf "./cimgui.a" "../ImGui/dist/Debug-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../dist/Debug-Linux64/cimgui.a"
           cmake --build . --config Release
-          cp -rf "./cimgui.a" "../ImGui/dist/Release-Linux64/cimgui.a"
+          cp -rf "./cimgui.a" "../dist/Release-Linux64/cimgui.a"
       
       - name: Commit and push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout Linux-Build
-          git add ImGui/dist/*
+          git add dist/*
           git commit -m "Generation"        
           git push origin Linux-Build
 
@@ -186,26 +186,26 @@ jobs:
       
       - name: Build cimgui
         run: |
-          rm -rf "./ImGui/dist/Debug-macOS"
-          rm -rf "./ImGui/dist/Release-macOS"
-          mkdir -p "./ImGui/dist/Debug-macOS"
-          mkdir -p "./ImGui/dist/Release-macOS"
+          rm -rf "./dist/Debug-macOS"
+          rm -rf "./dist/Release-macOS"
+          mkdir -p "./dist/Debug-macOS"
+          mkdir -p "./dist/Release-macOS"
           cd ./cimgui/
           cmake .
           cmake -DIMGUI_STATIC=yes
           cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           cmake -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=10.9
           cmake --build . --config Debug
-          cp -rf "./cimgui.a" "../ImGui/dist/Debug-macOS/cimgui.a"
+          cp -rf "./cimgui.a" "../dist/Debug-macOS/cimgui.a"
           cmake --build . --config Release
-          cp -rf "./cimgui.a" "../ImGui/dist/Release-macOS/cimgui.a"
+          cp -rf "./cimgui.a" "../dist/Release-macOS/cimgui.a"
           
       - name: Commit and push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b macOS-Build
-          git add ImGui/dist/*
+          git add dist/*
           git commit -m "Generation"
           git push origin macOS-Build
   merge:
