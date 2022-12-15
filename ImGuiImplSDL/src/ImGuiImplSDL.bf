@@ -6,6 +6,7 @@ namespace ImGui
     {
         private typealias SDL_Window = SDL2.SDL.Window;
         private typealias SDL_Event = SDL2.SDL.Event;
+        private typealias SDL_Renderer = SDL2.SDL.Renderer;
     
         [LinkName("ImGui_ImplSDL2_InitForD3D")]
         private static extern bool InitForD3DImpl(SDL_Window* window);

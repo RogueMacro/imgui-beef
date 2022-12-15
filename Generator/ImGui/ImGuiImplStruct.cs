@@ -68,6 +68,7 @@ public static class {Name}
 @"
     private typealias SDL_Window = SDL2.SDL.Window;
     private typealias SDL_Event = SDL2.SDL.Event;
+    private typealias SDL_Renderer = SDL2.SDL.Renderer;
 ";
             }
 
