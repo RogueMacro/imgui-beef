@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ImGuiBeefGenerator.ImGui
 {
@@ -12,6 +14,7 @@ namespace ImGuiBeefGenerator.ImGui
         public string DefaultValue { get; }
         public bool IsOutParam { get; }
         public bool IsRefParam { get; }
+        public bool IsArrayParam { get; }
 
         public ImGuiMethodParameter(string name, string type, string defaultValue = "", bool isRefToPtr = false)
         {
@@ -59,9 +62,10 @@ namespace ImGuiBeefGenerator.ImGui
                 }
             }
 
-            //IsOutParam = name.StartsWith("out_") && (isRefToPtr || type.EndsWith("**"));
+            Regex arrayRegex = new Regex(@"\w+\[\d+\]", RegexOptions.Compiled);
+            IsArrayParam = arrayRegex.IsMatch(Type);
             IsOutParam = name.StartsWith("out_") && !type.Contains("_") && type.EndsWith("*") && DefaultValue == "";
-            IsRefParam = !IsOutParam && isRefToPtr;
+            IsRefParam = (!IsOutParam && isRefToPtr) || IsArrayParam;
 
             if (Name.EndsWith("]"))
             {
@@ -165,20 +169,22 @@ namespace ImGuiBeefGenerator.ImGui
             if (IsVaList)
                 return "scope String()..AppendF(StringView(fmt), params args)";
             else
-                return $"{(IsOutParam || IsRefParam ? "&" : "")}{Name}";
+                return $"{((IsOutParam || IsRefParam) && !IsArrayParam ? "&" : "")}{Name}";
         }
 
         public string ToLinkableDefinitionArg()
         {
             if (IsVaList)
                 return "...";
+            else if (Name == "self")
+                return "Self* self";
             else
                 return $"{Type} {Name}";
         }
 
         public string ToDefinitionArg()
         {
-            return $"{(IsOutParam ? "out " : "")}{(IsRefParam ? "ref " : "")}{(IsOutParam || IsRefParam ? Type.Remove(Type.Length - 1, 1) : Type)} {Name}{(DefaultValue != "" ? $" = {DefaultValue}" : "")}";
+            return $"{(IsOutParam ? "out " : "")}{(IsRefParam ? "ref " : "")}{((IsOutParam || IsRefParam) && !Type.EndsWith("]") ? Type.Remove(Type.Length - 1, 1) : Type)} {Name}{(DefaultValue != "" ? $" = {DefaultValue}" : "")}";
         }
     }
 

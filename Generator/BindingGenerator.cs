@@ -11,6 +11,9 @@ namespace ImGuiBeefGenerator
     public class BindingGenerator
     {
         private readonly List<IBinding> Bindings = new List<IBinding>();
+		private int InstanceMethods = 0;
+		private int Constructors = 0;
+		private int Destructors = 0;
 
         public void Initialize()
         {
@@ -24,6 +27,10 @@ namespace ImGuiBeefGenerator
             Bindings.AddRange(enums);
 
             List<ImGuiMethodDefinition> methods = ImGuiMethodDefinition.From(ReadBindingData("definitions.json"));
+			InstanceMethods = methods.Count(b => b is ImGuiInstanceMethodDefinition);
+			Constructors = methods.Count(b => b is ImGuiConstructorDefinition);
+			Destructors = methods.Count(b => b is ImGuiDestructorDefinition);
+
 			Bindings.AddRange(ImGuiStruct.From(structs_and_enums["structs"], ref methods));
 			Bindings.AddRange(methods);
             Bindings.AddRange(ImGuiImplStruct.From(ReadBindingData("impl_definitions.json")));
@@ -41,11 +48,11 @@ namespace ImGuiBeefGenerator
 				imguiFile +=
 $@"// -- GENERATION INFORMATION --
 // Date: {DateTime.Now}
-// Constructors: {Bindings.Count(b => b is ImGuiConstructorDefinition)}
-// Destructors: {Bindings.Count(b => b is ImGuiDestructorDefinition)}
+// Constructors: {Constructors}
+// Destructors: {Destructors}
 // Enums: {Bindings.Count(b => b is ImGuiEnum)}
 // Global methods: {Bindings.Count(b => b is ImGuiGlobalMethodDefinition)}
-// Instance methods: {Bindings.Count(b => b is ImGuiInstanceMethodDefinition)}
+// Instance methods: {InstanceMethods}
 // Structs: {Bindings.Count(b => b is ImGuiStruct)}
 // Typedefs: {Bindings.Count(b => b is ImGuiTypeDef)}
 

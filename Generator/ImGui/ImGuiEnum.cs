@@ -61,13 +61,14 @@ namespace ImGuiBeefGenerator.ImGui
             var serialized =
 $@"
 [AllowDuplicates]
-public enum {Name} {(Type != "" ? $": {Type}" : "")}
+public enum {Name} : int32
 {{
 ";
 
             foreach (var enumValue in Values)
             {
-                serialized += $"    {enumValue.Key} = {enumValue.Value},\n";
+                serialized += 
+                    $"    {(char.IsDigit(enumValue.Key[0]) ? "N" : "")}{enumValue.Key} = {enumValue.Value},\n";
             }
 
             serialized += "\n}\n";

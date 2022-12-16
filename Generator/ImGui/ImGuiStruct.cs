@@ -155,12 +155,68 @@ namespace ImGuiBeefGenerator.ImGui
 
         public virtual string Serialize()
         {
+            string definition;
+            if (Name == "BitArray")
+                definition = "BitArray<BitCount, Offset> where BitCount : const int where Offset : const int";
+            else if (Name == "SpanAllocator")
+            {
+                definition = "SpanAllocator<T> where T : const int";
+            }
+            else
+                definition = $"{Name}{(IsGeneric ? "<T>" : "")}";
+
             var serialized =
 $@"
 [CRepr]
-public struct {Name}{(IsGeneric ? "<T>" : "")}
-{{
+public struct {definition}
+{{";
+            if (Name == "BitArray")
+            {
+                serialized += 
+@"
+    public U32[(BitCount + 32) >> 5] Storage;
 ";
+            }
+            else if (Name == "Span")
+            {
+                serialized +=
+@"
+    public T* Data;
+    public T* DataEnd;
+";
+            }
+            else if (Name == "SpanAllocator")
+            {
+                serialized +=
+@"
+    public charPtr BasePtr;
+    int32 CurrOff;
+    int32 CurrIdx;
+    int32[T] Offsets;
+    int32[T] Sizes;
+";
+            }
+            else if (Name == "Pool")
+            {
+                serialized +=
+@"
+    public Vector<T> Buf;
+    public Storage Map;
+    public PoolIdx FreeIdx;
+    public PoolIdx AliveCount;
+";
+            }
+            else if (Name == "ChunkStream")
+            {
+                serialized += 
+@"
+    public Vector<char> Buf;
+";
+            }
+            else
+            {
+                serialized += '\n';
+            }
 
             foreach (var property in Properties)
                 serialized += $"    {property}";

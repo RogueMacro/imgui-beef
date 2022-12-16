@@ -9,6 +9,10 @@ namespace ImGuiBeefGenerator.ImGui
 
         public ImGuiGlobalMethodDefinition(string name, string linkName, List<object> argsT, string returnType, Dictionary<string, object> defaults) : base(name, linkName, argsT, defaults)
         {
+            if (name.Contains("BitArray"))
+            {
+                var i = 1;
+            }
             ReturnType = ImGui.FixType(returnType);
 
             var pOuts = Args.Where(a => a.Name == "pOut");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ImGuiBeefGenerator.ImGui
@@ -52,6 +53,8 @@ namespace ImGuiBeefGenerator.ImGui
                 defaults = d;
 
             var argsT = (IEnumerable<dynamic>) variation["argsT"];
+            if ("ImBitArray" == (string) variation["stname"])
+                Console.WriteLine("");
             if ((argsT.Count() > 0 && argsT.Any(arg => arg["name"] == "self" && arg["type"] == $"{variation["stname"]}*")) || ((string) variation["ov_cimguiname"]).StartsWith("ImGui_Impl"))
             {
                 return new ImGuiInstanceMethodDefinition(

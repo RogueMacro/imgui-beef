@@ -28,7 +28,7 @@ namespace ImGuiBeefGenerator.ImGui
                 string name = ImGui.RemovePrefix(typedef.Key);
                 string value;
 
-                if (name == "BitArrayForNamedKeys") value = "BitArray<S32>";
+                if (name == "BitArrayForNamedKeys") value = "BitArray<const Key.NamedKey_COUNT, const -Key.NamedKey_BEGIN>";
                 else value = ImGui.FixType(typedef.Value.Replace(";", ""));
 
                 list.Add(new ImGuiTypeDef(name, value));
