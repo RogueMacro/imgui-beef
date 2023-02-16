@@ -59,6 +59,10 @@ namespace ImGui
         private static extern void ScrollCallbackImpl(GLFWwindow* window, double xoffset, double yoffset);
         public static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) => ScrollCallbackImpl(window, xoffset, yoffset);
         
+        [LinkName("ImGui_ImplGlfw_SetCallbacksChainForAllWindows")]
+        private static extern void SetCallbacksChainForAllWindowsImpl(bool chain_for_all_windows);
+        public static void SetCallbacksChainForAllWindows(bool chain_for_all_windows) => SetCallbacksChainForAllWindowsImpl(chain_for_all_windows);
+        
         [LinkName("ImGui_ImplGlfw_Shutdown")]
         private static extern void ShutdownImpl();
         public static void Shutdown() => ShutdownImpl();

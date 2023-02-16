@@ -1,12 +1,12 @@
 // -- GENERATION INFORMATION --
-// Date: 16/12/2022 15:32:55
-// Constructors: 96
-// Destructors: 75
+// Date: 02/16/2023 06:23:53
+// Constructors: 95
+// Destructors: 74
 // Enums: 72
-// Global methods: 847
-// Instance methods: 355
+// Global methods: 865
+// Instance methods: 353
 // Structs: 109
-// Typedefs: 28
+// Typedefs: 29
 
 using System;
 
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.89.1";
-		public static int VERSION_NUM = 189100;
+		public static char8* VERSION = "1.89.3";
+		public static int VERSION_NUM = 189300;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -133,6 +133,7 @@ namespace ImGui
         // -- Auto-Generated --
 
         public typealias BitArrayForNamedKeys = BitArray<const Key.NamedKey_COUNT, const -Key.NamedKey_BEGIN>;
+        public typealias BitArrayPtr = U32*;
         public typealias DrawCallback = function void(DrawList* parent_list, DrawCmd* cmd);
         public typealias DrawIdx = ushort;
         public typealias FileHandle = FILE*;
@@ -145,8 +146,8 @@ namespace ImGui
         public typealias MemAllocFunc = function void*(size sz, void* user_data);
         public typealias MemFreeFunc = function void(void* ptr, void* user_data);
         public typealias SizeCallback = function void(SizeCallbackData* data);
-        public typealias TableColumnIdx = S8;
-        public typealias TableDrawChannelIdx = U8;
+        public typealias TableColumnIdx = S16;
+        public typealias TableDrawChannelIdx = U16;
         public typealias PoolIdx = int32;
         public typealias S16 = short;
         public typealias S32 = int32;
@@ -878,8 +879,8 @@ namespace ImGui
             Mod_Shift = 8192,
             Mod_Alt = 16384,
             Mod_Super = 32768,
-            Mod_Mask_ = 61440,
-            Mod_Shortcut = 4096,
+            Mod_Shortcut = 2048,
+            Mod_Mask_ = 63488,
             NamedKey_BEGIN = 512,
             NamedKey_END = 652,
             NamedKey_COUNT = 140,
@@ -906,7 +907,8 @@ namespace ImGui
             WindowingMainMenuBar = 4,
             WindowingPopup = 5,
             WindowingUntitled = 6,
-            COUNT = 7,
+            DockingHideTabBar = 7,
+            COUNT = 8,
         
         }
         
@@ -1108,10 +1110,9 @@ namespace ImGui
             SelectableFlags_SelectOnClick = 4194304,
             SelectableFlags_SelectOnRelease = 8388608,
             SelectableFlags_SpanAvailWidth = 16777216,
-            SelectableFlags_DrawHoveredWhenHeld = 33554432,
-            SelectableFlags_SetNavIdOnHover = 67108864,
-            SelectableFlags_NoPadWithHalfSpacing = 134217728,
-            SelectableFlags_NoSetKeyOwner = 268435456,
+            SelectableFlags_SetNavIdOnHover = 33554432,
+            SelectableFlags_NoPadWithHalfSpacing = 67108864,
+            SelectableFlags_NoSetKeyOwner = 134217728,
         
         }
         
@@ -1194,7 +1195,10 @@ namespace ImGui
             TabRounding = 22,
             ButtonTextAlign = 23,
             SelectableTextAlign = 24,
-            COUNT = 25,
+            SeparatorTextBorderSize = 25,
+            SeparatorTextAlign = 26,
+            SeparatorTextPadding = 27,
+            COUNT = 28,
         
         }
         
@@ -2004,7 +2008,9 @@ namespace ImGui
             public short ConfigDataCount;
             public Wchar FallbackChar;
             public Wchar EllipsisChar;
-            public Wchar DotChar;
+            public short EllipsisCharCount;
+            public float EllipsisWidth;
+            public float EllipsisCharStep;
             public bool DirtyLookupTables;
             public float Scale;
             public float Ascent;
@@ -2098,6 +2104,7 @@ namespace ImGui
             public int32 TexDesiredWidth;
             public int32 TexGlyphPadding;
             public bool Locked;
+            public void* UserData;
             public bool TexReady;
             public bool TexPixelsUseColors;
             public uchar* TexPixelsAlpha8;
@@ -2453,7 +2460,10 @@ namespace ImGui
             public Window* MovingWindow;
             public Window* WheelingWindow;
             public Vec2 WheelingWindowRefMousePos;
+            public int32 WheelingWindowStartFrame;
             public float WheelingWindowReleaseTimer;
+            public Vec2 WheelingWindowWheelRemainder;
+            public Vec2 WheelingAxisAvg;
             public ID DebugHookIdInfo;
             public ID HoveredId;
             public ID HoveredIdPreviousFrame;
@@ -2600,9 +2610,11 @@ namespace ImGui
             public Font InputTextPasswordFont;
             public ID TempInputId;
             public ColorEditFlags ColorEditOptions;
-            public float ColorEditLastHue;
-            public float ColorEditLastSat;
-            public U32 ColorEditLastColor;
+            public ID ColorEditCurrentID;
+            public ID ColorEditSavedID;
+            public float ColorEditSavedHue;
+            public float ColorEditSavedSat;
+            public U32 ColorEditSavedColor;
             public Vec4 ColorPickerRef;
             public ComboPreviewData ComboPreviewData;
             public float SliderGrabClickOffset;
@@ -2630,7 +2642,7 @@ namespace ImGui
             public ChunkStream<TableSettings> SettingsTables;
             public Vector<ContextHook> Hooks;
             public ID HookIdNext;
-            public char*[7] LocalizationTable;
+            public char*[8] LocalizationTable;
             public bool LogEnabled;
             public LogType LogType;
             public FileHandle LogFile;
@@ -2991,8 +3003,8 @@ namespace ImGui
             public void AddMouseViewportEvent(ID id) mut=> AddMouseViewportEventImpl(&this, id);
             
             [LinkName("ImGuiIO_AddMouseWheelEvent")]
-            private static extern void AddMouseWheelEventImpl(Self* self, float wh_x, float wh_y);
-            public void AddMouseWheelEvent(float wh_x, float wh_y) mut=> AddMouseWheelEventImpl(&this, wh_x, wh_y);
+            private static extern void AddMouseWheelEventImpl(Self* self, float wheel_x, float wheel_y);
+            public void AddMouseWheelEvent(float wheel_x, float wheel_y) mut=> AddMouseWheelEventImpl(&this, wheel_x, wheel_y);
             
             [LinkName("ImGuiIO_ClearInputCharacters")]
             private static extern void ClearInputCharactersImpl(Self* self);
@@ -3033,7 +3045,6 @@ namespace ImGui
             {
                 this = *CtorImpl();
             }
-            
             [CRepr, Union]
             public struct InputEventUnion0
             {
@@ -3150,6 +3161,7 @@ namespace ImGui
         [CRepr]
         public struct InputTextState
         {
+            public Context* Ctx;
             public ID ID;
             public int32 CurLenW;
             public int32 CurLenA;
@@ -3167,10 +3179,10 @@ namespace ImGui
             public InputTextFlags Flags;
         
             [LinkName("ImGuiInputTextState_ImGuiInputTextState")]
-            private static extern InputTextState* CtorImpl();
-            public this()
+            private static extern InputTextState* CtorImpl(Context* ctx);
+            public this(Context* ctx)
             {
-                this = *CtorImpl();
+                this = *CtorImpl(ctx);
             }
             
             [LinkName("ImGuiInputTextState_ClearFreeMemory")]
@@ -3430,17 +3442,11 @@ namespace ImGui
             public bool ShowTablesRects;
             public bool ShowDrawCmdMesh;
             public bool ShowDrawCmdBoundingBoxes;
+            public bool ShowAtlasTintedWithTextColor;
             public bool ShowDockingNodes;
             public int32 ShowWindowsRectsType;
             public int32 ShowTablesRectsType;
         
-            [LinkName("ImGuiMetricsConfig_ImGuiMetricsConfig")]
-            private static extern MetricsConfig* CtorImpl();
-            public this()
-            {
-                this = *CtorImpl();
-            }
-            
         }
         
         [CRepr]
@@ -3944,7 +3950,6 @@ namespace ImGui
             {
                 this = *CtorImpl(_key, _val_p);
             }
-            
             [CRepr, Union]
             public struct StoragePairUnion0
             {
@@ -3990,6 +3995,9 @@ namespace ImGui
             public Dir ColorButtonPosition;
             public Vec2 ButtonTextAlign;
             public Vec2 SelectableTextAlign;
+            public float SeparatorTextBorderSize;
+            public Vec2 SeparatorTextAlign;
+            public Vec2 SeparatorTextPadding;
             public Vec2 DisplayWindowPadding;
             public Vec2 DisplaySafeAreaPadding;
             public float MouseCursorScale;
@@ -4041,7 +4049,6 @@ namespace ImGui
             {
                 this = *CtorImpl(idx, v);
             }
-            
             [CRepr, Union]
             public struct StyleModUnion0
             {
@@ -4093,14 +4100,6 @@ namespace ImGui
                 this = *CtorImpl();
             }
             
-            [LinkName("ImGuiTabBar_GetTabName")]
-            private static extern char* GetTabNameImpl(Self* self, TabItem* tab);
-            public char* GetTabName(TabItem* tab) mut=> GetTabNameImpl(&this, tab);
-            
-            [LinkName("ImGuiTabBar_GetTabOrder")]
-            private static extern int32 GetTabOrderImpl(Self* self, TabItem* tab);
-            public int32 GetTabOrder(TabItem* tab) mut=> GetTabOrderImpl(&this, tab);
-            
         }
         
         [CRepr]
@@ -4139,10 +4138,9 @@ namespace ImGui
             public Span<TableColumn> Columns;
             public Span<TableColumnIdx> DisplayOrderToIndex;
             public Span<TableCellData> RowCellData;
-            public U64 EnabledMaskByDisplayOrder;
-            public U64 EnabledMaskByIndex;
-            public U64 VisibleMaskByIndex;
-            public U64 RequestOutputMaskByIndex;
+            public BitArrayPtr EnabledMaskByDisplayOrder;
+            public BitArrayPtr EnabledMaskByIndex;
+            public BitArrayPtr VisibleMaskByIndex;
             public TableFlags SettingsLoadedFlags;
             public int32 SettingsOffset;
             public int32 LastFrameActive;
@@ -4234,6 +4232,8 @@ namespace ImGui
             public bool IsResetDisplayOrderRequest;
             public bool IsUnfrozenRows;
             public bool IsDefaultSizingPolicy;
+            public bool HasScrollbarYCurr;
+            public bool HasScrollbarYPrev;
             public bool MemoryCompacted;
             public bool HostSkipItems;
         
@@ -4349,8 +4349,10 @@ namespace ImGui
         [CRepr]
         public struct TableInstanceData
         {
+            public ID TableInstanceID;
             public float LastOuterHeight;
             public float LastFirstRowHeight;
+            public float LastFrozenHeight;
         
             [LinkName("ImGuiTableInstanceData_ImGuiTableInstanceData")]
             private static extern TableInstanceData* CtorImpl();
@@ -4725,6 +4727,12 @@ namespace ImGui
             public Vec2 WindowPadding;
             public float WindowRounding;
             public float WindowBorderSize;
+            public float DecoOuterSizeX1;
+            public float DecoOuterSizeY1;
+            public float DecoOuterSizeX2;
+            public float DecoOuterSizeY2;
+            public float DecoInnerSizeX1;
+            public float DecoInnerSizeY1;
             public int32 NameBufLen;
             public ID MoveId;
             public ID TabId;
@@ -4924,6 +4932,7 @@ namespace ImGui
             public short DockOrder;
             public bool Collapsed;
             public bool WantApply;
+            public bool WantDelete;
         
             [LinkName("ImGuiWindowSettings_ImGuiWindowSettings")]
             private static extern WindowSettings* CtorImpl();
@@ -5963,6 +5972,10 @@ namespace ImGui
         private static extern void ClearIniSettingsImpl();
         public static void ClearIniSettings() => ClearIniSettingsImpl();
         
+        [LinkName("igClearWindowSettings")]
+        private static extern void ClearWindowSettingsImpl(char* name);
+        public static void ClearWindowSettings(char* name) => ClearWindowSettingsImpl(name);
+        
         [LinkName("igCloseButton")]
         private static extern bool CloseButtonImpl(ID id, Vec2 pos);
         public static bool CloseButton(ID id, Vec2 pos) => CloseButtonImpl(id, pos);
@@ -6073,6 +6086,10 @@ namespace ImGui
         [LinkName("igCombo_FnBoolPtr")]
         private static extern bool ComboImpl(char* label, int32* current_item, function bool(void* data, int32 idx, char** outext) items_getter, void* data, int32 items_count, int32 popup_max_height_in_items);
         public static bool Combo(char* label, int32* current_item, function bool(void* data, int32 idx, char** outext) items_getter, void* data, int32 items_count, int32 popup_max_height_in_items = -1) => ComboImpl(label, current_item, items_getter, data, items_count, popup_max_height_in_items);
+        
+        [LinkName("igConvertShortcutMod")]
+        private static extern KeyChord ConvertShortcutModImpl(KeyChord key_chord);
+        public static KeyChord ConvertShortcutMod(KeyChord key_chord) => ConvertShortcutModImpl(key_chord);
         
         [LinkName("igConvertSingleModFlagToKey")]
         private static extern Key ConvertSingleModFlagToKeyImpl(Key key);
@@ -6217,6 +6234,10 @@ namespace ImGui
         private static extern void DebugNodeWindowsListByBeginStackParentImpl(Window** windows, int32 windows_size, Window* parent_in_begin_stack);
         public static void DebugNodeWindowsListByBeginStackParent(Window** windows, int32 windows_size, Window* parent_in_begin_stack) => DebugNodeWindowsListByBeginStackParentImpl(windows, windows_size, parent_in_begin_stack);
         
+        [LinkName("igDebugRenderKeyboardPreview")]
+        private static extern void DebugRenderKeyboardPreviewImpl(DrawList* draw_list);
+        public static void DebugRenderKeyboardPreview(DrawList* draw_list) => DebugRenderKeyboardPreviewImpl(draw_list);
+        
         [LinkName("igDebugRenderViewportThumbnail")]
         private static extern void DebugRenderViewportThumbnailImpl(DrawList* draw_list, ViewportP* viewport, Rect bb);
         public static void DebugRenderViewportThumbnail(DrawList* draw_list, ViewportP* viewport, Rect bb) => DebugRenderViewportThumbnailImpl(draw_list, viewport, bb);
@@ -6349,6 +6370,14 @@ namespace ImGui
         [LinkName("igDockContextNewFrameUpdateUndocking")]
         private static extern void DockContextNewFrameUpdateUndockingImpl(Context* ctx);
         public static void DockContextNewFrameUpdateUndocking(Context* ctx) => DockContextNewFrameUpdateUndockingImpl(ctx);
+        
+        [LinkName("igDockContextProcessUndockNode")]
+        private static extern void DockContextProcessUndockNodeImpl(Context* ctx, DockNode* node);
+        public static void DockContextProcessUndockNode(Context* ctx, DockNode* node) => DockContextProcessUndockNodeImpl(ctx, node);
+        
+        [LinkName("igDockContextProcessUndockWindow")]
+        private static extern void DockContextProcessUndockWindowImpl(Context* ctx, Window* window, bool clear_persistent_docking_ref);
+        public static void DockContextProcessUndockWindow(Context* ctx, Window* window, bool clear_persistent_docking_ref = true) => DockContextProcessUndockWindowImpl(ctx, window, clear_persistent_docking_ref);
         
         [LinkName("igDockContextQueueDock")]
         private static extern void DockContextQueueDockImpl(Context* ctx, Window* target, DockNode* target_node, Window* payload, Dir split_dir, float split_ratio, bool split_outer);
@@ -6596,14 +6625,6 @@ namespace ImGui
         public static OldColumns* FindOrCreateColumns(Window* window, ID id) => FindOrCreateColumnsImpl(window, id);
         #endif
         
-        [LinkName("igFindOrCreateWindowSettings")]
-        private static extern WindowSettings* FindOrCreateWindowSettingsImpl(char* name);
-        #if IMGUI_USE_REF
-        public static ref WindowSettings FindOrCreateWindowSettings(char* name) { return ref *FindOrCreateWindowSettingsImpl(name); }
-        #else
-        public static WindowSettings* FindOrCreateWindowSettings(char* name) => FindOrCreateWindowSettingsImpl(name);
-        #endif
-        
         [LinkName("igFindRenderedTextEnd")]
         private static extern char* FindRenderedTextEndImpl(char* text, char* text_end);
         #if IMGUI_USE_REF
@@ -6656,12 +6677,20 @@ namespace ImGui
         private static extern int32 FindWindowDisplayIndexImpl(Window* window);
         public static int32 FindWindowDisplayIndex(Window* window) => FindWindowDisplayIndexImpl(window);
         
-        [LinkName("igFindWindowSettings")]
-        private static extern WindowSettings* FindWindowSettingsImpl(ID id);
+        [LinkName("igFindWindowSettingsByID")]
+        private static extern WindowSettings* FindWindowSettingsByIDImpl(ID id);
         #if IMGUI_USE_REF
-        public static ref WindowSettings FindWindowSettings(ID id) { return ref *FindWindowSettingsImpl(id); }
+        public static ref WindowSettings FindWindowSettingsByID(ID id) { return ref *FindWindowSettingsByIDImpl(id); }
         #else
-        public static WindowSettings* FindWindowSettings(ID id) => FindWindowSettingsImpl(id);
+        public static WindowSettings* FindWindowSettingsByID(ID id) => FindWindowSettingsByIDImpl(id);
+        #endif
+        
+        [LinkName("igFindWindowSettingsByWindow")]
+        private static extern WindowSettings* FindWindowSettingsByWindowImpl(Window* window);
+        #if IMGUI_USE_REF
+        public static ref WindowSettings FindWindowSettingsByWindow(Window* window) { return ref *FindWindowSettingsByWindowImpl(window); }
+        #else
+        public static WindowSettings* FindWindowSettingsByWindow(Window* window) => FindWindowSettingsByWindowImpl(window);
         #endif
         
         [LinkName("igFocusTopMostWindowUnderOne")]
@@ -6794,6 +6823,14 @@ namespace ImGui
         [LinkName("igGetCurrentFocusScope")]
         private static extern ID GetCurrentFocusScopeImpl();
         public static ID GetCurrentFocusScope() => GetCurrentFocusScopeImpl();
+        
+        [LinkName("igGetCurrentTabBar")]
+        private static extern TabBar* GetCurrentTabBarImpl();
+        #if IMGUI_USE_REF
+        public static ref TabBar GetCurrentTabBar() { return ref *GetCurrentTabBarImpl(); }
+        #else
+        public static TabBar* GetCurrentTabBar() => GetCurrentTabBarImpl();
+        #endif
         
         [LinkName("igGetCurrentTable")]
         private static extern Table* GetCurrentTableImpl();
@@ -6963,9 +7000,13 @@ namespace ImGui
         private static extern ID GetIDImpl(void* ptr_id);
         public static ID GetID(void* ptr_id) => GetIDImpl(ptr_id);
         
-        [LinkName("igGetIDWithSeed")]
+        [LinkName("igGetIDWithSeed_Str")]
         private static extern ID GetIDWithSeedImpl(char* str_id_begin, char* str_id_end, ID seed);
         public static ID GetIDWithSeed(char* str_id_begin, char* str_id_end, ID seed) => GetIDWithSeedImpl(str_id_begin, str_id_end, seed);
+        
+        [LinkName("igGetIDWithSeed_Int")]
+        private static extern ID GetIDWithSeedImpl(int32 n, ID seed);
+        public static ID GetIDWithSeed(int32 n, ID seed) => GetIDWithSeedImpl(n, seed);
         
         [LinkName("igGetIO")]
         private static extern IO* GetIOImpl();
@@ -7041,6 +7082,15 @@ namespace ImGui
         private static extern Key GetKeyIndexImpl(Key key);
         public static Key GetKeyIndex(Key key) => GetKeyIndexImpl(key);
         
+        [LinkName("igGetKeyMagnitude2d")]
+        private static extern Vec2 GetKeyMagnitude2dImpl(Vec2* pOut, Key key_left, Key key_right, Key key_up, Key key_down);
+        public static Vec2 GetKeyMagnitude2d(Key key_left, Key key_right, Key key_up, Key key_down)
+        {
+            Vec2 pOut = default;
+            GetKeyMagnitude2dImpl(&pOut, key_left, key_right, key_up, key_down);
+            return pOut;
+        }
+        
         [LinkName("igGetKeyName")]
         private static extern char* GetKeyNameImpl(Key key);
         #if IMGUI_USE_REF
@@ -7064,15 +7114,6 @@ namespace ImGui
         [LinkName("igGetKeyPressedAmount")]
         private static extern int32 GetKeyPressedAmountImpl(Key key, float repeat_delay, float rate);
         public static int32 GetKeyPressedAmount(Key key, float repeat_delay, float rate) => GetKeyPressedAmountImpl(key, repeat_delay, rate);
-        
-        [LinkName("igGetKeyVector2d")]
-        private static extern Vec2 GetKeyVector2dImpl(Vec2* pOut, Key key_left, Key key_right, Key key_up, Key key_down);
-        public static Vec2 GetKeyVector2d(Key key_left, Key key_right, Key key_up, Key key_down)
-        {
-            Vec2 pOut = default;
-            GetKeyVector2dImpl(&pOut, key_left, key_right, key_up, key_down);
-            return pOut;
-        }
         
         [LinkName("igGetMainViewport")]
         private static extern Viewport* GetMainViewportImpl();
@@ -7399,9 +7440,17 @@ namespace ImGui
             return pOut;
         }
         
+        [LinkName("igImBitArrayClearAllBits")]
+        private static extern void ImBitArrayClearAllBitsImpl(U32* arr, int32 bitcount);
+        public static void ImBitArrayClearAllBits(U32* arr, int32 bitcount) => ImBitArrayClearAllBitsImpl(arr, bitcount);
+        
         [LinkName("igImBitArrayClearBit")]
         private static extern void ImBitArrayClearBitImpl(U32* arr, int32 n);
         public static void ImBitArrayClearBit(U32* arr, int32 n) => ImBitArrayClearBitImpl(arr, n);
+        
+        [LinkName("igImBitArrayGetStorageSizeInBytes")]
+        private static extern size ImBitArrayGetStorageSizeInBytesImpl(int32 bitcount);
+        public static size ImBitArrayGetStorageSizeInBytes(int32 bitcount) => ImBitArrayGetStorageSizeInBytesImpl(bitcount);
         
         [LinkName("igImBitArraySetBit")]
         private static extern void ImBitArraySetBitImpl(U32* arr, int32 n);
@@ -7435,6 +7484,10 @@ namespace ImGui
         [LinkName("igImDot")]
         private static extern float ImDotImpl(Vec2 a, Vec2 b);
         public static float ImDot(Vec2 a, Vec2 b) => ImDotImpl(a, b);
+        
+        [LinkName("igImExponentialMovingAverage")]
+        private static extern float ImExponentialMovingAverageImpl(float avg, float sample, int32 n);
+        public static float ImExponentialMovingAverage(float avg, float sample, int32 n) => ImExponentialMovingAverageImpl(avg, sample, n);
         
         [LinkName("igImFileClose")]
         private static extern bool ImFileCloseImpl(FileHandle file);
@@ -7547,12 +7600,12 @@ namespace ImGui
         public static Dir ImGetDirQuadrantFromDelta(float dx, float dy) => ImGetDirQuadrantFromDeltaImpl(dx, dy);
         
         [LinkName("igImHashData")]
-        private static extern ID ImHashDataImpl(void* data, size data_size, U32 seed);
-        public static ID ImHashData(void* data, size data_size, U32 seed = (U32) 0) => ImHashDataImpl(data, data_size, seed);
+        private static extern ID ImHashDataImpl(void* data, size data_size, ID seed);
+        public static ID ImHashData(void* data, size data_size, ID seed = (ID) 0) => ImHashDataImpl(data, data_size, seed);
         
         [LinkName("igImHashStr")]
-        private static extern ID ImHashStrImpl(char* data, size data_size, U32 seed);
-        public static ID ImHashStr(char* data, size data_size = (size) 0, U32 seed = (U32) 0) => ImHashStrImpl(data, data_size, seed);
+        private static extern ID ImHashStrImpl(char* data, size data_size, ID seed);
+        public static ID ImHashStr(char* data, size data_size = (size) 0, ID seed = (ID) 0) => ImHashStrImpl(data, data_size, seed);
         
         [LinkName("igImInvLength")]
         private static extern float ImInvLengthImpl(Vec2 lhs, float fail_value);
@@ -7901,8 +7954,8 @@ namespace ImGui
         public static bool ImageButton(char* str_id, TextureID user_texture_id, Vec2 size, Vec2 uv0 = Vec2.Zero, Vec2 uv1 = Vec2.Ones, Vec4 bg_col = Vec4.Zero, Vec4 tint_col = Vec4.Ones) => ImageButtonImpl(str_id, user_texture_id, size, uv0, uv1, bg_col, tint_col);
         
         [LinkName("igImageButtonEx")]
-        private static extern bool ImageButtonExImpl(ID id, TextureID texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec4 bg_col, Vec4 tint_col);
-        public static bool ImageButtonEx(ID id, TextureID texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec4 bg_col, Vec4 tint_col) => ImageButtonExImpl(id, texture_id, size, uv0, uv1, bg_col, tint_col);
+        private static extern bool ImageButtonExImpl(ID id, TextureID texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec4 bg_col, Vec4 tint_col, ButtonFlags flags);
+        public static bool ImageButtonEx(ID id, TextureID texture_id, Vec2 size, Vec2 uv0, Vec2 uv1, Vec4 bg_col, Vec4 tint_col, ButtonFlags flags = (ButtonFlags) 0) => ImageButtonExImpl(id, texture_id, size, uv0, uv1, bg_col, tint_col, flags);
         
         [LinkName("igIndent")]
         private static extern void IndentImpl(float indent_w);
@@ -8401,8 +8454,8 @@ namespace ImGui
         public static void OpenPopupOnItemClick(char* str_id = null, PopupFlags popup_flags = (PopupFlags) 1) => OpenPopupOnItemClickImpl(str_id, popup_flags);
         
         [LinkName("igPlotEx")]
-        private static extern int32 PlotExImpl(PlotType plot_type, char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 frame_size);
-        public static int32 PlotEx(PlotType plot_type, char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 frame_size) => PlotExImpl(plot_type, label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, frame_size);
+        private static extern int32 PlotExImpl(PlotType plot_type, char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 size_arg);
+        public static int32 PlotEx(PlotType plot_type, char* label, function float(void* data, int32 idx) values_getter, void* data, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 size_arg) => PlotExImpl(plot_type, label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, size_arg);
         
         [LinkName("igPlotHistogram_FloatPtr")]
         private static extern void PlotHistogramImpl(char* label, float* values, int32 values_count, int32 values_offset, char* overlay_text, float scale_min, float scale_max, Vec2 graph_size, int32 stride);
@@ -8716,6 +8769,14 @@ namespace ImGui
         [LinkName("igSeparatorEx")]
         private static extern void SeparatorExImpl(SeparatorFlags flags);
         public static void SeparatorEx(SeparatorFlags flags) => SeparatorExImpl(flags);
+        
+        [LinkName("igSeparatorText")]
+        private static extern void SeparatorTextImpl(char* label);
+        public static void SeparatorText(char* label) => SeparatorTextImpl(label);
+        
+        [LinkName("igSeparatorTextEx")]
+        private static extern void SeparatorTextExImpl(ID id, char* label, char* label_end, float extra_width);
+        public static void SeparatorTextEx(ID id, char* label, char* label_end, float extra_width) => SeparatorTextExImpl(id, label, label_end, extra_width);
         
         [LinkName("igSetActiveID")]
         private static extern void SetActiveIDImpl(ID id, Window* window);
@@ -9169,9 +9230,41 @@ namespace ImGui
         public static TabItem* TabBarFindTabByID(TabBar* tab_bar, ID tab_id) => TabBarFindTabByIDImpl(tab_bar, tab_id);
         #endif
         
+        [LinkName("igTabBarFindTabByOrder")]
+        private static extern TabItem* TabBarFindTabByOrderImpl(TabBar* tab_bar, int32 order);
+        #if IMGUI_USE_REF
+        public static ref TabItem TabBarFindTabByOrder(TabBar* tab_bar, int32 order) { return ref *TabBarFindTabByOrderImpl(tab_bar, order); }
+        #else
+        public static TabItem* TabBarFindTabByOrder(TabBar* tab_bar, int32 order) => TabBarFindTabByOrderImpl(tab_bar, order);
+        #endif
+        
+        [LinkName("igTabBarGetCurrentTab")]
+        private static extern TabItem* TabBarGetCurrentTabImpl(TabBar* tab_bar);
+        #if IMGUI_USE_REF
+        public static ref TabItem TabBarGetCurrentTab(TabBar* tab_bar) { return ref *TabBarGetCurrentTabImpl(tab_bar); }
+        #else
+        public static TabItem* TabBarGetCurrentTab(TabBar* tab_bar) => TabBarGetCurrentTabImpl(tab_bar);
+        #endif
+        
+        [LinkName("igTabBarGetTabName")]
+        private static extern char* TabBarGetTabNameImpl(TabBar* tab_bar, TabItem* tab);
+        #if IMGUI_USE_REF
+        public static ref char TabBarGetTabName(TabBar* tab_bar, TabItem* tab) { return ref *TabBarGetTabNameImpl(tab_bar, tab); }
+        #else
+        public static char* TabBarGetTabName(TabBar* tab_bar, TabItem* tab) => TabBarGetTabNameImpl(tab_bar, tab);
+        #endif
+        
+        [LinkName("igTabBarGetTabOrder")]
+        private static extern int32 TabBarGetTabOrderImpl(TabBar* tab_bar, TabItem* tab);
+        public static int32 TabBarGetTabOrder(TabBar* tab_bar, TabItem* tab) => TabBarGetTabOrderImpl(tab_bar, tab);
+        
         [LinkName("igTabBarProcessReorder")]
         private static extern bool TabBarProcessReorderImpl(TabBar* tab_bar);
         public static bool TabBarProcessReorder(TabBar* tab_bar) => TabBarProcessReorderImpl(tab_bar);
+        
+        [LinkName("igTabBarQueueFocus")]
+        private static extern void TabBarQueueFocusImpl(TabBar* tab_bar, TabItem* tab);
+        public static void TabBarQueueFocus(TabBar* tab_bar, TabItem* tab) => TabBarQueueFocusImpl(tab_bar, tab);
         
         [LinkName("igTabBarQueueReorder")]
         private static extern void TabBarQueueReorderImpl(TabBar* tab_bar, TabItem* tab, int32 offset);
@@ -9355,6 +9448,10 @@ namespace ImGui
         #else
         public static TableInstanceData* TableGetInstanceData(Table* table, int32 instance_no) => TableGetInstanceDataImpl(table, instance_no);
         #endif
+        
+        [LinkName("igTableGetInstanceID")]
+        private static extern ID TableGetInstanceIDImpl(Table* table, int32 instance_no);
+        public static ID TableGetInstanceID(Table* table, int32 instance_no) => TableGetInstanceIDImpl(table, instance_no);
         
         [LinkName("igTableGetMaxColumnWidth")]
         private static extern float TableGetMaxColumnWidthImpl(Table* table, int32 column_n);
