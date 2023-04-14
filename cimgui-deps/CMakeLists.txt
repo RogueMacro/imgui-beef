@@ -14,8 +14,8 @@ file(GLOB IMGUI_SOURCES
     imgui/backends/imgui_impl_glfw.cpp
     imgui/backends/imgui_impl_opengl3.h
     imgui/backends/imgui_impl_opengl3.cpp
-    imgui/backends/imgui_impl_sdl.h
-    imgui/backends/imgui_impl_sdl.cpp
+    imgui/backends/imgui_impl_sdl2.h
+    imgui/backends/imgui_impl_sdl2.cpp
     glad/glad.h
     glad/glad.c
 )
