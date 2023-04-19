@@ -1,11 +1,11 @@
 // -- GENERATION INFORMATION --
-// Date: 04/14/2023 20:57:08
-// Constructors: 95
-// Destructors: 74
-// Enums: 72
-// Global methods: 868
-// Instance methods: 354
-// Structs: 110
+// Date: 04/19/2023 06:29:50
+// Constructors: 96
+// Destructors: 75
+// Enums: 73
+// Global methods: 872
+// Instance methods: 356
+// Structs: 111
 // Typedefs: 29
 
 using System;
@@ -32,8 +32,8 @@ namespace ImGui
 
 	public static class ImGui
     {
-		public static char8* VERSION = "1.89.4";
-		public static int VERSION_NUM = 189400;
+		public static char8* VERSION = "1.89.5";
+		public static int VERSION_NUM = 189500;
 		public static bool CHECKVERSION()
 		{
 			bool result = DebugCheckVersionAndDataLayout(VERSION, sizeof(IO), sizeof(Style), sizeof(Vec2), sizeof(Vec4), sizeof(DrawVert), sizeof(DrawIdx));
@@ -480,10 +480,11 @@ namespace ImGui
             EventPopup = 4,
             EventNav = 8,
             EventClipper = 16,
-            EventIO = 32,
-            EventDocking = 64,
-            EventViewport = 128,
-            EventMask_ = 255,
+            EventSelection = 32,
+            EventIO = 64,
+            EventDocking = 128,
+            EventViewport = 256,
+            EventMask_ = 511,
             OutputToTTY = 1024,
         
         }
@@ -653,8 +654,7 @@ namespace ImGui
             Keyboard = 2,
             Gamepad = 3,
             Clipboard = 4,
-            Nav = 5,
-            COUNT = 6,
+            COUNT = 5,
         
         }
         
@@ -947,6 +947,16 @@ namespace ImGui
             Hand = 7,
             NotAllowed = 8,
             COUNT = 9,
+        
+        }
+        
+        [AllowDuplicates]
+        public enum MouseSource : int32
+        {
+            Mouse = 0,
+            TouchScreen = 1,
+            Pen = 2,
+            COUNT = 3,
         
         }
         
@@ -1405,10 +1415,11 @@ namespace ImGui
             NoFocusOnClick = 64,
             NoInputs = 128,
             NoRendererClear = 256,
-            TopMost = 512,
-            Minimized = 1024,
-            NoAutoMerge = 2048,
-            CanHostOtherWindows = 4096,
+            NoAutoMerge = 512,
+            TopMost = 1024,
+            CanHostOtherWindows = 2048,
+            IsMinimized = 4096,
+            IsFocused = 8192,
         
         }
         
@@ -2427,8 +2438,6 @@ namespace ImGui
             public bool FontAtlasOwnedByContext;
             public IO IO;
             public PlatformIO PlatformIO;
-            public Vector<InputEvent> InputEventsQueue;
-            public Vector<InputEvent> InputEventsTrail;
             public Style Style;
             public ConfigFlags ConfigFlagsCurrFrame;
             public ConfigFlags ConfigFlagsLastFrame;
@@ -2447,6 +2456,10 @@ namespace ImGui
             public bool GcCompactAll;
             public bool TestEngineHookItems;
             public void* TestEngine;
+            public Vector<InputEvent> InputEventsQueue;
+            public Vector<InputEvent> InputEventsTrail;
+            public MouseSource InputEventsNextMouseSource;
+            public U32 InputEventsNextEventId;
             public Vector<Window*> Windows;
             public Vector<Window*> WindowsFocusOrder;
             public Vector<Window*> WindowsTempSortBuffer;
@@ -2517,7 +2530,7 @@ namespace ImGui
             public ViewportP* MouseLastHoveredViewport;
             public ID PlatformLastFocusedViewportId;
             public PlatformMonitor FallbackMonitor;
-            public int32 ViewportFrontMostStampCount;
+            public int32 ViewportFocusedStampCount;
             public Window* NavWindow;
             public ID NavId;
             public ID NavFocusScopeId;
@@ -2606,6 +2619,7 @@ namespace ImGui
             public float HoverDelayClearTimer;
             public Vec2 MouseLastValidPos;
             public InputTextState InputTextState;
+            public InputTextDeactivatedState InputTextDeactivatedState;
             public Font InputTextPasswordFont;
             public ID TempInputId;
             public ColorEditFlags ColorEditOptions;
@@ -2947,6 +2961,7 @@ namespace ImGui
             public bool[5] MouseDown;
             public float MouseWheel;
             public float MouseWheelH;
+            public MouseSource MouseSource;
             public ID MouseHoveredViewport;
             public bool KeyCtrl;
             public bool KeyShift;
@@ -2965,6 +2980,7 @@ namespace ImGui
             public bool[5] MouseReleased;
             public bool[5] MouseDownOwned;
             public bool[5] MouseDownOwnedUnlessPopupClose;
+            public bool MouseWheelRequestAxisSwap;
             public float[5] MouseDownDuration;
             public float[5] MouseDownDurationPrev;
             public Vec2[5] MouseDragMaxDistanceAbs;
@@ -3016,6 +3032,10 @@ namespace ImGui
             private static extern void AddMousePosEventImpl(Self* self, float x, float y);
             public void AddMousePosEvent(float x, float y) mut=> AddMousePosEventImpl(&this, x, y);
             
+            [LinkName("ImGuiIO_AddMouseSourceEvent")]
+            private static extern void AddMouseSourceEventImpl(Self* self, MouseSource source);
+            public void AddMouseSourceEvent(MouseSource source) mut=> AddMouseSourceEventImpl(&this, source);
+            
             [LinkName("ImGuiIO_AddMouseViewportEvent")]
             private static extern void AddMouseViewportEventImpl(Self* self, ID id);
             public void AddMouseViewportEvent(ID id) mut=> AddMouseViewportEventImpl(&this, id);
@@ -3047,6 +3067,7 @@ namespace ImGui
         {
             public InputEventType Type;
             public InputSource Source;
+            public U32 EventId;
             private InputEventUnion0 Union0 = .();
             public InputEventMousePos MousePos { get { return Union0.MousePos; } set mut { Union0.MousePos = value; } };
             public InputEventMouseWheel MouseWheel { get { return Union0.MouseWheel; } set mut { Union0.MouseWheel = value; } };
@@ -3098,6 +3119,7 @@ namespace ImGui
         {
             public int32 Button;
             public bool Down;
+            public MouseSource MouseSource;
         
         }
         
@@ -3106,6 +3128,7 @@ namespace ImGui
         {
             public float PosX;
             public float PosY;
+            public MouseSource MouseSource;
         
         }
         
@@ -3121,6 +3144,7 @@ namespace ImGui
         {
             public float WheelX;
             public float WheelY;
+            public MouseSource MouseSource;
         
         }
         
@@ -3174,6 +3198,25 @@ namespace ImGui
             [LinkName("ImGuiInputTextCallbackData_SelectAll")]
             private static extern void SelectAllImpl(Self* self);
             public void SelectAll() mut=> SelectAllImpl(&this);
+            
+        }
+        
+        [CRepr]
+        public struct InputTextDeactivatedState
+        {
+            public ID ID;
+            public Vector<char> TextA;
+        
+            [LinkName("ImGuiInputTextDeactivatedState_ImGuiInputTextDeactivatedState")]
+            private static extern InputTextDeactivatedState* CtorImpl();
+            public this()
+            {
+                this = *CtorImpl();
+            }
+            
+            [LinkName("ImGuiInputTextDeactivatedState_ClearFreeMemory")]
+            private static extern void ClearFreeMemoryImpl(Self* self);
+            public void ClearFreeMemory() mut=> ClearFreeMemoryImpl(&this);
             
         }
         
@@ -4643,15 +4686,16 @@ namespace ImGui
         public struct ViewportP
         {
             public Viewport _ImGuiViewport;
+            public Window* Window;
             public int32 Idx;
             public int32 LastFrameActive;
-            public int32 LastFrontMostStampCount;
+            public int32 LastFocusedStampCount;
             public ID LastNameHash;
             public Vec2 LastPos;
             public float Alpha;
             public float LastAlpha;
+            public bool LastFocusedHadNavWindow;
             public short PlatformMonitor;
-            public Window* Window;
             public int32[2] DrawListsLastFrame;
             public DrawList*[2] DrawLists;
             public DrawData DrawDataP;
@@ -6113,8 +6157,8 @@ namespace ImGui
         public static KeyChord ConvertShortcutMod(KeyChord key_chord) => ConvertShortcutModImpl(key_chord);
         
         [LinkName("igConvertSingleModFlagToKey")]
-        private static extern Key ConvertSingleModFlagToKeyImpl(Key key);
-        public static Key ConvertSingleModFlagToKey(Key key) => ConvertSingleModFlagToKeyImpl(key);
+        private static extern Key ConvertSingleModFlagToKeyImpl(Context* ctx, Key key);
+        public static Key ConvertSingleModFlagToKey(Context* ctx, Key key) => ConvertSingleModFlagToKeyImpl(ctx, key);
         
         [LinkName("igCreateContext")]
         private static extern Context* CreateContextImpl(FontAtlas* shared_font_atlas);
@@ -6719,8 +6763,8 @@ namespace ImGui
         #endif
         
         [LinkName("igFocusTopMostWindowUnderOne")]
-        private static extern void FocusTopMostWindowUnderOneImpl(Window* under_this_window, Window* ignore_window);
-        public static void FocusTopMostWindowUnderOne(Window* under_this_window, Window* ignore_window) => FocusTopMostWindowUnderOneImpl(under_this_window, ignore_window);
+        private static extern void FocusTopMostWindowUnderOneImpl(Window* under_this_window, Window* ignore_window, Viewport* filter_viewport);
+        public static void FocusTopMostWindowUnderOne(Window* under_this_window, Window* ignore_window, Viewport* filter_viewport) => FocusTopMostWindowUnderOneImpl(under_this_window, ignore_window, filter_viewport);
         
         [LinkName("igFocusWindow")]
         private static extern void FocusWindowImpl(Window* window);
@@ -7095,7 +7139,15 @@ namespace ImGui
             out_buf = ?;
         }
         
-        [LinkName("igGetKeyData")]
+        [LinkName("igGetKeyData_ContextPtr")]
+        private static extern KeyData* GetKeyDataImpl(Context* ctx, Key key);
+        #if IMGUI_USE_REF
+        public static ref KeyData GetKeyData(Context* ctx, Key key) { return ref *GetKeyDataImpl(ctx, key); }
+        #else
+        public static KeyData* GetKeyData(Context* ctx, Key key) => GetKeyDataImpl(ctx, key);
+        #endif
+        
+        [LinkName("igGetKeyData_Key")]
         private static extern KeyData* GetKeyDataImpl(Key key);
         #if IMGUI_USE_REF
         public static ref KeyData GetKeyData(Key key) { return ref *GetKeyDataImpl(key); }
@@ -7129,11 +7181,11 @@ namespace ImGui
         public static ID GetKeyOwner(Key key) => GetKeyOwnerImpl(key);
         
         [LinkName("igGetKeyOwnerData")]
-        private static extern KeyOwnerData* GetKeyOwnerDataImpl(Key key);
+        private static extern KeyOwnerData* GetKeyOwnerDataImpl(Context* ctx, Key key);
         #if IMGUI_USE_REF
-        public static ref KeyOwnerData GetKeyOwnerData(Key key) { return ref *GetKeyOwnerDataImpl(key); }
+        public static ref KeyOwnerData GetKeyOwnerData(Context* ctx, Key key) { return ref *GetKeyOwnerDataImpl(ctx, key); }
         #else
-        public static KeyOwnerData* GetKeyOwnerData(Key key) => GetKeyOwnerDataImpl(key);
+        public static KeyOwnerData* GetKeyOwnerData(Context* ctx, Key key) => GetKeyOwnerDataImpl(ctx, key);
         #endif
         
         [LinkName("igGetKeyPressedAmount")]
@@ -8046,6 +8098,10 @@ namespace ImGui
         private static extern bool InputTextImpl(char* label, char* buf, size buf_size, InputTextFlags flags, InputTextCallback callback, void* user_data);
         public static bool InputText(char* label, char* buf, size buf_size, InputTextFlags flags = (InputTextFlags) 0, InputTextCallback callback = null, void* user_data = null) => InputTextImpl(label, buf, buf_size, flags, callback, user_data);
         
+        [LinkName("igInputTextDeactivateHook")]
+        private static extern void InputTextDeactivateHookImpl(ID id);
+        public static void InputTextDeactivateHook(ID id) => InputTextDeactivateHookImpl(id);
+        
         [LinkName("igInputTextEx")]
         private static extern bool InputTextExImpl(char* label, char* hint, char* buf, int32 buf_size, Vec2 size_arg, InputTextFlags flags, InputTextCallback callback, void* user_data);
         public static bool InputTextEx(char* label, char* hint, char* buf, int32 buf_size, Vec2 size_arg, InputTextFlags flags, InputTextCallback callback = null, void* user_data = null) => InputTextExImpl(label, hint, buf, buf_size, size_arg, flags, callback, user_data);
@@ -8269,6 +8325,10 @@ namespace ImGui
         [LinkName("igIsWindowCollapsed")]
         private static extern bool IsWindowCollapsedImpl();
         public static bool IsWindowCollapsed() => IsWindowCollapsedImpl();
+        
+        [LinkName("igIsWindowContentHoverable")]
+        private static extern bool IsWindowContentHoverableImpl(Window* window, HoveredFlags flags);
+        public static bool IsWindowContentHoverable(Window* window, HoveredFlags flags = (HoveredFlags) 0) => IsWindowContentHoverableImpl(window, flags);
         
         [LinkName("igIsWindowDocked")]
         private static extern bool IsWindowDockedImpl();
@@ -8894,6 +8954,10 @@ namespace ImGui
         [LinkName("igSetKeyOwner")]
         private static extern void SetKeyOwnerImpl(Key key, ID owner_id, InputFlags flags);
         public static void SetKeyOwner(Key key, ID owner_id, InputFlags flags = (InputFlags) 0) => SetKeyOwnerImpl(key, owner_id, flags);
+        
+        [LinkName("igSetKeyOwnersForKeyChord")]
+        private static extern void SetKeyOwnersForKeyChordImpl(KeyChord key, ID owner_id, InputFlags flags);
+        public static void SetKeyOwnersForKeyChord(KeyChord key, ID owner_id, InputFlags flags = (InputFlags) 0) => SetKeyOwnersForKeyChordImpl(key, owner_id, flags);
         
         [LinkName("igSetKeyboardFocusHere")]
         private static extern void SetKeyboardFocusHereImpl(int32 offset);
